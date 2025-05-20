@@ -10,20 +10,15 @@
     <div id="proyectos"></div>
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
-            try {
-                const response = await fetch('/api/v3/projects');
-                console.log(response);
-
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
+            fetch('http://localhost:8080/api/v3/projects', {
+                headers: {
+                'Authorization': 'Basic ' + btoa('apikey:83382842c354f6095df2a29715b78f3b5302ab7d586b65deaf1e08a69296fe52')
                 }
-
-                const proyectosPG = response.json();
-                const proyectos = proyectosPG;
-
-            } catch (error) {
-                console.log(error.message)
-            }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                });
             
         })
     </script>
