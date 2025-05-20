@@ -10,14 +10,23 @@
     <div id="proyectos"></div>
     <script>
         document.addEventListener('DOMContentLoaded', async() => {
-            fetch('http://localhost:8080/api/v3/projects', {
+            const url = 'http://localhost:8080';
+            fetch(url + '/api/v3/projects', {
                 headers: {
                 'Authorization': 'Basic ' + btoa('apikey:83382842c354f6095df2a29715b78f3b5302ab7d586b65deaf1e08a69296fe52')
                 }
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                const proyectos = data._embedded.elements;
+                const lista = document.getElementById('proyectos');
+                lista.insertAdjacentHTML('beforeend', '<ul>');
+                proyectos.forEach(proyecto => {
+                    lista.insertAdjacentHTML('beforeend', '<li> ' + proyecto.name + ' - ' + proyecto.description.raw + '</li>');
+                });
+                lista.insertAdjacentHTML('beforeend', '</ul>');
+
+                console.log(data._embedded.elements);
                 });
             
         })
