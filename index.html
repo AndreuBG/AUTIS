@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTIS</title>
+</head>
+<body>
+    <h1>Proyectos</h1>
+    <div id="proyectos"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async() => {
+            try {
+                const response = await fetch('/api/v3/projects');
+                console.log(response);
+
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const proyectosPG = response.json();
+                const proyectos = proyectosPG;
+
+            } catch (error) {
+                console.log(error.message)
+            }
+            
+        })
+    </script>
+</body>
+</html>
