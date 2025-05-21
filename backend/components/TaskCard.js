@@ -1,4 +1,4 @@
-class TaskCrad extends HTMLElement {
+class TaskCard extends HTMLElement {
     constructor(){
         super();
         this.attachShadow({ mode: 'open' });
