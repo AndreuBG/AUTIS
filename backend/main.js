@@ -1,4 +1,5 @@
 import { OpenProjectService } from "./OpenProjectService.js";
+import './components/ProjectCard.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -8,16 +9,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const listaTareas = document.getElementById('tareas');
                 listaTareas.insertAdjacentHTML('beforeend', '<ul>');
                 tareas.forEach(tarea => {
-                    listaTareas.insertAdjacentHTML('beforeend', '<li> ' + tarea.subject + ' - ' + tarea.description.raw + '</li>');
+                    listaTareas.insertAdjacentHTML('beforeend', '<li> ' + tarea.subject + ' - ' + tarea.description + '</li>');
                 });
                 listaTareas.insertAdjacentHTML('beforeend', '</ul>');
         
                 const listaProyectos = document.getElementById('proyectos');
-                listaProyectos.insertAdjacentHTML('beforeend', '<ul>');
-                proyectos.forEach(proyecto => {
-                    listaProyectos.insertAdjacentHTML('beforeend', '<li> ' + proyecto.name + ' - ' + proyecto.description.raw + '</li>');
+                proyectos.forEach(p => {
+                    const projectElement = document.createElement('project-card');
+                    projectElement.setAttribute('id', p.id);
+                    projectElement.setAttribute('active', p.active  );
+                    projectElement.setAttribute('name', p.name);
+                    projectElement.setAttribute('description', p.description);
+
+                    listaProyectos.appendChild(projectElement);
                 });
-                listaProyectos.insertAdjacentHTML('beforeend', '</ul>');
 
             
     } catch(error) {

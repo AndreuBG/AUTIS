@@ -20,7 +20,7 @@ static async getAllProjects() {
       projects.push(project)
   }
   console.log(projects);
-  return data;
+  return projects;
 }
     
  static async getAllTasks() {
@@ -41,7 +41,7 @@ static async getAllProjects() {
             
     console.log(tasks);
 
-    return data;
+    return tasks;
 }
 }
 

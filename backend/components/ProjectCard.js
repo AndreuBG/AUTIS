@@ -18,8 +18,9 @@ class ProjectCard extends HTMLElement {
                     border-radius: 5px;
                     padding: 10px;
                     margin: 10px;
-                    width: 200px;
+                    width: 100%;
                     background-color: ${active ? '#e0ffe0' : '#fff'};
+                    
                 }
                 .card h2 {
                     font-size: 1.5em;
@@ -29,22 +30,14 @@ class ProjectCard extends HTMLElement {
                     font-size: 1em;
                     margin: 5px 0;
                 }
-                .card button {
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    padding: 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
-                .card button:hover {
-                    background-color: #0056b3;
+
+                .card:hover {
+                    background-color:rgb(145, 198, 255);
                 }
             </style>
             <div class="card">
                 <h2>${name}</h2>
                 <p>${description}</p>
-                <button id="viewButton">View</button>
             </div>
         `;
 
