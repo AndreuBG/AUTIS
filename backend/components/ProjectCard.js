@@ -19,7 +19,7 @@ class ProjectCard extends HTMLElement {
                     padding: 10px;
                     margin: 10px;
                     width: 100%;
-                    background-color: ${active ? '#e0ffe0' : '#fff'};
+                    background-color: ${active ? '#e0ffe0' : '#f0f6fc'};
                     
                 }
                 .card h2 {

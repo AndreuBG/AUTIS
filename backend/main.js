@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     taskElement.setAttribute('id', t.id);
                     taskElement.setAttribute('subject', t.subject);
                     taskElement.setAttribute('description', t.description);
-                    taskElement.setAttribute('start-date', t.startDate);
+                    taskElement.setAttribute('startDate', t.startDate);
                     taskElement.setAttribute('dueDate', t.dueDate);
                     taskElement.setAttribute('project', t.project);
 
