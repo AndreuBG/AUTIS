@@ -13,31 +13,31 @@ class ProjectCard extends HTMLElement {
 
         this.shadowRoot.innerHTML = `
             <style>
-                .card {
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    padding: 10px;
-                    margin: 10px;
-                    width: 100%;
-                    background-color: ${active ? '#e0ffe0' : '#f0f6fc'};
-                    
-                }
-                .card h2 {
-                    font-size: 1.5em;
-                    margin: 0;
-                }
-                .card p {
-                    font-size: 1em;
-                    margin: 5px 0;
-                }
+            .card {
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px;
+                width: 100%;
+                background-color: ${active ? '#e0ffe0' : '#dfe9f5'};
+                
+            }
+            .card h2 {
+                font-size: 1.5em;
+                margin: 0;
+            }
+            .card p {
+                font-size: 1em;
+                margin: 5px 0;
+            }
 
-                .card:hover {
-                    background-color:rgb(145, 198, 255);
-                }
+            .card:hover {
+                background-color:rgb(145, 198, 255);
+            }
             </style>
             <div class="card">
-                <h2>${name}</h2>
-                <p>${description}</p>
+            <h2>${name}</h2>
+            <p>${description}</p>
             </div>
         `;
 
