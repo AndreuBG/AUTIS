@@ -11,48 +11,6 @@
 
     <h1>Tareas</h1>
     <div id="tareas"></div>
-    <script>
-        document.addEventListener('DOMContentLoaded', async() => {
-            const url = 'http://localhost:8080';
-
-            // Proyectos
-            fetch(url + '/api/v3/projects', {
-                headers: {
-                'Authorization': 'Basic ' + btoa('apikey:83382842c354f6095df2a29715b78f3b5302ab7d586b65deaf1e08a69296fe52')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const proyectos = data._embedded.elements;
-                const lista = document.getElementById('proyectos');
-                lista.insertAdjacentHTML('beforeend', '<ul>');
-                proyectos.forEach(proyecto => {
-                    lista.insertAdjacentHTML('beforeend', '<li> ' + proyecto.name + ' - ' + proyecto.description.raw + '</li>');
-                });
-                lista.insertAdjacentHTML('beforeend', '</ul>');
-
-                console.log(data._embedded.elements);
-                });
-            
-            // Tareas
-            fetch(url + '/api/v3/work_packages', {
-                headers: {
-                'Authorization': 'Basic ' + btoa('apikey:83382842c354f6095df2a29715b78f3b5302ab7d586b65deaf1e08a69296fe52')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const tareas = data._embedded.elements;
-                const lista = document.getElementById('tareas');
-                lista.insertAdjacentHTML('beforeend', '<ul>');
-                tareas.forEach(tarea => {
-                    lista.insertAdjacentHTML('beforeend', '<li> ' + tarea.subject + ' - ' + tarea.description.raw + '</li>');
-                });
-                lista.insertAdjacentHTML('beforeend', '</ul>');
-
-                console.log(data);
-                });
-        })
-    </script>
+    <script type="module" src="main.js" defer></script>
 </body>
 </html>
