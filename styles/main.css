@@ -1,0 +1,148 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  color: #330F0A; 
+  padding: 0;
+  margin-top: 80px; /* Increased space for fixed nav */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+  color: #09348bf8;
+  letter-spacing: 1.5px;
+  font-size: 1.8em;
+  background-color: #ffffffe1;
+  padding: 10px;
+  border-radius: 6px;
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px; /* Add top margin to headers */
+}
+
+#tituloProyectos {
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: bold;
+  color: #CC6204;
+  letter-spacing: 1.5px;
+  font-size: 2em;
+}
+
+#proyectos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 35px;
+  max-width: 1300px;
+  margin: 0 auto 50px auto;
+  padding: 30px; /* Increased padding around projects */
+  margin-top: 30px; /* Add space after header */
+  min-height: 200px; /* Ensure a minimum height for the project container */
+}
+
+project-card {
+  display:grid;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 15px;
+  background-color: #09348be5;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+#tareas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 60px; /* Increased gap between tasks */
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 30px; /* Increased padding around task container */
+}
+
+.task-card {
+  background-color: #E2DCDE;
+  border: 2px solid #CC6204;
+  border-radius: 10px;
+  margin: 15px; /* Increased margin around each task */
+  padding: 30px; /* Increased padding inside each task */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  min-height: 200px;
+}
+
+.task-card:hover {
+  background-color: #F1DAC4;
+  transform: translateY(-3px);
+  cursor: pointer;
+}
+
+.task-card h3 {
+  font-size: 1.3em;
+  color: #330F0A;
+  margin-bottom: 8px;
+}
+
+.task-card p {
+  margin: 4px 0;
+  color: #333;
+  font-size: 0.95em;
+}
+
+html {
+  --s: 271px; /* control the size*/
+  --c1: #ffffff;
+  --c2: #d6f5ff;
+  --c3: #6cc6fe;
+  
+  background:
+    repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) 
+     calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
+    repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
+  background-size: var(--s) calc(var(--s)*tan(30deg));
+}
+
+tab-button {
+  padding: 12px 24px;
+  border: 2px solid #CC6204;
+  background-color: #E2DCDE;
+  color: #330F0A;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
+}
+
+tab-button:hover {
+  background-color: #F1DAC4;
+  transform: translateY(-2px);
+}
+
+tab-button[active="true"] {
+  background-color: #CC6204;
+  color: white;
+}
+
+#proyectos-group:not(.active),
+#tareas-group:not(.active) {
+  display: none;
+}
+
+#proyectos-group,
+#tareas-group {
+  margin-top: 100px; /* Add space below nav for groups */
+}
