@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API_TOKEN Login</title>
-    <link rel="stylesheet" href="styles/styleform.css">
+    <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="login-container">
-        <form id="api-token-login" method="get" action="https://autis.uvigo.es/api/login">
+        <form id="api-token-login">
             <label for="api-token">API Token:</label>
             <div class="password-container">
                 <input type="password" id="api-token" name="api-token" required>
@@ -24,27 +24,6 @@
         </form>
     </div>
 
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('api-token');
-            const toggleButton = document.getElementById('toggle-password');
-            const icon = toggleButton.querySelector('i');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.className = 'fas fa-eye-slash';
-            } else {
-                passwordInput.type = 'password';
-                icon.className = 'fas fa-eye';
-            }
-        }
-
-        function clearPassword() {
-            const passwordInput = document.getElementById('api-token');
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
-
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>

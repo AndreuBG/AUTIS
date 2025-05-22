@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/main.css">
+    <title>AUTIS</title>
+</head>
+
+<body>
+    <nav>
+        <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
+        <tab-button target="tareas-group">Tareas</tab-button>
+    </nav>
+
+    <div id="proyectos-group">
+        <h1>Proyectos</h1>
+        <div id="proyectos" class="section active"></div>
+    </div>
+
+    <div id="tareas-group">
+        <h1>Tareas</h1>
+        <div id="tareas" class="section"></div>
+    </div>
+    <script type="module" src="backend/main.js" defer></script>
+</body>
+</html>
+

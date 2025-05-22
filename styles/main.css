@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  
+  color: #330F0A; 
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: bold;
+  color: #330F0A;
+  letter-spacing: 1.5px;
+  font-size: 2em;
+  background-color: #FFE4C4;
+}
+
+#tituloProyectos {
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: bold;
+  color: #CC6204;
+  letter-spacing: 1.5px;
+  font-size: 2em;
+}
+
+#proyectos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto 50px auto;
+  padding: 0 10px;
+}
+
+project-card {
+  display:grid;
+}
+
+#tareas {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 25px;
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.6;
+  
+}
+
+#tareas ul {
+  list-style-type: disc;
+  padding-left: 10px;
+}
+
+#tareas li {
+  padding: 10px 0;
+  border: black;
+  border-bottom: 1px solid #ccc;
+  color: #330F0A;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+  background-color: #E2DCDE;
+}
+
+#tareas li:last-child {
+  border-bottom: none;
+}
+
+#tareas li:hover {
+  background-color: #F1DAC4;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  #tareas {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+#tareas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.task-card {
+  background-color: #E2DCDE;
+  border: 2px solid #CC6204;
+  border-radius: 10px;
+  padding: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+}
+
+.task-card:hover {
+  background-color: #F1DAC4;
+  transform: translateY(-3px);
+  cursor: pointer;
+}
+
+.task-card h3 {
+  font-size: 1.3em;
+  color: #330F0A;
+  margin-bottom: 8px;
+}
+
+.task-card p {
+  margin: 4px 0;
+  color: #333;
+  font-size: 0.95em;
+}
+
+html {
+  --s: 271px; /* control the size*/
+  --c1: #ffffff;
+  --c2: #d6f5ff;
+  --c3: #6cc6fe;
+  
+  background:
+    repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) 
+     calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
+    repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
+  background-size: var(--s) calc(var(--s)*tan(30deg));
+}
