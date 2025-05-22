@@ -33,7 +33,9 @@
         if (!response.ok) {
             alert("Credenciales incorrectas!");
         } else {
-            window.location.assign("main.html")
+            sessionStorage.setItem('token', token);
+            window.location.assign("/pages/main.html")
+
         }
 
         
