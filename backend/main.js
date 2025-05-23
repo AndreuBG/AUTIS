@@ -1,7 +1,8 @@
 import { OpenProjectService } from "./OpenProjectService.js";
 import './components/ProjectCard.js';
 import './components/TaskCard.js';
-import './components/TabButton.js';
+import { ScaffoldComponent } from './libcomponents/scaffold_component.js';
+import { TabComponent } from './libcomponents/tab_component.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {

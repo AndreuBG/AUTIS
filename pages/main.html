@@ -7,11 +7,10 @@
     <title>AUTIS</title>
     <link rel="stylesheet" href="./styles/main.css">
 </head>
-
 <body>
     <nav>
-        <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
-        <tab-button target="tareas-group">Tareas</tab-button>
+        <tab-component active="true" target="proyectos-group">Proyectos</tab-component>
+        <tab-component target="tareas-group">Tareas</tab-component>
     </nav>
 
     <div id="proyectos-group">
@@ -19,7 +18,7 @@
         <div id="proyectos" class="section active"></div>
     </div>
 
-    <div id="tareas-group">
+    <div id="tareas-group" style="display: none;">
         <h1>Tareas</h1>
         <div id="tareas" class="section"></div>
     </div>
