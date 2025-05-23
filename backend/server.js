@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
+import { OpenProjectService } from "./OpenProjectService.js";
 
 // Inicialització d'Express
 const app = express();
@@ -26,4 +27,17 @@ app.get('/', (req, res) => {
 // Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escoltant a http://localhost:${PORT}`);
+});
+
+app.get('/getProjects', async function(req, res) {
+    res.send(await OpenProjectService.getAllProjects());
+});
+
+app.get('/getTasks', async function(req, res) {
+    res.send(await OpenProjectService.getAllTasks());
+});
+
+app.post('/postToken', express.text(), (req, res) => {
+    OpenProjectService.setToken(req.body);
+
 });

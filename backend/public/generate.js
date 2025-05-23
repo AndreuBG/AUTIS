@@ -1,12 +1,27 @@
-import { OpenProjectService } from "../../OpenProjectService.js";
-import '../../components/ProjectCard.js';
-import '../../components/TaskCard.js';
-import '../../components/TabButton.js';
+//import { OpenProjectService } from "../OpenProjectService.js";
+import '../components/ProjectCard.js';
+import '../components/TaskCard.js';
+import '../components/TabButton.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const proyectos = await OpenProjectService.getAllProjects();
-        const tareas = await OpenProjectService.getAllTasks();
+        const responseProject = await fetch('/getProjects');
+        const proyectos = await responseProject.json();
+
+
+        const listaProyectos = document.getElementById('proyectos');
+        proyectos.forEach(p => {
+            const projectElement = document.createElement('project-card');
+            projectElement.setAttribute('id', p.id);
+            projectElement.setAttribute('active', p.active  );
+            projectElement.setAttribute('name', p.name);
+            projectElement.setAttribute('description', p.description);
+
+            listaProyectos.appendChild(projectElement);
+        });
+
+        const responseTask = await fetch('/getTasks');
+        const tareas = await responseTask.json();
 
         const listaTareas = document.getElementById('tareas');
                 tareas.forEach(t => {
@@ -22,16 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 });
         
-                const listaProyectos = document.getElementById('proyectos');
-                proyectos.forEach(p => {
-                    const projectElement = document.createElement('project-card');
-                    projectElement.setAttribute('id', p.id);
-                    projectElement.setAttribute('active', p.active  );
-                    projectElement.setAttribute('name', p.name);
-                    projectElement.setAttribute('description', p.description);
 
-                    listaProyectos.appendChild(projectElement);
-                });
 
             
     } catch(error) {

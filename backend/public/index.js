@@ -22,6 +22,7 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+
         const token = document.getElementById('api-token').value;
         
           const response = await fetch(`http://localhost:8080/api/v3/projects`, {
@@ -33,7 +34,18 @@
         if (!response.ok) {
             alert("Credenciales incorrectas!");
         } else {
-            sessionStorage.setItem('token', token);
+            try {
+                 fetch('/postToken', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "text/plain"
+                    },
+                    body: token
+                })
+                     .then(response => response.text());
+            } catch (error) {
+                throw error;
+            }
             window.location.assign("/pages/main.html")
 
         }
