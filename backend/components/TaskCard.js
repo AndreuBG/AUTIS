@@ -39,17 +39,6 @@ class TaskCard extends HTMLElement {
                     transform: translateY(-2px);
                     transition: all 0.3s ease;
                 }
-                button {
-                    background-color: #ff9040;
-                    color: white;
-                    border: none;
-                    padding: 8px 16px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                }
-                button:hover {
-                    background-color: #ff7020;
-                }
             </style>
             <div class="card">
                 <h2>${subject}</h2>
@@ -57,7 +46,6 @@ class TaskCard extends HTMLElement {
                 <p>Start Date: ${startDate}</p>
                 <p>Due Date: ${dueDate}</p>
                 <p>Project: ${project}</p>
-                <button id="viewButton">View</button>
             </div>
         `;
     }

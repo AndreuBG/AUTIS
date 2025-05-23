@@ -1,0 +1,25 @@
+{
+  "name": "autis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreuBG/AUTIS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreuBG/AUTIS/issues"
+  },
+  "homepage": "https://github.com/AndreuBG/AUTIS#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
