@@ -6,7 +6,7 @@
 }
 
 body {
-  color: #330F0A; 
+  color: #330F0A;
   padding: 0;
   margin-top: 80px; /* Increased space for fixed nav */
 }
@@ -58,7 +58,7 @@ nav {
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 30px;
   padding: 15px;
   background-color: #09348be5;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -108,11 +108,11 @@ html {
   --c1: #ffffff;
   --c2: #d6f5ff;
   --c3: #6cc6fe;
-  
+
   background:
-    repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) 
-     calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
-    repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
+          repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%)
+          calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
+          repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
   background-size: var(--s) calc(var(--s)*tan(30deg));
 }
 
@@ -143,6 +143,6 @@ tab-button[active="true"] {
 }
 
 #proyectos-group,
-#tareas-group {
-  margin-top: 130px; /* Add space below nav for groups */
+#tareas-group, #usuarios-group {
+  margin-top: 100px;
 }
