@@ -37,6 +37,10 @@ app.get('/getTasks', async function(req, res) {
     res.send(await OpenProjectService.getAllTasks());
 });
 
+app.get('/getUsers', async function(req, res) {
+    res.send(await OpenProjectService.getAllUsers());
+});
+
 app.post('/postToken', express.text(), (req, res) => {
     OpenProjectService.setToken(req.body);
 

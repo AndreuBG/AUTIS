@@ -1,6 +1,6 @@
 import { Project } from "./public/Models/Project.js";
 import { Task } from "./public/Models/Task.js";
-import {response} from "express";
+import { User } from "./public/Models/User.js";
 
 export class OpenProjectService {
 static API_URL = 'http://localhost:8080/api/v3';
@@ -59,6 +59,25 @@ static async getAllProjects() {
     }
 
     return tasks;
+}
+
+    static async getAllUsers() {
+        const data = await fetch(`${this.API_URL}/users`, {
+        headers: {
+            'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+        }
+    })
+    .then(response => response.json())
+    .then(data => data._embedded.elements)
+
+    const users = [];
+
+    for (let i = 0; i < data.length; i++) {
+    const description = data[i].description ? data[i].description.raw : 'Sin descripción';
+    const user = new User(data[i].active, data[i].id, data[i].name, description);
+    users.push(user);
+}
+return users;
 }
 }
 

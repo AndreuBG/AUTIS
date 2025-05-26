@@ -4,16 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>AUTIS</title>
 </head>
 <body>
     <nav>
         <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
         <tab-button target="tareas-group">Tareas</tab-button>
+        <tab-button target="usuarios-group">Usuarios</tab-button>
     </nav>
+
+
 
     <div id="proyectos-group">
         <h1>Proyectos</h1>
+        <div class="filtro-container">
+            <div class="filtro-menu" id="filtro-menu">
+                <label>
+                    Estado:
+                    <select id="filtro-estado">
+                        <option value="">Todos</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en_progreso">En progreso</option>
+                        <option value="completado">Completado</option>
+                    </select>
+                </label>
+                <label>
+                    Responsable:
+                    <select id="filtro-responsable">
+                        <option value="todos">Todos</option>
+                        <option value="jefe">Jefe de proyecto</option>
+                        <option value="empleados">Empleados</option>
+                    </select>
+                </label>
+                <button id="aplicar-filtro">Aplicar filtro</button>
+            </div>
+        </div>
         <div id="proyectos" class="section active"></div>
     </div>
 
@@ -21,6 +47,27 @@
         <h1>Tareas</h1>
         <div id="tareas" class="section"></div>
     </div>
+
+    <div id="usuarios-group">
+        <h1>Usuarios</h1>
+        <div id="users" class="section"></div>
+        <div class="crear-container">
+            <button class="boton_crear">Crear nuevo usuario</button>
+        </div>
+    </div>
+
+    <section style="display: flex; gap: 550px; padding: 100px">
+        <div>
+            <h2>Gráfico de Barras</h2>
+            <canvas id="graficoBarras" width="300" height="300"></canvas>
+        </div>
+
+        <div>
+            <h2>Gráfico Circular</h2>
+            <canvas id="graficoCircular" width="300" height="300"></canvas>
+        </div>
+    </section>
+
     <script src="../generate.js" type="module" defer></script>
 </body>
 </html>

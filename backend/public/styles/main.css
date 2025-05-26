@@ -145,4 +145,75 @@ tab-button[active="true"] {
 #proyectos-group,
 #tareas-group, #usuarios-group {
   margin-top: 100px;
+  margin-top: 100px;
+}
+
+#aplicar-filtro {
+  background-color: #2867c9;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#aplicar-filtro:hover {
+  background-color: #1d4fa5;
+}
+
+.filtro-container {
+  width: 100%;
+  background-color: #f1f5fb;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.filtro-menu {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+
+.filtro-menu label {
+  font-weight: bold;
+  color: #09348bf8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.filtro-menu select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 14px;
+}
+
+.crear-container {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  margin: 20px 0;
+}
+
+.crear-container button {
+  padding: 15px 25px;
+  font-size: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  background-color:rgb(93, 92, 85);
 }
