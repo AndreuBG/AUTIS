@@ -60,7 +60,7 @@ nav {
   justify-content: center;
   gap: 30px;
   padding: 15px;
-  background-color: #09348be5;
+  background-color: #09348b;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   z-index: 1000;
 }
@@ -216,4 +216,10 @@ tab-button[active="true"] {
   cursor: pointer;
   color: white;
   background-color:rgb(93, 92, 85);
+}
+
+.graficos {
+  background: #ffffffe1;
+  padding: 10px;
+  border-radius: 5px;
 }
