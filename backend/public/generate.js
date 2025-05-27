@@ -138,3 +138,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
 });
+
+const cerrarSesion = document.getElementById('cerrarSesion');
+cerrarSesion.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    console.log("Cerrando sesion...");
+    window.location.href = '/pages/index.html';
+})
