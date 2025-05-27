@@ -54,14 +54,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const filtroContainer = document.getElementById('filtro-proyectos');
 
+        // Generar los datos para los gráficos con los proyectos y las tareas
+        const proyectosLabels = proyectos.map(p => p.name);
+        const tareasPorProyecto = proyectos.map(p => tareas.filter(t => t.project === p.name).length);
+
+        // Configurar el gráfico de barras: Horas por proyecto
         const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
         new Chart(ctxBarras, {
             type: 'bar',
             data: {
-                labels: ['Web App', 'API', 'Mobile', 'Soporte Interno'],
+                labels: proyectosLabels,
                 datasets: [{
-                    label: 'Horas Por Proyecto',
-                    data: [19, 5, 10, 5],
+                    label: 'Tareas Por Proyecto',
+                    data: tareasPorProyecto, // Datos dinámicos de tareas por proyecto
                     backgroundColor: 'rgb(10, 40, 209)',
                     borderColor: 'rgb(0, 0, 0)',
                     borderWidth: 1
@@ -85,20 +90,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+        // Configurar el gráfico circular: Carga de trabajo por proyecto
         const ctxCircular = document.getElementById('graficoCircular').getContext('2d');
         new Chart(ctxCircular, {
             type: 'pie',
             data: {
-                labels: ['EQUIPO 1', 'EQUIPO 2', 'EQUIPO 3',],
+                labels: proyectosLabels,
                 datasets: [{
-                    label: 'Carga de Trabajo del Equipo',
-                    data: [20, 30, 50],
+                    label: 'Carga de Trabajo por Proyecto',
+                    data: tareasPorProyecto, // Carga de trabajo representada por el número de tareas
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
-                        'rgb(255, 206, 86)'
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 64)'
                     ],
                     borderColor: [
+                        'rgb(0, 0, 0)',
+                        'rgb(0, 0, 0)',
+                        'rgb(0, 0, 0)',
                         'rgb(0, 0, 0)',
                         'rgb(0, 0, 0)',
                         'rgb(0, 0, 0)'
@@ -117,9 +129,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             }
                         }
                     }
-                },
-                scales: {
-                    y: { beginAtZero: true }
                 }
             }
         });
