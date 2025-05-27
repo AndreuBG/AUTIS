@@ -22,12 +22,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'pages', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'pages', 'load.html'));
 });
 
 // Escoltem el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor escoltant a http://localhost:${PORT}`);
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
 
 app.get('/getProjects', async function(req, res) {

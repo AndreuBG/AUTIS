@@ -22,11 +22,14 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(form);
+        const token = document.getElementById('api-token')
+        const recordarCheck = document.getElementById('recordarPasswd');
+
         const datosFormulario = {
-            token: formData.get('api-token'),
-            recordar: formData.get('recordarPasswd')
+            token: token.value,
+            recordar: recordarCheck.checked
         }
+
 
         const response = await fetch('/login', {
             method: 'POST',
@@ -43,6 +46,7 @@
         const data = await response.json();
 
         if (data.success) {
+            if (recordarCheck.checked) localStorage.setItem('token', token.value)
             window.location.href = "/pages/main.html";
         } else {
             alert(data.error || "Error durante el login");
