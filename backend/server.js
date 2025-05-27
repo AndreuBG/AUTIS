@@ -3,6 +3,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectService } from "./OpenProjectService.js";
+import {login} from "./controllers/authentication.js";
 
 // Inicialització d'Express
 const app = express();
@@ -41,7 +42,21 @@ app.get('/getUsers', async function(req, res) {
     res.send(await OpenProjectService.getAllUsers());
 });
 
-app.post('/postToken', express.text(), (req, res) => {
-    OpenProjectService.setToken(req.body);
+app.post('/postToken', express.json(), (req, res) => {
+    try {
+        const token = req.body.token;
+        if (!token) {
+            return res.status(400).json({ error: 'Token no proporcionado' });
+        }
+        OpenProjectService.setToken(token);
+        res.status(200).json({ message: 'Token actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al procesar el token:', error);
+        res.status(500).json({ error: 'Error al actualizar el token' });
+    }
+});
 
+
+app.post('/login', async (req, res) => {
+    res.send(await login(req.body));
 });

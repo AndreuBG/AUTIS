@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="login-container">
-        <form id="api-token-login" method="get">
         <form id="api-token-login">
             <label for="api-token">API Token:</label>
             <div class="password-container">
@@ -20,7 +19,15 @@
                 <button type="button" id="clear-password" onclick="clearPassword()">
                     <i class="fas fa-trash"></i>
                 </button>
+
             </div>
+
+            <div class="checkbox-wrapper">
+                <label for="recordarPasswd">Recordar contraseña</label>
+                <input type="checkbox" id="recordarPasswd" name="recordar"/>
+            </div>
+
+
             <button type="submit">Acceder</button>
         </form>
     </div>

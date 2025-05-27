@@ -104,3 +104,23 @@ button[type="submit"]:hover {
     color: var(--orange);
     background: none;
 }
+
+.checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#recordarPasswd {
+    margin: 0;
+    border: 2px solid #09348b;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+
+}
+
+.checkbox-wrapper label {
+    margin-right: 4px;
+}

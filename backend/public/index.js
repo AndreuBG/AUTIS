@@ -22,32 +22,33 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const formData = new FormData(form);
+        const datosFormulario = {
+            token: formData.get('api-token'),
+            recordar: formData.get('recordarPasswd')
+        }
 
-        const token = document.getElementById('api-token').value;
-        
-          const response = await fetch(`http://localhost:8080/api/v3/projects`, {
-                headers: {
-                'Authorization': 'Basic ' + btoa(`apikey:${token}`)
-                }
-            }) 
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datosFormulario)
+        })
 
         if (!response.ok) {
             alert("Credenciales incorrectas!");
-        } else {
-            try {
-                 fetch('/postToken', {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "text/plain"
-                    },
-                    body: token
-                })
-                     .then(response => response.text());
-            } catch (error) {
-                throw error;
-            }
-            window.location.assign("/pages/main.html")
-
         }
 
+        const data = await response.json();
+
+        if (data.success) {
+            window.location.href = "/pages/main.html";
+        } else {
+            alert(data.error || "Error durante el login");
+        }
+
+
     });
+
+
