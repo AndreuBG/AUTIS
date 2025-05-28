@@ -5,6 +5,18 @@ import './components/UserCard.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        await fetch('http://localhost:5500/postToken', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({token: localStorage.getItem('token')})
+        });
+    } catch (error) {
+        console.error("Error subiendo el token: " + error.message);
+    }
+
+    try {
         const responseProject = await fetch('/getProjects');
         const proyectos = await responseProject.json();
 
@@ -136,12 +148,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(error) {
         console.error(error)
     }
+
+    const filtroMenu = document.getElementById('filtro-menu');
+    filtroMenu.innerHTML = `<label>
+                Estado:
+                <select id="filtro-estado">
+                    <option value="">Todos</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_progreso">En progreso</option>
+                    <option value="completado">Completado</option>
+                </select>
+            </label>
+            <label>
+                Responsable:
+                <select id="filtro-responsable">
+                    <option value="todos">Todos</option>
+                    <option value="jefe">Jefe de proyecto</option>
+                    <option value="empleados">Empleados</option>
+                </select>
+            </label>
+            <button id="aplicar-filtro">Aplicar filtro</button>`
+
+    const cerrarSesion = document.getElementById('cerrarSesion');
+    cerrarSesion.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        console.log("Cerrando sesion...");
+        window.location.href = '/pages/index.html';
+    })
     
 });
 
-const cerrarSesion = document.getElementById('cerrarSesion');
-cerrarSesion.addEventListener('click', () => {
-    localStorage.removeItem('token');
-    console.log("Cerrando sesion...");
-    window.location.href = '/pages/index.html';
-})

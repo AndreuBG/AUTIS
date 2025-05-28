@@ -9,38 +9,21 @@
 </head>
 <body>
     <nav>
+        <img id="logo" src="/img/logo_autis.png" alt="Logo Autis">
         <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
         <tab-button target="tareas-group">Tareas</tab-button>
         <tab-button target="usuarios-group">Usuarios</tab-button>
         <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
     </nav>
+    
+    <div class="filtro-container">
+        <div class="filtro-menu" id="filtro-menu">
 
-
+        </div>
+    </div>
 
     <div id="proyectos-group">
         <h1>Proyectos</h1>
-        <div class="filtro-container">
-            <div class="filtro-menu" id="filtro-menu">
-                <label>
-                    Estado:
-                    <select id="filtro-estado">
-                        <option value="">Todos</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="en_progreso">En progreso</option>
-                        <option value="completado">Completado</option>
-                    </select>
-                </label>
-                <label>
-                    Responsable:
-                    <select id="filtro-responsable">
-                        <option value="todos">Todos</option>
-                        <option value="jefe">Jefe de proyecto</option>
-                        <option value="empleados">Empleados</option>
-                    </select>
-                </label>
-                <button id="aplicar-filtro">Aplicar filtro</button>
-            </div>
-        </div>
         <div id="proyectos" class="section active"></div>
     </div>
 
@@ -57,7 +40,7 @@
         </div>
     </div>
 
-    <section style="display: flex; gap: 550px; padding: 100px">
+    <div class="graficos-container">
         <div class="graficos">
             <h2>Gráfico de Barras</h2>
             <canvas id="graficoBarras" width="300" height="300"></canvas>
@@ -67,9 +50,15 @@
             <h2>Gráfico Circular</h2>
             <canvas id="graficoCircular" width="300" height="300"></canvas>
         </div>
-    </section>
+
+        <div class="graficos">
+            <h2>Gráfico de Ejemplo</h2>
+            <canvas id="graficoEjemplo" width="300" height="300"></canvas>
+        </div>
+
+
+    </div>
 
     <script src="../generate.js" type="module" defer></script>
 </body>
 </html>
-

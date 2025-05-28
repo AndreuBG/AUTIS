@@ -19,7 +19,7 @@ class ProjectCard extends HTMLElement {
                 padding: 10px;
                 margin: 10px;
                 width: 100%;
-                background-color: ${active ? '#e0ffe0' : '#dfe9f5'};
+                background-color: #ececec;
                 
             }
             .card h2 {
@@ -30,13 +30,19 @@ class ProjectCard extends HTMLElement {
                 font-size: 1em;
                 margin: 5px 0;
             }
+            
+            .card b {
+                color: ${active ? '#029302' : '#c60009'};
+            }
 
             .card:hover {
-                background-color:rgb(145, 198, 255);
+                background-color:rgb(249,252,255);
             }
             </style>
             <div class="card">
             <h2>${name}</h2>
+            <hr>
+            <p>Estado: <b>${active ? "Activo" : "Inactivo"}</b></p><br>
             <p>${description}</p>
             </div>
         `;

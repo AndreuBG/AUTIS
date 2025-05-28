@@ -6,9 +6,9 @@
 }
 
 body {
-  color: #330F0A;
-  padding: 0;
-  margin-top: 80px; /* Increased space for fixed nav */
+    color: #330F0A;
+    padding: 0;
+    margin-top: 105px;
 }
 
 h1 {
@@ -19,12 +19,12 @@ h1 {
   letter-spacing: 1.5px;
   font-size: 1.8em;
   background-color: #ffffffe1;
-  padding: 10px;
+  padding: 20px;
   border-radius: 6px;
   width: 35%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 30px; /* Add top margin to headers */
+  margin-top: 40px; /* Add top margin to headers */
 }
 
 #tituloProyectos {
@@ -60,24 +60,28 @@ nav {
     justify-content: center;
     align-items: center;
     gap: 30px;
-    padding: 15px;
+    height: 60px;
     background-color: #09348b;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
+    z-index: 1001;
 }
 
-nav img {
+#cerrarSesion {
     position: absolute;
     right: 20px;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     cursor: pointer;
     top: 50%;
     transform: translateY(-50%);
 }
 
-nav img:hover {
-    opacity: 0.8;
+#logo {
+    position: absolute;
+    left: 20px;
+    height: 35px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #tareas {
@@ -119,21 +123,7 @@ nav img:hover {
 }
 
 html {
-  --s: 194px; /* control the size*/
-  --c1: #ffffff;
-  --c2: #8ad2ff;
-  --c3: #ffc494;
-
-  --_l:#0000 calc(25%/3),var(--c1) 0 25%,#0000 0;
-  --_g:conic-gradient(from 120deg at 50% 87.5%,var(--c1) 120deg,#0000 0);
-  background:
-          var(--_g),var(--_g) 0 calc(var(--s)/2),
-          conic-gradient(from 180deg at 75%,var(--c2) 60deg,#0000 0),
-          conic-gradient(from 60deg at 75% 75%,var(--c1) 0 60deg,#0000 0),
-          linear-gradient(150deg,var(--_l)) 0 calc(var(--s)/2),
-          conic-gradient(at 25% 25%,#0000 50%,var(--c2) 0 240deg,var(--c1) 0 300deg,var(--c2) 0),
-          linear-gradient(-150deg,var(--_l)) var(--c3);
-  background-size: calc(0.866*var(--s)) var(--s);
+  background-color: #E2DCDE;
 }
 
 tab-button {
@@ -163,63 +153,63 @@ tab-button[active="true"] {
 }
 
 #proyectos-group,
-#tareas-group, #usuarios-group {
-  margin-top: 100px;
-  margin-top: 100px;
+#tareas-group, 
+#usuarios-group {
+  margin-top: 120px; /* Un solo valor de margin-top */
 }
 
 #aplicar-filtro {
-  background-color: #2867c9;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+    background-color: #2867c9;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 #aplicar-filtro:hover {
-  background-color: #1d4fa5;
+    background-color: #1d4fa5;
 }
 
 .filtro-container {
-  width: 100%;
-  background-color: #f1f5fb;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-  border-radius: 0;
-  box-sizing: border-box;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    height: 45px;
+    background-color: #f1f5fb;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
 }
 
 .filtro-menu {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  align-items: center;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    height: 100%;
 }
 
+/* Manteniendo los estilos de los elementos dentro del filtro */
 .filtro-menu label {
-  font-weight: bold;
-  color: #09348bf8;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+    font-weight: bold;
+    color: #09348bf8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .filtro-menu select {
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: white;
-  font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 14px;
 }
 
 .crear-container {
@@ -238,8 +228,33 @@ tab-button[active="true"] {
   background-color:rgb(93, 92, 85);
 }
 
+.graficos-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .graficos {
-  background: #ffffffe1;
-  padding: 10px;
-  border-radius: 5px;
+    background: #ffffffe1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.graficos h2 {
+    margin-bottom: 15px;
+    color: #09348bf8;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.graficos canvas {
+    max-width: 100%;
+    height: auto;
 }
