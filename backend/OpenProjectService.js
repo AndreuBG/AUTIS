@@ -78,5 +78,47 @@ static async getAllProjects() {
 }
 return users;
 }
+
+    static async deleteUser(id) {
+        try {
+            const API_URL = 'http://localhost:8080';
+            const authHeader = 'Basic ' + btoa(`apikey:${this.API_TOKEN}`);
+
+            console.log('Intentando eliminar usuario:', {
+                userId: id,
+                authHeader: authHeader,
+                status: 'iniciando petición'
+            });
+
+            const res = await fetch(`${API_URL}/users/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log(id);
+
+            if (res.ok) {
+                console.log('Eliminación exitosa:', {
+                    userId: id,
+                    status: res.status
+                });
+
+            } else {
+                console.log(res);
+            }
+            return res;
+
+        } catch (error) {
+            console.error('Error de red:', {
+                userId: id,
+                error: error.message
+            });
+            throw error;
+        }
+
+    }
 }
 

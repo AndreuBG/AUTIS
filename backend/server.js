@@ -56,6 +56,10 @@ app.post('/postToken', express.json(), (req, res) => {
     }
 });
 
+app.get('/deleteUser/:id', async function (req, res) {
+    res.send(await OpenProjectService.deleteUser(req.params.id));
+});
+
 
 app.post('/login', async (req, res) => {
     res.send(await login(req.body));

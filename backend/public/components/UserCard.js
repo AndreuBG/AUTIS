@@ -2,7 +2,6 @@ class UserCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this.userData = null;
   }
 
   connectedCallback() {
@@ -216,9 +215,8 @@ class UserCard extends HTMLElement {
       return;
     }
 
-    try {
-      const API_URL = 'http://localhost:8080';
-      const authHeader = 'Basic ' + btoa(`apikey:${token}`);
+    const API_URL = 'http://localhost:8080';
+    const authHeader = 'Basic ' + btoa(`apikey:${token}`);
 
       const descripcion = this.shadowRoot.querySelector('#description').value.trim();
       const datosActualizados = {
@@ -255,7 +253,7 @@ class UserCard extends HTMLElement {
       console.error('Error de red:', error);
       alert('Error de red al modificar usuario');
     }
-  }
+
 
   async eliminarUsuario(id) {
     if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
@@ -267,11 +265,8 @@ class UserCard extends HTMLElement {
     }
 
     try {
-      const API_URL = 'http://localhost:8080';
-      const authHeader = 'Basic ' + btoa(`apikey:${token}`);
-
-      const res = await fetch(`${API_URL}/api/v3/users/${id}`, {
-        method: 'DELETE',
+      const res = await fetch(`${API_URL}/api/v3/users`, {
+        method: 'POST',
         headers: {
           'Authorization': authHeader,
           'Content-Type': 'application/json'
