@@ -64,3 +64,7 @@ app.get('/deleteUser/:id', async function (req, res) {
 app.post('/login', async (req, res) => {
     res.send(await login(req.body));
 });
+
+app.post('/createUser', async (req, res) => {
+    res.send(await OpenProjectService.createUser(req.body));
+})

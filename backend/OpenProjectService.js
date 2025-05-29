@@ -118,5 +118,22 @@ return users;
         }
 
     }
+
+    static async createUser(userData) {
+        try {
+            const response = await fetch('http://localhost:5500/api/v3/users', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error de conexión al servidor');
+        }
+    }
 }
 
