@@ -81,7 +81,6 @@ return users;
 
     static async deleteUser(id) {
         try {
-            const API_URL = 'http://localhost:8080';
             const authHeader = 'Basic ' + btoa(`apikey:${this.API_TOKEN}`);
 
             console.log('Intentando eliminar usuario:', {
@@ -90,7 +89,7 @@ return users;
                 status: 'iniciando petición'
             });
 
-            const res = await fetch(`${API_URL}/users/${id}`, {
+            const res = await fetch(`${this.API_URL}/users/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': authHeader,
@@ -98,7 +97,6 @@ return users;
                 }
             });
 
-            console.log(id);
 
             if (res.ok) {
                 console.log('Eliminación exitosa:', {
