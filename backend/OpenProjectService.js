@@ -120,15 +120,26 @@ return users;
     }
 
     static async createUser(userData) {
+        console.log(userData);
         try {
-            const response = await fetch('http://localhost:5500/api/v3/users', {
+            console.log(this.API_TOKEN);
+            const response = await fetch(`${this.API_URL}/users`, {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    login: userData.login,
+                    email: userData.email,
+                    password: userData.password,
+                    status: "active"
+                })
             });
+
+            console.log(response);
 
         } catch (error) {
             console.error('Error:', error);
