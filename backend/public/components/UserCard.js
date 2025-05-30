@@ -2,6 +2,7 @@ class UserCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this.userData = null;
   }
 
   connectedCallback() {
@@ -130,10 +131,6 @@ class UserCard extends HTMLElement {
               <label>Correo electrónico</label>
               <input type="email" id="email" required>
             </div>
-            <div class="form-group">
-              <label>Descripción</label>
-              <textarea id="description" name="description"></textarea>
-            </div>
             <div class="modal-buttons">
               <button type="button" class="boton_eliminar" id="modalbtndel">Cancelar</button>
               <button type="submit" class="boton_modificar" id="modalbtnmod">Guardar</button>
@@ -168,69 +165,45 @@ class UserCard extends HTMLElement {
   }
 
   async cargarDatosUsuario() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Token no encontrado. Por favor inicia sesión.');
-      return;
-    }
-
     try {
-      const API_URL = 'http://localhost:8080';
-      const authHeader = 'Basic ' + btoa(`apikey:${token}`);
-      const res = await fetch(`${API_URL}/api/v3/users/${this.idUser}`, {
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
+        const res = await fetch(`http://localhost:5500/getUserData/${this.idUser}`);
+        
+        if (res.ok) {
+            this.userData = await res.json();
+            this.mostrarFormularioModificacion();
+        } else {
+            const errorText = await res.text();
+            alert(`Error al cargar usuario: ${res.status} - ${errorText}`);
+            if (res.status === 401) window.location.href = '/login.html';
         }
-      });
-
-      if (res.ok) {
-        this.userData = await res.json();
-        this.mostrarFormularioModificacion();
-      } else {
-        const errorText = await res.text();
-        alert(`Error al cargar usuario: ${res.status} - ${errorText}`);
-        if (res.status === 401) window.location.href = '/login.html';
-      }
     } catch (error) {
-      console.error('Error de red:', error);
-      alert('Error de red al cargar usuario');
+        console.error('Error de red:', error);
+        alert('Error de red al cargar usuario');
     }
-  }
+}
 
   mostrarFormularioModificacion() {
+    console.log(this.userData);
     const form = this.shadowRoot.querySelector('#form-modificar');
     form.querySelector('#firstName').value = this.userData.firstName || '';
     form.querySelector('#lastName').value = this.userData.lastName || '';
     form.querySelector('#login').value = this.userData.login || '';
     form.querySelector('#email').value = this.userData.email || '';
-    form.querySelector('#description').value = this.userData.description?.raw || '';
     this.shadowRoot.querySelector('.modal').style.display = 'flex';
   }
 
   async modificarUsuario() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Token no encontrado. Por favor inicia sesión.');
-      return;
-    }
 
-    const API_URL = 'http://localhost:8080';
-    const authHeader = 'Basic ' + btoa(`apikey:${token}`);
-
-      const descripcion = this.shadowRoot.querySelector('#description').value.trim();
-      const datosActualizados = {
-        firstName: this.shadowRoot.querySelector('#firstName').value,
-        lastName: this.shadowRoot.querySelector('#lastName').value,
-        login: this.shadowRoot.querySelector('#login').value,
-        email: this.shadowRoot.querySelector('#email').value,
-        description: descripcion === '' ? 'Sin descripción' : descripcion
-      };
-
-      const res = await fetch(`${API_URL}/api/v3/users/${this.idUser}`, {
-        method: 'PATCH',
+    const datosActualizados = {
+      firstName: this.shadowRoot.querySelector('#firstName').value,
+      lastName: this.shadowRoot.querySelector('#lastName').value,
+      login: this.shadowRoot.querySelector('#login').value,
+      email: this.shadowRoot.querySelector('#email').value,
+    };
+    try {
+      const res = await fetch(`http://localhost:5500/modifyUser/${this.idUser}`, {
+        method: 'POST',
         headers: {
-          'Authorization': authHeader,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(datosActualizados)
@@ -239,9 +212,9 @@ class UserCard extends HTMLElement {
       if (res.ok) {
         alert('Usuario modificado exitosamente');
         this.shadowRoot.querySelector('.info h2').textContent =
-            `${datosActualizados.firstName} ${datosActualizados.lastName}`;
+            `${datosActualizados.firstName} ${datosActualizados.lastName} (${datosActualizados.login})`;
         this.shadowRoot.querySelector('.info p').textContent =
-            datosActualizados.description;
+            datosActualizados.email;
         this.setAttribute('description', datosActualizados.description);
         this.shadowRoot.querySelector('.modal').style.display = 'none';
       } else {
@@ -249,11 +222,12 @@ class UserCard extends HTMLElement {
         alert(`Error al modificar usuario: ${res.status} - ${errorText}`);
         if (res.status === 401) window.location.href = '/login.html';
       }
+
     } catch (error) {
       console.error('Error de red:', error);
       alert('Error de red al modificar usuario');
     }
-
+  }
 
   async eliminarUsuario(id) {
     if (!confirm('¿Estás seguro de eliminar este usuario?')) return;

@@ -68,3 +68,11 @@ app.post('/login', async (req, res) => {
 app.post('/createUser', async (req, res) => {
     res.send(await OpenProjectService.createUser(req.body));
 })
+
+app.get('/getUserData/:id', async function(req, res){
+   res.send(await OpenProjectService.getUserData(req.params.id));
+});
+
+app.post('/modifyUser/:id', async (req, res) => {
+    res.send(await OpenProjectService.modifyUser(req.body, req.params.id));
+})

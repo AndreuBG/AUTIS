@@ -139,5 +139,45 @@ return users;
             alert('Error de conexión al servidor');
         }
     }
-}
 
+    static async getUserData(id) {
+    try {
+        const response = await fetch(`${this.API_URL}/users/${id}`, {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al obtener datos del usuario');
+        }
+
+        const userData = await response.json();
+        return userData;
+
+    } catch (error) {
+        console.error(`Error consiguiendo datos del usuario ${id}:`, error.message);
+        throw error;
+    }
+}
+    static async modifyUser(datosActualizados, idUser) {
+    try {
+
+        const response = await fetch(`${this.API_URL}/users/${idUser}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datosActualizados)
+        });
+
+        if (!response.ok) {
+            console.log(response);
+            console.error("Error modificando el usuario");
+        }
+    } catch (error) {
+        console.error('Error de red:', error);
+    }
+    }
+}
