@@ -129,14 +129,7 @@ return users;
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    firstName: userData.firstName,
-                    lastName: userData.lastName,
-                    login: userData.login,
-                    email: userData.email,
-                    password: userData.password,
-                    status: "active"
-                })
+                body: JSON.stringify(userData)
             });
 
             console.log(response);
