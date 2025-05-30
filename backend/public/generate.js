@@ -151,24 +151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const filtroMenu = document.getElementById('filtro-menu');
-    filtroMenu.innerHTML = `<label>
-                Estado:
-                <select id="filtro-estado">
-                    <option value="">Todos</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En progreso</option>
-                    <option value="completado">Completado</option>
-                </select>
-            </label>
-            <label>
-                Responsable:
-                <select id="filtro-responsable">
-                    <option value="todos">Todos</option>
-                    <option value="jefe">Jefe de proyecto</option>
-                    <option value="empleados">Empleados</option>
-                </select>
-            </label>
-            <button id="aplicar-filtro">Aplicar filtro</button>`
 
     const cerrarSesion = document.getElementById('cerrarSesion');
     cerrarSesion.addEventListener('click', () => {
