@@ -232,20 +232,8 @@ class UserCard extends HTMLElement {
   async eliminarUsuario(id) {
     if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Token no encontrado. Por favor inicia sesión.');
-      return;
-    }
-
     try {
-      const res = await fetch(`${API_URL}/api/v3/users`, {
-        method: 'POST',
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json'
-        }
-      });
+      const res = await fetch(`http://localhost:5500/deleteUser/${id}`);
 
       if (res.ok) {
         alert('Usuario eliminado');
@@ -255,6 +243,7 @@ class UserCard extends HTMLElement {
         alert(`Error al eliminar usuario: ${res.status} - ${errorText}`);
         if (res.status === 401) window.location.href = '/login.html';
       }
+
     } catch (error) {
       console.error('Error de red:', error);
       alert('Error de red al eliminar usuario');
