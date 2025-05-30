@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             userElement.setAttribute('id', u.id);
             userElement.setAttribute('active', u.active  );
             userElement.setAttribute('name', u.name);
-            userElement.setAttribute('description', u.description);
+            userElement.setAttribute('login', u.login);
+            userElement.setAttribute('email', u.email);
 
             listaUsuarios.appendChild(userElement);
         });

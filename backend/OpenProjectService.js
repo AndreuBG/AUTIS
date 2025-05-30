@@ -73,8 +73,7 @@ static async getAllProjects() {
     const users = [];
 
     for (let i = 0; i < data.length; i++) {
-    const description = data[i].description ? data[i].description.raw : 'Sin descripción';
-    const user = new User(data[i].active, data[i].id, data[i].name, description);
+    const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
     users.push(user);
 }
 return users;

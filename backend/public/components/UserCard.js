@@ -9,7 +9,8 @@ class UserCard extends HTMLElement {
     const active = this.getAttribute('active') === 'true';
     this.idUser = this.getAttribute('id'); // asegúrate de que este atributo se pase en HTML
     const name = this.getAttribute('name') || '';
-    const description = this.getAttribute('description') || '';
+    const login = this.getAttribute('login') || '';
+    const email = this.getAttribute('email') || '';
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -100,8 +101,8 @@ class UserCard extends HTMLElement {
         <div class="info-container">
           <img class="user-icon" src="../img/user.png" alt="User Icon" />
           <div class="info">
-            <h2>${name}</h2>
-            <p>${description}</p>
+            <h2>${name} <i>(${login})</i></h2>
+            <p>${email}</p>
           </div>
         </div>
         <div class="buttons">
@@ -204,7 +205,7 @@ class UserCard extends HTMLElement {
     form.querySelector('#lastName').value = this.userData.lastName || '';
     form.querySelector('#login').value = this.userData.login || '';
     form.querySelector('#email').value = this.userData.email || '';
-    form.querySelector('#description').value = this.userData.description || '';
+    form.querySelector('#description').value = this.userData.description?.raw || '';
     this.shadowRoot.querySelector('.modal').style.display = 'flex';
   }
 
