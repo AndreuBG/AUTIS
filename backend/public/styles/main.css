@@ -495,11 +495,3 @@ project-card {
 .cerrar-x:hover {
     color: #CC6204;
 }
-
-body.no-scroll #logo {
-    left: 340px; /* Un poco más que el ancho del menú lateral */
-    transition: left 0.3s;
-}
-#logo {
-    transition: left 0.3s;
-}
