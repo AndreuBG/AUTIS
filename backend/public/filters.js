@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const filtrosTXT = JSON.stringify(filtros);
 
         const response = await fetch(`/getProjectsFiltered/${filtrosTXT}`)
-        console.log(response)
         const proyectosFiltrados = await response.json();
-        console.log(proyectosFiltrados);
 
         const listaProyectos = document.getElementById('proyectos');
         listaProyectos.innerHTML = "";
