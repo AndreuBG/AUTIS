@@ -180,4 +180,39 @@ return users;
         console.error('Error de red:', error);
     }
     }
+
+    static async getProjectsFiltered(filters) {
+        const projects = [];
+        const textFilters = JSON.stringify(filters);
+
+        console.log(`${this.API_URL}/projects?filters=${filters}`);
+
+        try {
+            const data = await fetch(`${this.API_URL}/projects?filters=[${textFilters}]`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then (data => data._embedded.elements)
+
+            console.log(data);
+
+            for (let i = 0; i < data.length; i++) {
+                const project = new Project(data[i].active, data[i].id, data[i].name, data[i].description.raw);
+                projects.push(project)
+            }
+
+            if (!data.ok) {
+                console.log(data);
+            }
+
+
+        } catch (error) {
+            console.log("Hubo un problema con los proyectos:" + error.message);
+            return error;
+        }
+
+        return projects;
+    }
 }

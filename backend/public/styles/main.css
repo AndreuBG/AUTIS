@@ -1,162 +1,226 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
 body {
     color: #330F0A;
     padding: 0;
-    margin-top: 105px;
+    margin-top: 50px;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: bold;
-  color: #09348bf8;
-  letter-spacing: 1.5px;
-  font-size: 1.8em;
-  background-color: #ffffffe1;
-  padding: 20px;
-  border-radius: 6px;
-  width: 35%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 40px; /* Add top margin to headers */
-}
-
-#tituloProyectos {
-  text-align: center;
-  margin-bottom: 40px;
-  font-weight: bold;
-  color: #CC6204;
-  letter-spacing: 1.5px;
-  font-size: 2em;
-}
-
-#proyectos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 35px;
-  max-width: 1300px;
-  margin: 0 auto 50px auto;
-  padding: 30px; /* Increased padding around projects */
-  margin-top: 30px; /* Add space after header */
-  min-height: 200px; /* Ensure a minimum height for the project container */
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #09348bf8;
+    letter-spacing: 1.5px;
+    font-size: 1.8em;
+    background-color: #ffffffe1;
+    padding: 20px;
+    border-radius: 6px;
+    width: 35%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px; /* Add top margin to headers */
 }
 
 project-card {
-  display:grid;
+    display:grid;
 }
+
 
 nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    height: 60px;
+    height: 50px;
     background-color: #09348b;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     z-index: 1001;
+
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 10px;
+    justify-content: center;
 }
 
-#cerrarSesion {
+/* Logo a la izquierda */
+#logo {
+    max-height: 30px;
+    height: auto;
+    width: auto;
     position: absolute;
-    right: 20px;
+    left: 15px;
+}
+
+/* Icono cerrar sesión a la derecha */
+#cerrarSesion {
     width: 25px;
     height: 25px;
     cursor: pointer;
+    position: absolute;
+    right: 15px;
+    z-index: 1100;
+    display: block;
     top: 50%;
     transform: translateY(-50%);
 }
 
-#logo {
-    position: absolute;
-    left: 20px;
-    height: 35px;
-    top: 50%;
-    transform: translateY(-50%);
+@media (max-width: 900px) {
+    nav {
+        padding: 0 10px;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    nav tab-button:first-of-type {
+        margin-left: 70px;
+        margin-right: 0px;
+    }
+
+    tab-button {
+        padding: 6px 10px;
+        min-width: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    #cerrarSesion {
+        margin-left: 10px;
+        width: 20px;
+        height: 20px;
+    }
 }
 
 #tareas {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 60px; /* Increased gap between tasks */
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 30px; /* Increased padding around task container */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 60px; /* Increased gap between tasks */
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 30px; /* Increased padding around task container */
 }
 
 .task-card {
-  background-color: #E2DCDE;
-  border: 2px solid #CC6204;
-  border-radius: 10px;
-  margin: 15px; /* Increased margin around each task */
-  padding: 30px; /* Increased padding inside each task */
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  min-height: 200px;
+    background-color: #E2DCDE;
+    border: 2px solid #CC6204;
+    border-radius: 10px;
+    margin: 15px; /* Increased margin around each task */
+    padding: 30px; /* Increased padding inside each task */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    min-height: 200px;
 }
 
 .task-card:hover {
-  background-color: #F1DAC4;
-  transform: translateY(-3px);
-  cursor: pointer;
+    background-color: #F1DAC4;
+    transform: translateY(-3px);
+    cursor: pointer;
 }
 
 .task-card h3 {
-  font-size: 1.3em;
-  color: #330F0A;
-  margin-bottom: 8px;
+    font-size: 1.3em;
+    color: #330F0A;
+    margin-bottom: 8px;
 }
 
 .task-card p {
-  margin: 4px 0;
-  color: #333;
-  font-size: 0.95em;
+    margin: 4px 0;
+    color: #333;
+    font-size: 0.95em;
 }
 
 html {
-  background-color: #E2DCDE;
+    background-color: #E2DCDE;
 }
 
 tab-button {
-  padding: 12px 24px;
-  border: 2px solid #CC6204;
-  background-color: #E2DCDE;
-  color: #330F0A;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
+    padding: 6px 12px;
+    border: 2px solid #CC6204;
+    background-color: #E2DCDE;
+    color: #330F0A;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: clamp(0.9em, 2vw, 0.9em); /* Ajusta tamaño según ancho de pantalla */
+    transition: all 0.3s ease;
+    white-space: nowrap;      /* No dividir palabras */
+    overflow: visible;        /* Mostrar texto completo */
+    text-overflow: clip;      /* No usar '...' */
+    text-align: center;
+    max-width: 100%;          /* Evita que sobresalga del contenedor */
 }
 
 tab-button:hover {
-  background-color: #F1DAC4;
-  transform: translateY(-2px);
+    background-color: #F1DAC4;
+    transform: translateY(-2px);
 }
 
 tab-button[active="true"] {
-  background-color: #CC6204;
-  color: white;
+    background-color: #CC6204;
+    color: white;
 }
 
 #proyectos-group:not(.active),
 #tareas-group:not(.active) {
-  display: none;
+    display: none;
 }
 
 #proyectos-group,
-#tareas-group, 
+#tareas-group,
 #usuarios-group {
-  margin-top: 120px; /* Un solo valor de margin-top */
+    margin-top: 120px; /* Un solo valor de margin-top */
 }
+
+#tituloProyectos {
+    font-size: 1.6em;
+    margin-bottom: 25px;
+}
+
+#proyectos {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding: 15px;
+    gap: 20px;
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+#tituloProyectos {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+    color: #CC6204;
+    letter-spacing: 1.5px;
+    font-size: 2em;
+}
+
+#proyectos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 35px;
+    max-width: 1300px;
+    margin: 0 auto 50px auto;
+    padding: 30px;
+    margin-top: 30px;
+    min-height: 200px;
+}
+
+project-card {
+    display: block; /* Que se comporte como un bloque */
+    width: 100%; /* Ocupa todo el espacio del grid */
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100vh; /* para evitar saltos */
+}
+
 
 #aplicar-filtro {
     background-color: #2867c9;
@@ -175,7 +239,7 @@ tab-button[active="true"] {
 
 .filtro-container {
     position: fixed;
-    top: 60px;
+    top: 50px;
     left: 0;
     right: 0;
     height: 45px;
@@ -184,48 +248,80 @@ tab-button[active="true"] {
     align-items: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     z-index: 1000;
+    padding: 0 10px;
+    justify-content: center;
+}
+
+.filtro-wrapper {
+    width: 100%;
+    max-width: 1200px; /* centra en pantallas grandes */
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 .filtro-menu {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
-    width: 100%;
-    justify-content: center;
     height: 100%;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: auto; /* ← cambia esto */
+    margin: 0 auto; /* ← centra horizontalmente */
 }
 
-/* Manteniendo los estilos de los elementos dentro del filtro */
+/* Permite que los labels y selects puedan reducir su tamaño */
 .filtro-menu label {
     font-weight: bold;
     color: #09348bf8;
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-shrink: 1;
+    min-width: 50px;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 
 .filtro-menu select {
-    padding: 4px 8px;
+    padding: 2px 6px;
     border-radius: 5px;
     border: 1px solid #ccc;
     background-color: white;
-    font-size: 14px;
+    font-size: 12px;
+    flex-shrink: 1;
+    min-width: 60px; /* Ancho mínimo */
+}
+
+#aplicar-filtro {
+    background-color: #2867c9;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+#aplicar-filtro:hover {
+    background-color: #1d4fa5;
 }
 
 .crear-container {
-  display: flex;
-  justify-content: center; /* Centrado horizontal */
-  margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .crear-container button {
-  padding: 15px 25px;
-  font-size: 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-  background-color:rgb(93, 92, 85);
+    padding: 15px 25px;
+    font-size: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    background-color:rgb(93, 92, 85);
 }
 
 .graficos-container {
@@ -257,4 +353,35 @@ tab-button[active="true"] {
 .graficos canvas {
     max-width: 100%;
     height: auto;
+}
+
+@media (max-width: 768px) {
+
+    body {
+        margin-top: 130px;
+    }
+
+    h1 {
+        width: 90%;
+        font-size: 1.4em;
+        padding: 15px;
+        margin-top: 30px;
+    }
+
+    .task-card {
+        padding: 15px;
+        margin: 10px;
+        min-height: auto;
+    }
+
+    .graficos-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .crear-container button {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
 }

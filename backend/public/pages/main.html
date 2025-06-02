@@ -3,81 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
     <link rel="icon" type="image/jpg" href="/img/favicon.png"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../userCreate.js" defer></script>
-    <title>AUTIS - Gestión de proyectos</title>
+    <title>AUTIS</title>
 </head>
 <body>
-    <nav>
-        <img id="logo" src="/img/logo_autis.png" alt="Logo Autis">
-        <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
-        <tab-button target="tareas-group">Tareas</tab-button>
-        <tab-button target="usuarios-group">Usuarios</tab-button>
-        <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
-    </nav>
+<nav>
+    <img id="logo" src="/img/logo_autis.png" alt="Logo Autis">
+    <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
+    <tab-button target="tareas-group">Tareas</tab-button>
+    <tab-button target="usuarios-group">Usuarios</tab-button>
+    <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
+</nav>
 
+
+
+<div id="proyectos-group">
     <div class="filtro-container">
-        <div class="filtro-menu" id="filtro-menu">
-            <label>
-                Estado:
-                <select id="filtro-estado">
-                    <option value="">Todos</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En progreso</option>
-                    <option value="completado">Completado</option>
-                </select>
-            </label>
-            <label>
-                Responsable:
-                <select id="filtro-responsable">
-                    <option value="todos">Todos</option>
-                    <option value="jefe">Jefe de proyecto</option>
-                    <option value="empleados">Empleados</option>
-                </select>
-            </label>
-            <button id="aplicar-filtro">Aplicar filtro</button>
+        <div class="filtro-wrapper">
+            <div class="filtro-menu" id="filtro-menu">
+                <label>
+                    Estado:
+                    <select id="filtro-estado">
+                        <option value="">Todos</option>
+                        <option value="active">Activo</option>
+                        <option value="inactive">Inactivo</option>
+                    </select>
+                </label>
+                <button id="aplicar-filtro">Aplicar filtro</button>
+            </div>
         </div>
     </div>
+    <h1>Proyectos</h1>
+    <div id="proyectos" class="section active"></div>
+</div>
 
-    <div id="proyectos-group">
-        <h1>Proyectos</h1>
-        <div id="proyectos" class="section active"></div>
+<div id="tareas-group" style="display: none;">
+    <h1>Tareas</h1>
+    <div id="tareas" class="section"></div>
+</div>
+
+<div id="usuarios-group">
+    <h1>Usuarios</h1>
+    <div id="users" class="section"></div>
+    <div class="crear-container">
+        <button class="boton_crear">Crear nuevo usuario</button>
+    </div>
+</div>
+
+<div class="graficos-container">
+    <div class="graficos">
+        <h2>Gráfico de Barras</h2>
+        <canvas id="graficoBarras" width="300" height="300"></canvas>
     </div>
 
-    <div id="tareas-group" style="display: none;">
-        <h1>Tareas</h1>
-        <div id="tareas" class="section"></div>
+    <div class="graficos">
+        <h2>Gráfico Circular</h2>
+        <canvas id="graficoCircular" width="300" height="300"></canvas>
     </div>
 
-    <div id="usuarios-group">
-        <h1>Usuarios</h1>
-        <div id="users" class="section"></div>
-        <div class="crear-container">
-            <button class="boton_crear">Crear nuevo usuario</button>
-        </div>
+    <div class="graficos">
+        <h2>Gráfico de Ejemplo</h2>
+        <canvas id="graficoEjemplo" width="300" height="300"></canvas>
     </div>
 
-    <div class="graficos-container">
-        <div class="graficos">
-            <h2>Gráfico de Barras</h2>
-            <canvas id="graficoBarras" width="300" height="300"></canvas>
-        </div>
 
-        <div class="graficos">
-            <h2>Gráfico Circular</h2>
-            <canvas id="graficoCircular" width="300" height="300"></canvas>
-        </div>
+</div>
 
-        <div class="graficos">
-            <h2>Gráfico de Ejemplo</h2>
-            <canvas id="graficoEjemplo" width="300" height="300"></canvas>
-        </div>
+<script src="../generate.js" type="module" defer></script>
+<script src="/filters.js" type="module"></script>
 
-
-    </div>
-
-    <script src="../generate.js" type="module" defer></script>
 </body>
 </html>
