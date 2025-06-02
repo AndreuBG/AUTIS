@@ -78,9 +78,6 @@ app.post('/modifyUser/:id', async (req, res) => {
 })
 
 app.get('/getProjectsFiltered/:filter', async (req, res) => {
-    const filtrosTXT = JSON.stringify(req.params.filter);
-    const filtrosURL = encodeURI(filtrosTXT);
-
     console.log(req.params.filter);
-    res.send(await OpenProjectService.getProjectsFiltered(filtrosURL));
+    res.send(await OpenProjectService.getProjectsFiltered(req.params.filter));
 });

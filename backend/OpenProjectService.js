@@ -40,7 +40,7 @@ static async getAllProjects() {
     const tasks = [];
 
     try {
-        const data = await fetch(`${this.API_URL}/work_packages`, {
+        const data = await fetch(`${this.API_URL}/work_packages?pageSize=100`, {
             headers: {
                 'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
             }
@@ -183,12 +183,12 @@ return users;
 
     static async getProjectsFiltered(filters) {
         const projects = [];
-        const textFilters = JSON.stringify(filters);
+        const encodedFilters = encodeURIComponent(filters);
 
-        console.log(`${this.API_URL}/projects?filters=${filters}`);
+        console.log(`${this.API_URL}/projects?filters=${encodedFilters}`);
 
         try {
-            const data = await fetch(`${this.API_URL}/projects?filters=[${textFilters}]`, {
+            const data = await fetch(`${this.API_URL}/projects?filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -196,15 +196,9 @@ return users;
                 .then(response => response.json())
                 .then (data => data._embedded.elements)
 
-            console.log(data);
-
             for (let i = 0; i < data.length; i++) {
                 const project = new Project(data[i].active, data[i].id, data[i].name, data[i].description.raw);
                 projects.push(project)
-            }
-
-            if (!data.ok) {
-                console.log(data);
             }
 
 
