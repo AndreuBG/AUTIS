@@ -7,6 +7,7 @@
     <link rel="icon" type="image/jpg" href="/img/favicon.png"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../userCreate.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="../js/filtroProyectos.js" defer></script>
     <title>AUTIS - Gestión de proyectos</title>
 </head>
@@ -160,8 +161,52 @@
 
     </div>
 
+    <!-- Modal para Crear Usuario -->
+    <div id="modalCrearUsuario" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Crear Nuevo Usuario</h2>
+            <form id="createUserForm">
+                <div class="input-group">
+                    <label for="firstName" class="required">Nombre</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Ej: María" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="lastName" class="required">Apellidos</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Ej: García López" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="login" class="required">Usuario</label>
+                    <input type="text" id="login" name="login" placeholder="Ej: mgarcia123" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email" class="required">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="Ej: maria@correo.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password" class="required">Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" minlength="10" required>
+                        <button type="button" id="toggle-password"><i class="fas fa-eye"></i></button>
+                    </div>
+                    <small>Debe tener al menos 10 caracteres.</small>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Crear Usuario</button>
+                    <button type="button" class="btn-secondary" id="cancelarModal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
+
+
 
 </body>
 </html>
