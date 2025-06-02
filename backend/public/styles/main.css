@@ -60,9 +60,16 @@ nav {
 
 /* Icono cerrar sesión a la derecha */
 #cerrarSesion {
+    position: absolute;
+    right: 20px;
     width: 25px;
     height: 25px;
     cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#logo {
     position: absolute;
     right: 15px;
     z-index: 1100;
@@ -222,7 +229,7 @@ project-card {
 }
 
 
-#aplicar-filtro {
+.aplicar-filtro {
     background-color: #2867c9;
     color: white;
     border: none;
@@ -233,7 +240,7 @@ project-card {
     transition: background-color 0.3s ease;
 }
 
-#aplicar-filtro:hover {
+.aplicar-filtro:hover {
     background-color: #1d4fa5;
 }
 
@@ -306,6 +313,13 @@ project-card {
 
 #aplicar-filtro:hover {
     background-color: #1d4fa5;
+}
+
+.filtro-menu select:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #ddd;
 }
 
 .crear-container {
