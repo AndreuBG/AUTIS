@@ -13,12 +13,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         const filtrosTXT = JSON.stringify(filtros);
-        const filtrosURL = encodeURIComponent(filtrosTXT);
 
-        console.log(filtrosURL);
-        const response = await fetch(`/getProjectsFiltered/${filtrosURL}`)
+        const response = await fetch(`/getProjectsFiltered/${filtrosTXT}`)
         console.log(response)
         const proyectosFiltrados = await response.json();
         console.log(proyectosFiltrados);
+
+        const listaProyectos = document.getElementById('proyectos');
+        listaProyectos.innerHTML = "";
+       proyectosFiltrados.forEach(p => {
+           const projectElement = document.createElement('project-card');
+           projectElement.setAttribute('id', p.id);
+           projectElement.setAttribute('active', p.active  );
+           projectElement.setAttribute('name', p.name);
+           projectElement.setAttribute('description', p.description);
+
+           listaProyectos.appendChild(projectElement);
+       });
    })
 });
