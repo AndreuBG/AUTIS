@@ -267,4 +267,20 @@ return users;
 
         return users;
     }
+
+    static async getAllTimeEntries() {
+        try {
+            const response = await fetch(`${this.API_URL}/time_entries`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            });
+            const data = await response.json();
+            return data._embedded ? data._embedded.elements : [];
+        } catch (error) {
+            console.error("Error obteniendo time entries:", error);
+            return [];
+        }
+    }
+
 }

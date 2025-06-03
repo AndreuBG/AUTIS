@@ -21,8 +21,42 @@ class UserCard extends HTMLElement {
         .info { display: flex; flex-direction: column; }
         .card h2 { font-size: 1.5em; margin: 0 0 5px 0; }
         .card p { font-size: 1em; margin: 0; }
-        .buttons { display: flex; gap: 8px; }
-        button { padding: 15px 25px; font-size: 20px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .buttons {
+          display: flex;
+          gap: 8px;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          max-width: 100%;
+        }
+        button {
+          padding: 15px 25px;
+          font-size: 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          color: white;
+          min-width: 90px;
+          max-width: 100%;
+          box-sizing: border-box;
+          transition: background 0.2s, color 0.2s, font-size 0.2s, padding 0.2s;
+        }
+
+        /* Responsive: botones más pequeños, alineados a la derecha y uno al lado del otro */
+        @media (max-width: 600px) {
+          .buttons {
+            gap: 4px;
+            justify-content: flex-end;
+            flex-wrap: nowrap;
+            max-width: 100%;
+          }
+          button {
+            font-size: 12px;
+            padding: 6px 8px;
+            min-width: 50px;
+            max-width: 100px;
+            white-space: nowrap;
+          }
+        }
         .boton_modificar { background-color: #4CAF50; }
         .boton_eliminar { background-color: #f44336; }
         .card:hover { background-color: rgb(145, 198, 255); }
@@ -89,7 +123,7 @@ class UserCard extends HTMLElement {
         #modalbtnmod { 
           background-color: orange;
           color: white;
-          padding: 8px 16px;
+          padding: 8px 10px;
           border: none;
           border-radius: 4px;
           cursor: pointer;} 

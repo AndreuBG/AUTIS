@@ -1,0 +1,49 @@
+const apiUrl = 'http://localhost:8080/api/v3/time_entries';
+
+// Función para iniciar un temporizador
+async function startTimer(taskId) {
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // Reemplaza con tu token de acceso
+        },
+        body: JSON.stringify({
+            // Aquí debes incluir los datos necesarios para crear una entrada de tiempo
+            "time_entry": {
+                "project_id": "YOUR_PROJECT_ID",
+                "task_id": taskId,
+                "hours": 0, // Inicialmente 0 horas
+                "comments": "Iniciando temporizador"
+            }
+        })
+    });
+
+    const data = await response.json();
+    console.log(data);
+}
+
+// Función para detener el temporizador
+async function stopTimer(timeEntryId) {
+    const response = await fetch(`${apiUrl}/${timeEntryId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // Reemplaza con tu token de acceso
+        },
+        body: JSON.stringify({
+            // Aquí debes incluir los datos necesarios para actualizar la entrada de tiempo
+            "time_entry": {
+                "hours": calculateElapsedHours() // Calcula las horas transcurridas
+            }
+        })
+    });
+
+    const data = await response.json();
+    console.log(data);
+}
+
+// Función para calcular las horas transcurridas
+function calculateElapsedHours() {
+    // Implementa la lógica para calcular el tiempo transcurrido
+}
