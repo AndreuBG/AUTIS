@@ -90,3 +90,12 @@ app.get('/getTimeEntries', async (req, res) => {
         res.status(500).json({ error: 'Error obteniendo time entries' });
     }
 });
+app.get('/getTasksFiltered/:filter', async (req, res) => {
+    console.log(req.params.filter);
+    res.send(await OpenProjectService.getTasksFiltered(req.params.filter));
+});
+
+app.get('/getUsersFiltered/:filter', async (req, res) => {
+    console.log(req.params.filter);
+    res.send(await OpenProjectService.getUsersFiltered(req.params.filter));
+});

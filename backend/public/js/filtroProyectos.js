@@ -1,20 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const filtroActividad = document.getElementById('filtro-actividad-proyectos');
     const proyectosContainer = document.getElementById('proyectos');
-    const filtroEstado = document.getElementById('filtro-estado-proyectos');
     const botonAplicarFiltro = document.querySelector('#filtro-proyectos .aplicar-filtro');
 
-    // Función para manejar el cambio en el filtro de actividad
-    filtroActividad.addEventListener('change', () => {
-        // Si seleccionamos inactivo, deshabilitamos el filtro de estado
-        if (filtroActividad.value === 'inactivo') {
-            filtroEstado.disabled = true;
-            // Opcional: resetear el valor del estado
-            filtroEstado.value = '';
-        } else {
-            filtroEstado.disabled = false;
-        }
-    });
 
     // Función para aplicar el filtro
     botonAplicarFiltro.addEventListener('click', () => {
