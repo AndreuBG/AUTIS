@@ -17,7 +17,18 @@ document.addEventListener('DOMContentLoaded', async () => {
        const response = await fetch(`/getUsersFiltered/${filtrosTXT}`)
        const usuariosFiltradas = await response.json();
 
-       console.log(usuariosFiltradas);
+       const listaUsuarios = document.getElementById('users');
+       listaUsuarios.innerHTML = '';
+       usuariosFiltradas.forEach(u => {
+           const userElement = document.createElement('user-card');
+           userElement.setAttribute('id', u.id);
+           userElement.setAttribute('active', u.active  );
+           userElement.setAttribute('name', u.name);
+           userElement.setAttribute('login', u.login);
+           userElement.setAttribute('email', u.email);
+
+           listaUsuarios.appendChild(userElement);
+       });
 
    });
 
