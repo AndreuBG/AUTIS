@@ -7,18 +7,33 @@
     <link rel="icon" type="image/jpg" href="/img/favicon.png"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../userCreate.js" defer></script>
+    <script src="/scripts/menu.js" defer></script>
     <title>AUTIS</title>
 </head>
 <body>
 <nav>
+    <!-- Botón menú hamburguesa (oculto en escritorio, visible en móvil) -->
+    <div id="menu-hamburguesa">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
     <img id="logo" src="/img/logo_autis.png" alt="Logo Autis">
     <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
     <tab-button target="tareas-group">Tareas</tab-button>
     <tab-button target="usuarios-group">Usuarios</tab-button>
+    <tab-button target="dashboard-group">Dashboard</tab-button>
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
 </nav>
 
-
+<!-- Menú lateral oculto, se muestra al pulsar hamburguesa -->
+<div id="menu-lateral">
+    <span id="cerrarMenuLateral" class="cerrar-x">&times;</span>
+    <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
+    <tab-button target="tareas-group">Tareas</tab-button>
+    <tab-button target="usuarios-group">Usuarios</tab-button>
+    <tab-button target="dashboard-group">Dashboard</tab-button>
+    </div>
 
 <div id="proyectos-group">
     <div class="filtro-container">
@@ -68,10 +83,14 @@
         <h2>Gráfico de Ejemplo</h2>
         <canvas id="graficoEjemplo" width="300" height="300"></canvas>
     </div>
-
-
 </div>
 
+<div id="dashboard-group" style="display: none;">
+    <h1>Dashboard</h1>
+    <time-entries-table></time-entries-table>
+</div>
+
+<script src="../components/TimeEntriesTable.js" type="module"></script>
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
 

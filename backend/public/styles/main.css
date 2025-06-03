@@ -44,8 +44,8 @@ nav {
 
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    gap: 10px;
+    padding: 0 5px;
+    gap: 20px;
     justify-content: center;
 }
 
@@ -55,7 +55,7 @@ nav {
     height: auto;
     width: auto;
     position: absolute;
-    left: 15px;
+    left: 5px;
 }
 
 /* Icono cerrar sesión a la derecha */
@@ -384,4 +384,108 @@ project-card {
         font-size: 16px;
         padding: 10px 20px;
     }
+
+    #menu-hamburguesa {
+        display: flex !important;
+        position: absolute;
+        left: 10px;
+        top: 7px;
+        z-index: 1202;
+    }
+
+    nav tab-button {
+        display: none !important;
+    }
+
+    #logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1100;
+    }
+
+    #cerrarSesion {
+        display: block !important;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 25px;
+        height: 25px;
+        z-index: 1202;
+        margin: 0;
+    }
+}
+
+/* Menú hamburguesa: oculto en escritorio, visible en móvil */
+#menu-hamburguesa {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    z-index: 1201;
+}
+#menu-hamburguesa span {
+    display: block;
+    height: 4px;
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* Menú lateral oculto por defecto */
+#menu-lateral {
+    display: flex; /* <-- Cambia esto */
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: #09348b;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    z-index: 2000;
+    padding: 70px 10px 10px 10px;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden; /* Añade esto para evitar tabulación */
+}
+#menu-lateral.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.cerrar-x {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 2100;
+    user-select: none;
+    transition: color 0.2s;
+}
+.cerrar-x:hover {
+    color: #CC6204;
+}
+
+body.no-scroll #logo {
+    left: 340px; /* Un poco más que el ancho del menú lateral */
+    transition: left 0.3s;
+}
+#logo {
+    transition: left 0.3s;
 }

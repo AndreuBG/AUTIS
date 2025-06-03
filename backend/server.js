@@ -84,3 +84,12 @@ app.get('/getProjectsFiltered/:filter', async (req, res) => {
     console.log(req.params.filter);
     res.send(await OpenProjectService.getProjectsFiltered(filtrosURL));
 });
+
+app.get('/getTimeEntries', async (req, res) => {
+    try {
+        const entries = await OpenProjectService.getAllTimeEntries();
+        res.json(entries);
+    } catch (error) {
+        res.status(500).json({ error: 'Error obteniendo time entries' });
+    }
+});

@@ -1,0 +1,20 @@
+async function getTimeEntries() {
+    try {
+        const response = await fetch('http://localhost:8080/api/v3/time_entries', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer YOUR_ACCESS_TOKEN' // Asegúrate de incluir el token de acceso si es necesario
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data); // Aquí puedes manejar los datos recibidos
+    } catch (error) {
+        console.error('Error fetching time entries:', error);
+    }
+}
