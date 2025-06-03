@@ -54,4 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // Filtros de tareas
+    const filtroTipo = document.getElementById('filtro-tipo-tareas');
+    const filtroEstadoTareas = document.getElementById('filtro-estado-tareas');
+    const filtroTipoEstado = document.getElementById('filtro-tipo-estado-tareas');
+    
+    // El filtro de Estado y T.Estado están visibles por defecto
+    // Solo reaccionamos al cambio de Estado
+    filtroEstadoTareas.addEventListener('change', () => {
+        if (filtroEstadoTareas.value === 'cerrado') {
+            filtroTipoEstado.parentElement.style.display = 'none';
+            filtroTipoEstado.value = '';
+        } else {
+            filtroTipoEstado.parentElement.style.display = 'block';
+        }
+    });
 });
