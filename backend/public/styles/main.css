@@ -60,9 +60,16 @@ nav {
 
 /* Icono cerrar sesión a la derecha */
 #cerrarSesion {
+    position: absolute;
+    right: 20px;
     width: 25px;
     height: 25px;
     cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#logo {
     position: absolute;
     right: 15px;
     z-index: 1100;
@@ -312,6 +319,13 @@ project-card {
     background-color: #1d4fa5;
 }
 
+.filtro-menu select:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #ddd;
+}
+
 .crear-container {
     display: flex;
     justify-content: center;
@@ -357,6 +371,144 @@ project-card {
 .graficos canvas {
     max-width: 100%;
     height: auto;
+}
+
+.modal-crear {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-crear .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 600px;
+    max-width: 90%;
+    border: 2px solid #09348b;
+}
+
+.modal-crear .form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.modal-crear .password-container {
+    position: relative;
+}
+
+.modal-crear .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 62%;
+    transform: translateY(-25%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff7300;
+    font-size: 1.1em;
+    padding: 5px;
+}
+
+.modal-crear .toggle-password:hover {
+    color: #cc5c00;
+}
+
+.modal-crear .hint {
+    display: block;
+    font-size: 12px;
+    color: #ff7300;
+    margin-top: 5px;
+}
+
+.modal-crear input:invalid {
+    border-color: #ff0000;
+}
+
+.modal-crear input:valid {
+    border-color: #09348b;
+}
+
+.modal-crear input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.modal-crear .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 18px;
+}
+
+.modal-crear .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #09348b;
+    border-radius: 4px;
+}
+
+.modal-crear h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #09348b;
+}
+
+.modal-crear .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-crear .boton-cancelar {
+    background-color: #ff7300;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-crear .boton-crear {
+    background-color: #09348b;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-crear .boton-crear:hover {
+    background-color: #072a70;
+}
+
+.modal-crear .boton-cancelar:hover {
+    background-color: #cc5c00;
+}
+
+.modal-crear .password-container input {
+    padding-right: 50px;
+}
+
+.modal-crear .password-container input:invalid {
+    border-color: #ff0000;
+}
+
+.modal-crear .password-container .hint {
+    color: #ff0000;
+    display: none;
+}
+
+.modal-crear .password-container input:invalid + .hint {
+    display: block;
 }
 
 @media (max-width: 768px) {

@@ -37,16 +37,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaProyectos.appendChild(projectElement);
         });
 
-        // Añadir las tareas
-        const listaTareas = document.getElementById('tareas');
-        tareas.forEach(t => {
-            const taskElement = document.createElement('task-card');
-            taskElement.setAttribute('id', t.id);
-            taskElement.setAttribute('subject', t.subject);
-            taskElement.setAttribute('description', t.description);
-            taskElement.setAttribute('startDate', t.startDate);
-            taskElement.setAttribute('dueDate', t.dueDate);
-            taskElement.setAttribute('project', t.project);
+            // Añadir las tareas
+            const listaTareas = document.getElementById('tareas');
+            tareas.forEach(t => {
+                const taskElement = document.createElement('task-card');
+                taskElement.setAttribute('id', t.id);
+                taskElement.setAttribute('subject', t.subject);
+                taskElement.setAttribute('description', t.description);
+                taskElement.setAttribute('startDate', t.startDate);
+                taskElement.setAttribute('dueDate', t.dueDate);
+                taskElement.setAttribute('project', t.project);
+                taskElement.setAttribute('type', t.type || 'Sin Tipo');
+
 
             listaTareas.appendChild(taskElement);
         });
@@ -143,8 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         });
-
-
 
     } catch(error) {
         console.error(error)
