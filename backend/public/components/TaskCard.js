@@ -9,6 +9,8 @@ class TaskCard extends HTMLElement {
     }
 
     render() {
+        const type = this.getAttribute('type');
+        const typeColor = this.getAttribute('typeColor');
         const subject = this.getAttribute('subject');
         const description = this.getAttribute('description');
         const startDate = this.getAttribute('startDate');
@@ -72,6 +74,7 @@ class TaskCard extends HTMLElement {
                 <p><strong>Inicio:</strong> ${startDate}</p>
                 <p><strong>Vencimiento:</strong> ${dueDate}</p>
                 <p><strong>Proyecto:</strong> ${project}</p>
+                <p><strong>Tipo:</strong> <span style="color: ${typeColor}; font-weight: bold;">${type}</span></p>
             </div>
         `;
     }

@@ -48,14 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtroEstadoTareas = document.getElementById('filtro-estado-tareas');
     const filtroTipoEstado = document.getElementById('filtro-tipo-estado-tareas');
     
-    // El filtro de Estado y T.Estado están visibles por defecto
+    // Ocultar T.Estado inicialmente
+    filtroTipoEstado.parentElement.style.display = 'none';
+    
     // Solo reaccionamos al cambio de Estado
     filtroEstadoTareas.addEventListener('change', () => {
-        if (filtroEstadoTareas.value === 'cerrado') {
+        console.log('Estado seleccionado:', filtroEstadoTareas.value); // Mantener para debug
+        if (filtroEstadoTareas.value === 'abierto') {
+            filtroTipoEstado.parentElement.style.display = 'block';
+        } else {
             filtroTipoEstado.parentElement.style.display = 'none';
             filtroTipoEstado.value = '';
-        } else {
-            filtroTipoEstado.parentElement.style.display = 'block';
         }
     });
 });

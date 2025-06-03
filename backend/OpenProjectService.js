@@ -49,7 +49,7 @@ static async getAllProjects() {
             .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
-                const task = new Task(data[i].id, data[i].subject, data[i].description.raw, data[i].startDate, data[i].dueDate, data[i]._links.project.title);
+                const task = new Task(data[i].id, data[i].subject, data[i].description.raw, data[i].startDate, data[i].dueDate, data[i]._links.project.title, data[i]._links.type.title);
                 tasks.push(task)
             }
 
