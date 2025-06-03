@@ -1,33 +1,37 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('modalCrearUsuario');
+    const modal = document.getElementById('modal-crear-usuario');
     const openBtn = document.querySelector('.boton_crear');
-    const cancelBtn = document.getElementById('cancelarModal');
-    const togglePassword = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('password');
+    const cancelBtn = document.getElementById('cancelar-crear');
+    const form = document.getElementById('form-crear-usuario');
+    const togglePassword = document.getElementById('toggle-password-crear');
+    const passwordInput = document.getElementById('password-crear');
 
-    openBtn.addEventListener('click', () => modal.style.display = 'flex');
-    cancelBtn.addEventListener('click', () => modal.style.display = 'none');
+    openBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
 
+    cancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        form.reset();
+    });
+
+    // Toggle password visibility
     togglePassword.addEventListener('click', () => {
         const type = passwordInput.type === 'password' ? 'text' : 'password';
         passwordInput.type = type;
         togglePassword.querySelector('i').classList.toggle('fa-eye');
         togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
     });
-    
 
-    const form = document.getElementById('createUserForm');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const userData = {
-            firstName: form.firstName.value,
-            lastName: form.lastName.value,
-            login: form.login.value,
-            email: form.email.value,
-            password: form.password.value
+            firstName: document.getElementById('firstName-crear').value,
+            lastName: document.getElementById('lastName-crear').value,
+            login: document.getElementById('login-crear').value,
+            email: document.getElementById('email-crear').value,
+            password: document.getElementById('password-crear').value
         };
 
         try {
@@ -41,12 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Usuario creado exitosamente');
                 modal.style.display = 'none';
                 form.reset();
+                location.reload(); // Recargar para mostrar el nuevo usuario
             } else {
                 const data = await res.json();
-                alert('Error: ' + (data.message || 'Desconocido'));
+                alert('Error: ' + (data.message || 'Error desconocido'));
             }
-        } catch (err) {
+        } catch (error) {
             alert('Error de conexión al servidor');
         }
     });
 });
+
