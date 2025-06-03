@@ -209,4 +209,62 @@ return users;
 
         return projects;
     }
+
+    static async getTasksFiltered(filters) {
+        const tasks = [];
+        const encodedFilters = encodeURIComponent(filters);
+
+        console.log(`${this.API_URL}/work_packages?filters=${encodedFilters}`);
+
+        try {
+            const data = await fetch(`${this.API_URL}/work_packages?filters=${encodedFilters}`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then (data => data._embedded.elements)
+
+            for (let i = 0; i < data.length; i++) {
+                const task = new Task(data[i].id, data[i].subject, data[i].description.raw, data[i].startDate, data[i].dueDate, data[i]._links.project.title);
+                tasks.push(task)
+            }
+
+
+        } catch (error) {
+            console.log("Hubo un problema con las tareas filtradas:" + error.message);
+            return error;
+        }
+
+        return tasks;
+    }
+
+    static async getUsersFiltered(filters) {
+        const users = [];
+        const encodedFilters = encodeURIComponent(filters);
+
+        console.log(`${this.API_URL}/users?filters=${encodedFilters}`);
+
+        try {
+            const data = await fetch(`${this.API_URL}/users?filters=${encodedFilters}`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then (data => data._embedded.elements)
+
+            for (let i = 0; i < data.length; i++) {
+                const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
+                users.push(user);
+            }
+
+
+        } catch (error) {
+            console.log("Hubo un problema con las tareas filtradas:" + error.message);
+            return error;
+        }
+
+        return users;
+    }
 }

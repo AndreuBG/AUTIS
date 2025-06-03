@@ -20,160 +20,129 @@
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
 </nav>
 
-<!-- Filtros para Proyectos -->
-<div class="filtro-container" id="filtro-proyectos">
-    <div class="filtro-menu">
-        <label>
-            Actividad:
-            <select id="filtro-actividad-proyectos">
-                <option value="">Todos</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-        </label>
-        <label>
-            Estado:
-            <select id="filtro-estado-proyectos">
-                <option value="">Todos</option>
-                <option value="on-track">On-Track</option>
-                <option value="at-risk">At-Risk</option>
-                <option value="off-track">Off-Track</option>
-                <option value="not-started">No Started</option>
-                <option value="finished">Finished</option>
-                <option value="discontinued">Discontinued</option>
-            </select>
-        </label>
-        <button class="aplicar-filtro">Aplicar filtro</button>
-    </div>
-</div>
-
-<!-- Filtros para Tareas -->
-<div class="filtro-container" id="filtro-tareas" style="display: none;">
-    <div class="filtro-menu">
-        <label>
-            Tipo:
-            <select id="filtro-tipo-tareas">
-                <option value="">Todas</option>
-                <option value="task">Task</option>
-                <option value="milestone">Milestone</option>
-                <option value="summary-task">Summary Task</option>
-                <option value="feature">Feature</option>
-                <option value="epic">Epic</option>
-                <option value="user-story">User Story</option>
-                <option value="bug">Bug</option>
-            </select>
-        </label>
-        <label>
-            Estado:
-            <select id="filtro-estado-tareas">
-                <option value="">Todos</option>
-                <option value="abierto">Abierto</option>
-                <option value="cerrado">Cerrado</option>
-            </select>
-        </label>
-        <label>
-            T.Estado:
-            <select id="filtro-tipo-estado-tareas">
-                <option value="">Todos</option>
-                <option value="new">New</option>
-                <option value="in-specification">In Specification</option>
-                <option value="specification" >Specification</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="to-be-scheduled">To Be Scheduled</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="in-progress">In Progress</option>
-                <option value="developed">Developed</option>
-                <option value="in-testing">In Testing</option>
-                <option value="tested">Tested</option>
-                <option value="test-failed">Test Failed</option>
-                <option value="on-hold">On Hold</option>
-            </select>
-        </label>
-        <label>
-            Prioridad:
-            <select id="filtro-Prioridad-tareas">
-                <option value="">Todos</option>
-                <option value="low">Low</option>
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
-                <option value="inmediate">Inmediate</option>
-            </select>
-        </label>
-        <button class="aplicar-filtro">Aplicar filtro</button>
-    </div>
-</div>
-
-<!-- Filtros para Usuarios -->
-<div class="filtro-container" id="filtro-usuarios" style="display: none;">
-    <div class="filtro-menu">
-        <label>
-            Rol:
-            <select id="filtro-rol-usuarios">
-                <option value="">Todos</option>
-                <option value="admin">Administrador</option>
-                <option value="jefe">Jefe de proyecto</option>
-                <option value="desarrollador">Desarrollador</option>
-                <option value="tester">Tester</option>
-            </select>
-        </label>
-        <label>
-            Departamento:
-            <select id="filtro-departamento-usuarios">
-                <option value="">Todos</option>
-                <option value="desarrollo">Desarrollo</option>
-                <option value="diseno">Diseño</option>
-                <option value="qa">QA</option>
-                <option value="marketing">Marketing</option>
-            </select>
-        </label>
-        <label>
-            Disponibilidad:
-            <select id="filtro-disponibilidad-usuarios">
-                <option value="">Todos</option>
-                <option value="disponible">Disponible</option>
-                <option value="ocupado">Ocupado</option>
-            </select>
-        </label>
-        <button class="aplicar-filtro">Aplicar filtro</button>
-    </div>
-</div>
-
-<div id="proyectos-group">
-    <h1>Proyectos</h1>
-    <div id="proyectos" class="section active"></div>
-</div>
-
-<div id="tareas-group" style="display: none;">
-    <h1>Tareas</h1>
-    <div id="tareas" class="section"></div>
-</div>
-
-<div id="usuarios-group">
-    <h1>Usuarios</h1>
-    <div id="users" class="section"></div>
-    <div class="crear-container">
-        <button class="boton_crear">Crear nuevo usuario</button>
-    </div>
-</div>
-
-<div class="graficos-container">
-    <div class="graficos">
-        <h2>Gráfico de Barras</h2>
-        <canvas id="graficoBarras" width="300" height="300"></canvas>
+    <!-- Filtros para Proyectos -->
+    <div class="filtro-container" id="filtro-proyectos">
+        <div class="filtro-menu">
+            <label>
+                Actividad:
+                <select id="filtro-actividad-proyectos">
+                    <option value="">Todos</option>
+                    <option value="t">Activo</option>
+                    <option value="f">Inactivo</option>
+                </select>
+            </label>
+            <button id="aplicar-filtro-proyectos" class="aplicar-filtro">Aplicar filtro</button>
+        </div>
     </div>
 
-    <div class="graficos">
-        <h2>Gráfico Circular</h2>
-        <canvas id="graficoCircular" width="300" height="300"></canvas>
+    <!-- Filtros para Tareas -->
+    <div class="filtro-container" id="filtro-tareas" style="display: none;">
+        <div class="filtro-menu">
+            <label>
+                Tipo:
+                <select id="filtro-tipo-tareas">
+                    <option value="">Todas</option>
+                    <option value="1">Task</option>
+                    <option value="2">Milestone</option>
+                    <option value="3">Summary Task</option>
+                    <option value="4">Feature</option>
+                    <option value="5">Epic</option>
+                    <option value="6">User Story</option>
+                    <option value="7">Bug</option>
+                </select>
+            </label>
+            <label>
+                Estado:
+                <select id="filtro-estado-tareas">
+                    <option value="">Todos</option>
+                    <option value="abierto">Abierto</option>
+                    <option value="cerrado">Cerrado</option>
+                </select>
+            </label>
+            <label>
+                T.Estado:
+                <select id="filtro-tipo-estado-tareas">
+                    <option value="">Todos</option>
+                    <option value="new">New</option>
+                    <option value="in-specification">In Specification</option>
+                    <option value="specification" >Specification</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="to-be-scheduled">To Be Scheduled</option>
+                    <option value="scheduled">Scheduled</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="developed">Developed</option>
+                    <option value="in-testing">In Testing</option>
+                    <option value="tested">Tested</option>
+                    <option value="test-failed">Test Failed</option>
+                    <option value="on-hold">On Hold</option>
+                </select>
+            </label>
+                Prioridad:
+                <select id="filtro-Prioridad-tareas">
+                    <option value="">Todos</option>
+                    <option value="7">Low</option>
+                    <option value="8">Normal</option>
+                    <option value="9">High</option>
+                    <option value="10">Inmediate</option>
+                </select>
+            </label>
+            <button class="aplicar-filtro" id="aplicar-filtro-tareas">Aplicar filtro</button>
+        </div>
     </div>
 
-    <div class="graficos">
-        <h2>Gráfico de Ejemplo</h2>
-        <canvas id="graficoEjemplo" width="300" height="300"></canvas>
+    <!-- Filtros para Usuarios -->
+    <div class="filtro-container" id="filtro-usuarios" style="display: none;">
+        <div class="filtro-menu">
+            <label>
+                Estado:
+                <select id="filtro-estado-usuarios">
+                    <option value="">Todos</option>
+                    <option value="active">Activo</option>
+                    <option value="invited">Invitado</option>
+                    <option value="registered">Registrado</option>
+                    <option value="locked">Bloqueado</option>
+                </select>
+            </label>
+            <button class="aplicar-filtro" id="aplicar-filtro-usuarios">Aplicar filtro</button>
+        </div>
     </div>
 
+    <div id="proyectos-group">
+        <h1>Proyectos</h1>
+        <div id="proyectos" class="section active"></div>
+    </div>
 
-</div>
+    <div id="tareas-group" style="display: none;">
+        <h1>Tareas</h1>
+        <div id="tareas" class="section"></div>
+    </div>
+
+    <div id="usuarios-group">
+        <h1>Usuarios</h1>
+        <div id="users" class="section"></div>
+        <div class="crear-container">
+            <button class="boton_crear">Crear nuevo usuario</button>
+        </div>
+    </div>
+
+    <div class="graficos-container">
+        <div class="graficos">
+            <h2>Gráfico de Barras</h2>
+            <canvas id="graficoBarras" width="300" height="300"></canvas>
+        </div>
+
+        <div class="graficos">
+            <h2>Gráfico Circular</h2>
+            <canvas id="graficoCircular" width="300" height="300"></canvas>
+        </div>
+
+        <div class="graficos">
+            <h2>Gráfico de Ejemplo</h2>
+            <canvas id="graficoEjemplo" width="300" height="300"></canvas>
+        </div>
+
+
+    </div>
 
 <div id="modal-crear-usuario" class="modal-crear" style="display: none;">
     <div class="modal-content">
@@ -181,29 +150,29 @@
         <form id="form-crear-usuario">
             <div class="form-group">
                 <label>Nombre</label>
-                <input type="text" id="firstName-crear" 
+                <input type="text" id="firstName-crear"
                     placeholder="Ej: Juan" required>
             </div>
             <div class="form-group">
                 <label>Apellidos</label>
-                <input type="text" id="lastName-crear" 
+                <input type="text" id="lastName-crear"
                     placeholder="Ej: García Pérez" required>
             </div>
             <div class="form-group">
                 <label>Usuario</label>
-                <input type="text" id="login-crear" 
+                <input type="text" id="login-crear"
                     placeholder="Ej: jgarcia" required>
             </div>
             <div class="form-group">
                 <label>Correo electrónico</label>
-                <input type="email" id="email-crear" 
+                <input type="email" id="email-crear"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                     placeholder="usuario@dominio.com" required>
             </div>
             <div class="form-group password-container">
                 <label>Contraseña</label>
-                <input type="password" id="password-crear" 
-                    minlength="10" 
+                <input type="password" id="password-crear"
+                    minlength="10"
                     placeholder="Mínimo 10 caracteres"
                     oninvalid="this.setCustomValidity('La contraseña debe tener al menos 10 caracteres')"
                     oninput="this.setCustomValidity('')"
@@ -223,6 +192,8 @@
 
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
+
+
 
 </body>
 </html>

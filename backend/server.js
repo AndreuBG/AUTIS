@@ -81,3 +81,13 @@ app.get('/getProjectsFiltered/:filter', async (req, res) => {
     console.log(req.params.filter);
     res.send(await OpenProjectService.getProjectsFiltered(req.params.filter));
 });
+
+app.get('/getTasksFiltered/:filter', async (req, res) => {
+    console.log(req.params.filter);
+    res.send(await OpenProjectService.getTasksFiltered(req.params.filter));
+});
+
+app.get('/getUsersFiltered/:filter', async (req, res) => {
+    console.log(req.params.filter);
+    res.send(await OpenProjectService.getUsersFiltered(req.params.filter));
+});
