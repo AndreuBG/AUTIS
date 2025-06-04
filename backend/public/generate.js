@@ -20,9 +20,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const responseProject = await fetch('/getProjects');
         const proyectos = await responseProject.json();
 
-        const responseTask = await fetch('/getTasks');
-        const tareas = await responseTask.json();
+        // Obtener TODAS las tareas primero
+        const responseAllTasks = await fetch('/getAllTasks');
+        const todasLasTareas = await responseAllTasks.json();
+        
+        // Hacer disponibles las tareas globalmente
+        window.todasLasTareas = todasLasTareas;
 
+        // Resto del código de paginación
         let paginaTareaActual = 1;
         const pageSize = 16;
 
@@ -42,38 +47,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         async function cargarTareasPagina(pagina) {
             try {
-                // Obtenemos las tareas para la página actual
                 const responseTask = await fetch(`/getTasks?pageSize=${pageSize}&offset=${pagina}`);
+                if (!responseTask.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                
                 const tareas = await responseTask.json();
-
                 const listaTareas = document.getElementById('tareas');
-                listaTareas.innerHTML = ''; // Limpiar la lista anterior
+                listaTareas.innerHTML = '';
 
-                // Si no hay tareas y no estamos en la primera página, volvemos a la anterior
                 if (tareas.length === 0 && pagina > 1) {
-                    cargarTareasPagina(pagina - 1);
+                    await cargarTareasPagina(pagina - 1);
                     return;
                 }
 
                 tareas.forEach(t => {
                     const taskElement = document.createElement('task-card');
-                    taskElement.setAttribute('id', t.id);
-                    taskElement.setAttribute('type', t.type);
-                    taskElement.setAttribute('typeColor', t.typeColor);
-                    taskElement.setAttribute('subject', t.subject);
-                    taskElement.setAttribute('description', t.description);
-                    taskElement.setAttribute('startDate', t.startDate);
-                    taskElement.setAttribute('dueDate', t.dueDate);
-                    taskElement.setAttribute('project', t.project);
+                    // Mantener solo un setAttribute por propiedad
+                    Object.entries({
+                        id: t.id,
+                        type: t.type,
+                        subject: t.subject,
+                        description: t.description,
+                        startDate: t.startDate,
+                        dueDate: t.dueDate,
+                        project: t.project
+                    }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
 
                     listaTareas.appendChild(taskElement);
                 });
 
-                // Actualizar el texto de la página actual
-                document.getElementById('pagina-actual').textContent = `Página ${pagina}`;
+                document.getElementById('pagina-actual').textContent = `${pagina}`;
                 paginaTareaActual = pagina;
 
-                // Lógica para habilitar/deshabilitar botones de paginación
                 document.getElementById('anterior').disabled = pagina <= 1;
                 document.getElementById('siguiente').disabled = tareas.length < pageSize;
             } catch (error) {
@@ -111,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Generar los datos para los gráficos con los proyectos y las tareas
         const proyectosLabels = proyectos.map(p => p.name);
-        const tareasPorProyecto = proyectos.map(p => tareas.filter(t => t.project === p.name).length);
+        const tareasPorProyecto = proyectos.map(p => todasLasTareas.filter(t => t.project === p.name).length);
 
         // Configurar el gráfico de barras: Horas por proyecto
         const ctxBarras = document.getElementById('graficoBarras').getContext('2d');
@@ -326,6 +332,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error("Error cargando time entries:", error);
     }
+
+    // Modificar el getRelatedTasksHtml en ProjectCard.js para usar todasLasTareas
+    window.todasLasTareas = todasLasTareas; // Hacer disponible para ProjectCard
 
 });
 

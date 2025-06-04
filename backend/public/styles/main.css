@@ -507,6 +507,54 @@ project-card {
     display: block;
 }
 
+/* Estilos para la paginación */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#anterior,
+#siguiente,
+#pagina-actual {
+    background-color: #09348b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    font-size: 20px;
+}
+
+#pagina-actual {
+    font-size: 16px;
+    padding: 8px 16px;
+    min-width: 60px;
+}
+
+#anterior:hover,
+#siguiente:hover {
+    background-color: #072a70;
+}
+
+#anterior:disabled,
+#siguiente:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#pagina-actual {
+    cursor: default;
+}
+
 @media (max-width: 768px) {
 
     body {
@@ -537,4 +585,7 @@ project-card {
         padding: 10px 20px;
     }
 }
+
+
+
 

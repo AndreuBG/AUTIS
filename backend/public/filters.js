@@ -36,34 +36,66 @@ document.addEventListener('DOMContentLoaded', async () => {
        const tipo = document.getElementById('filtro-tipo-tareas').value;
        const estado = document.getElementById('filtro-estado-tareas').value;
        const prioridad = document.getElementById('filtro-Prioridad-tareas').value;
+       let paginaTareaActual = 1;
+       const pageSize = 16;
 
        let filtros = [];
-
        if (tipo !== "") filtros.push({"type_id": {"operator": "=", "values" : [`${tipo}`]}});
-
-       console.log(prioridad);
        if (prioridad !== "") filtros.push({"priority": {"operator": "=", "values" : [`${prioridad}`]}});
 
        const filtrosTXT = JSON.stringify(filtros);
 
-       const response = await fetch(`/getTasksFiltered/${filtrosTXT}`)
-       const tareasFiltradas = await response.json();
+       async function cargarTareasFiltradas(pagina) {
+           try {
+               const response = await fetch(`/getTasksFiltered/${filtrosTXT}?pageSize=${pageSize}&offset=${pagina}`);
+               const tareasFiltradas = await response.json();
 
-       const listaTareas = document.getElementById('tareas');
-       listaTareas.innerHTML = '';
-       tareasFiltradas.forEach(t => {
-           const taskElement = document.createElement('task-card');
-           taskElement.setAttribute('id', t.id);
-           taskElement.setAttribute('subject', t.subject);
-           taskElement.setAttribute('description', t.description);
-           taskElement.setAttribute('startDate', t.startDate);
-           taskElement.setAttribute('dueDate', t.dueDate);
-           taskElement.setAttribute('project', t.project);
+               const listaTareas = document.getElementById('tareas');
+               listaTareas.innerHTML = '';
 
-           listaTareas.appendChild(taskElement);
+               if (tareasFiltradas.length === 0 && pagina > 1) {
+                   await cargarTareasFiltradas(pagina - 1);
+                   return;
+               }
+
+               tareasFiltradas.forEach(t => {
+                   const taskElement = document.createElement('task-card');
+                   Object.entries({
+                       id: t.id,
+                       subject: t.subject,
+                       description: t.description,
+                       startDate: t.startDate,
+                       dueDate: t.dueDate,
+                       project: t.project,
+                       type: t.type
+                   }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
+
+                   listaTareas.appendChild(taskElement);
+               });
+
+               document.getElementById('pagina-actual').textContent = `Página ${pagina}`;
+               paginaTareaActual = pagina;
+
+               document.getElementById('anterior').disabled = pagina <= 1;
+               document.getElementById('siguiente').disabled = tareasFiltradas.length < pageSize;
+           } catch (error) {
+               console.error("Error cargando tareas filtradas:", error.message);
+           }
+       }
+
+       // Iniciar con la primera página
+       await cargarTareasFiltradas(1);
+
+       // Configurar eventos de paginación
+       document.getElementById('anterior').addEventListener('click', () => {
+           if (paginaTareaActual > 1) {
+               cargarTareasFiltradas(paginaTareaActual - 1);
+           }
        });
 
-
+       document.getElementById('siguiente').addEventListener('click', () => {
+           cargarTareasFiltradas(paginaTareaActual + 1);
+       });
    });
 
    botonProyectos.addEventListener('click', async () => {

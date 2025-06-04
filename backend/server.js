@@ -35,7 +35,17 @@ app.get('/getProjects', async function(req, res) {
 });
 
 app.get('/getTasks', async function(req, res) {
-    res.send(await OpenProjectService.getAllTasks());
+    const pagesize = parseInt(req.query.pageSize) || 16; // Valor por defecto de 16
+    const offset = parseInt(req.query.offset) || 1; // Valor por defecto de 1
+
+    try {
+        const tasks = await OpenProjectService.getAllTasks(pagesize, offset);
+        res.send(tasks);
+    } catch (error) {
+        console.error("Error obteniendo tareas:", error);
+        res.status(500).json({ error: 'Error obteniendo tareas' });
+    }
+
 });
 
 app.get('/getUsers', async function(req, res) {
@@ -91,11 +101,23 @@ app.get('/getTimeEntries', async (req, res) => {
     }
 });
 app.get('/getTasksFiltered/:filter', async (req, res) => {
+    const pageSize = parseInt(req.query.pageSize) || 16;
+    const offset = parseInt(req.query.offset) || 1;
     console.log(req.params.filter);
-    res.send(await OpenProjectService.getTasksFiltered(req.params.filter));
+    res.send(await OpenProjectService.getTasksFiltered(req.params.filter, pageSize, offset));
 });
 
 app.get('/getUsersFiltered/:filter', async (req, res) => {
     console.log(req.params.filter);
     res.send(await OpenProjectService.getUsersFiltered(req.params.filter));
+});
+
+app.get('/getAllTasks', async function(req, res) {
+    try {
+        const tasks = await OpenProjectService.getAllTasksNoPagination();
+        res.send(tasks);
+    } catch (error) {
+        console.error("Error obteniendo todas las tareas:", error);
+        res.status(500).json({ error: 'Error obteniendo todas las tareas' });
+    }
 });
