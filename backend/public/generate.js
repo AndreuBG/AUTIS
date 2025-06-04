@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const responseTask = await fetch('/getTasks');
         const tareas = await responseTask.json();
 
+        let paginaTareaActual = 1;
+        const pageSize = 16;
+
         const responseUser = await fetch('/getUsers');
         const usuarios = await responseUser.json();
 
@@ -37,21 +40,60 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaProyectos.appendChild(projectElement);
         });
 
-            // Añadir las tareas
-            const listaTareas = document.getElementById('tareas');
-            tareas.forEach(t => {
-                const taskElement = document.createElement('task-card');
-                taskElement.setAttribute('id', t.id);
-                taskElement.setAttribute('subject', t.subject);
-                taskElement.setAttribute('description', t.description);
-                taskElement.setAttribute('startDate', t.startDate);
-                taskElement.setAttribute('dueDate', t.dueDate);
-                taskElement.setAttribute('project', t.project);
-                taskElement.setAttribute('type', t.type || 'Sin Tipo');
+        async function cargarTareasPagina(pagina) {
+            try {
+                // Obtenemos las tareas para la página actual
+                const responseTask = await fetch(`/getTasks?pageSize=${pageSize}&offset=${pagina}`);
+                const tareas = await responseTask.json();
 
+                const listaTareas = document.getElementById('tareas');
+                listaTareas.innerHTML = ''; // Limpiar la lista anterior
 
-            listaTareas.appendChild(taskElement);
+                // Si no hay tareas y no estamos en la primera página, volvemos a la anterior
+                if (tareas.length === 0 && pagina > 1) {
+                    cargarTareasPagina(pagina - 1);
+                    return;
+                }
+
+                tareas.forEach(t => {
+                    const taskElement = document.createElement('task-card');
+                    taskElement.setAttribute('id', t.id);
+                    taskElement.setAttribute('type', t.type);
+                    taskElement.setAttribute('typeColor', t.typeColor);
+                    taskElement.setAttribute('subject', t.subject);
+                    taskElement.setAttribute('description', t.description);
+                    taskElement.setAttribute('startDate', t.startDate);
+                    taskElement.setAttribute('dueDate', t.dueDate);
+                    taskElement.setAttribute('project', t.project);
+
+                    listaTareas.appendChild(taskElement);
+                });
+
+                // Actualizar el texto de la página actual
+                document.getElementById('pagina-actual').textContent = `Página ${pagina}`;
+                paginaTareaActual = pagina;
+
+                // Lógica para habilitar/deshabilitar botones de paginación
+                document.getElementById('anterior').disabled = pagina <= 1;
+                document.getElementById('siguiente').disabled = tareas.length < pageSize;
+            } catch (error) {
+                console.error("Error cargando tareas:", error.message);
+            }
+        }
+
+        //Evento de los botones de paginación
+        document.getElementById('anterior').addEventListener('click', () => {
+            if (paginaTareaActual > 1) {
+                cargarTareasPagina(paginaTareaActual - 1);
+            }
         });
+
+        document.getElementById('siguiente').addEventListener('click', () => {
+            cargarTareasPagina(paginaTareaActual + 1);
+        });
+
+        // Cargar la primera página de tareas al inicio
+        await cargarTareasPagina(1);
 
         const listaUsuarios = document.getElementById('users');
         usuarios.forEach(u => {
