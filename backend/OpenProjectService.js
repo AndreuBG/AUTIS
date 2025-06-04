@@ -36,26 +36,36 @@ static async getAllProjects() {
   return projects;
 }
     
- static async getAllTasks() {
+ static async getAllTasks(pageSize = 16, offset = 1) {
     const tasks = [];
 
     try {
-        const data = await fetch(`${this.API_URL}/work_packages?pageSize=100`, {
+        // Asegurarnos de que el offset es un número y ajustarlo para la API
+        const adjustedOffset = Math.max(0, offset - 1) * pageSize;
+        
+        const response = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${adjustedOffset}`, {
             headers: {
                 'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
             }
-        })
-            .then(response => response.json())
-            .then(data => data._embedded.elements)
+        });
+        
+        const responseData = await response.json();
+        const data = responseData._embedded.elements;
 
-            for (let i = 0; i < data.length; i++) {
-                const task = new Task(data[i].id, data[i].subject, data[i].description.raw, data[i].startDate, data[i].dueDate, data[i]._links.project.title, data[i]._links.type.title);
-                tasks.push(task)
-            }
-
-
+        for (const item of data) {
+            const task = new Task(
+                item.id,
+                item.subject,
+                item.description.raw,
+                item.startDate,
+                item.dueDate,
+                item._links.project.title,
+                item._links.type.title
+            );
+            tasks.push(task);
+        }
     } catch (error) {
-        console.error("Hubo un problema con las tareas:" + error.message);
+        console.error("Hubo un problema con las tareas:", error.message);
     }
 
     return tasks;
