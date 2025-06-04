@@ -38,38 +38,64 @@ static async getAllProjects() {
     
  static async getAllTasks(pageSize = 16, offset = 1) {
     const tasks = [];
-
     try {
-        // Asegurarnos de que el offset es un número y ajustarlo para la API
-        const adjustedOffset = Math.max(0, offset - 1) * pageSize;
-        
-        const response = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${adjustedOffset}`, {
+        // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
+        const apiOffset = offset;
+
+        const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${apiOffset}`, {
             headers: {
                 'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
             }
-        });
-        
-        const responseData = await response.json();
-        const data = responseData._embedded.elements;
+        })
+            .then(response => response.json())
+            .then(data => data._embedded.elements);
 
-        for (const item of data) {
+        for (let i = 0; i < data.length; i++) {
             const task = new Task(
-                item.id,
-                item.subject,
-                item.description.raw,
-                item.startDate,
-                item.dueDate,
-                item._links.project.title,
-                item._links.type.title
+                data[i].id,
+                data[i].subject,
+                data[i].description.raw,
+                data[i].startDate,
+                data[i].dueDate,
+                data[i]._links.project.title,
+                data[i]._links.type.title
             );
             tasks.push(task);
         }
     } catch (error) {
         console.error("Hubo un problema con las tareas:", error.message);
     }
-
     return tasks;
 }
+
+    static async getAllTasksNoPagination() {
+        const tasks = [];
+        try {
+            const data = await fetch(`${this.API_URL}/work_packages?pageSize=1000`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then(data => data._embedded.elements);
+
+            for (let i = 0; i < data.length; i++) {
+                const task = new Task(
+                    data[i].id,
+                    data[i].subject,
+                    data[i].description.raw,
+                    data[i].startDate,
+                    data[i].dueDate,
+                    data[i]._links.project.title,
+                    data[i]._links.type.title
+                );
+                tasks.push(task);
+            }
+        } catch (error) {
+            console.error("Hubo un problema con las tareas:", error.message);
+        }
+        return tasks;
+    }
 
     static async getAllUsers() {
         const data = await fetch(`${this.API_URL}/users`, {
@@ -220,30 +246,34 @@ return users;
         return projects;
     }
 
-    static async getTasksFiltered(filters) {
+    static async getTasksFiltered(filters, pageSize = 16, offset = 1) {
         const tasks = [];
         const encodedFilters = encodeURIComponent(filters);
 
-        console.log(`${this.API_URL}/work_packages?filters=${encodedFilters}`);
-
         try {
-            const data = await fetch(`${this.API_URL}/work_packages?filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
             })
                 .then(response => response.json())
-                .then (data => data._embedded.elements)
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
-                const task = new Task(data[i].id, data[i].subject, data[i].description.raw, data[i].startDate, data[i].dueDate, data[i]._links.project.title);
-                tasks.push(task)
+                const task = new Task(
+                    data[i].id,
+                    data[i].subject,
+                    data[i].description.raw,
+                    data[i].startDate,
+                    data[i].dueDate,
+                    data[i]._links.project.title,
+                    data[i]._links.type.title
+                );
+                tasks.push(task);
             }
-
-
         } catch (error) {
-            console.log("Hubo un problema con las tareas filtradas:" + error.message);
-            return error;
+            console.error("Error con las tareas filtradas:", error.message);
+            return [];
         }
 
         return tasks;

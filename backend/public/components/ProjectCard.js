@@ -52,10 +52,20 @@ class ProjectCard extends HTMLElement {
     }
 
     getRelatedTasksHtml(projectName) {
-        const tasks = Array.from(document.querySelectorAll('task-card'));
-        return tasks
-            .filter(task => task.getAttribute('project') === projectName)
-            .map(task => task.outerHTML)
+        // Usar las tareas globales almacenadas en window.todasLasTareas
+        return window.todasLasTareas
+            .filter(task => task.project === projectName)
+            .map(task => {
+                const taskElement = document.createElement('task-card');
+                taskElement.setAttribute('id', task.id);
+                taskElement.setAttribute('type', task.type);
+                taskElement.setAttribute('subject', task.subject);
+                taskElement.setAttribute('description', task.description);
+                taskElement.setAttribute('startDate', task.startDate);
+                taskElement.setAttribute('dueDate', task.dueDate);
+                taskElement.setAttribute('project', task.project);
+                return taskElement.outerHTML;
+            })
             .join('');
     }
 
