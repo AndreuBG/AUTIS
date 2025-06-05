@@ -82,14 +82,6 @@ app.get('/getProjectsFiltered/:filter', async (req, res) => {
     res.send(await OpenProjectService.getProjectsFiltered(req.params.filter));
 });
 
-app.get('/getTimeEntries', async (req, res) => {
-    try {
-        const entries = await OpenProjectService.getAllTimeEntries();
-        res.json(entries);
-    } catch (error) {
-        res.status(500).json({ error: 'Error obteniendo time entries' });
-    }
-});
 app.get('/getTasksFiltered/:filter', async (req, res) => {
     console.log(req.params.filter);
     res.send(await OpenProjectService.getTasksFiltered(req.params.filter));
@@ -98,4 +90,28 @@ app.get('/getTasksFiltered/:filter', async (req, res) => {
 app.get('/getUsersFiltered/:filter', async (req, res) => {
     console.log(req.params.filter);
     res.send(await OpenProjectService.getUsersFiltered(req.params.filter));
+});
+
+app.get('/getTimeEntries', async (req, res) => {
+    try {
+        const entries = await OpenProjectService.getAllTimeEntries();
+
+        // Obtener detalles de usuario para cada time entry
+        const entriesWithUser = await Promise.all(entries.map(async entry => {
+            let userInfo = null;
+            if (entry._links && entry._links.user && entry._links.user.href) {
+                // Extrae el ID del usuario desde la URL
+                const userId = entry._links.user.href.split('/').pop();
+                userInfo = await OpenProjectService.getUserData(userId);
+            }
+            return {
+                ...entry,
+                assignedUser: userInfo // Incluye los datos del usuario asignado
+            };
+        }));
+
+        res.json(entriesWithUser);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });

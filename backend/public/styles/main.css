@@ -174,9 +174,12 @@ tab-button[active="true"] {
 
 #proyectos-group,
 #tareas-group,
-#usuarios-group,
-#dashboard-group {
+#usuarios-group {
     margin-top: 120px;
+}
+
+#dashboard-group {
+    margin-top: 85px;
 }
 
 #tituloProyectos {
@@ -489,4 +492,60 @@ body.no-scroll #logo {
 }
 #logo {
     transition: left 0.3s;
+}
+
+@media (max-width: 700px) {
+    .filtro-container {
+        position: fixed;
+        top: 50px;          
+        left: 0;
+        right: 0;
+        height: auto;
+        min-height: 0;
+        background: #f1f5fb;
+        box-shadow: none;
+        padding: 10px;
+        width: 100%;
+        border-radius: 0;
+        z-index: 1000;
+    }
+    #filtro-tareas .filtro-menu {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    #filtro-tareas .filtro-menu label,
+    #filtro-tareas .filtro-menu select,
+    #filtro-tareas .filtro-menu button {
+        width: 100%;
+        min-width: 0;
+        font-size: 1em;
+    }
+    #icono-filtro-tareas {
+        display: block;
+        position: static;    /* <-- No fijo, sigue el flujo normal */
+        top: auto;
+        right: auto;
+        left: auto;
+        width: 32px;
+        height: 32px;
+        margin: 12px auto 8px auto; /* Centrado y con separación */
+        z-index: auto;
+        cursor: pointer;
+    }
+    #filtro-tareas.flotante {
+        top: 100px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        background: #f1f5fb;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        z-index: 1100;
+        padding: 12px 10px;
+        margin: 0;
+    }
 }

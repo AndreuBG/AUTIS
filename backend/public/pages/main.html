@@ -94,6 +94,7 @@
                     <option value="on-hold">On Hold</option>
                 </select>
             </label>
+            <label>
                 Prioridad:
                 <select id="filtro-Prioridad-tareas">
                     <option value="">Todos</option>
@@ -131,6 +132,7 @@
 
     <div id="tareas-group" style="display: none;">
         <h1>Tareas</h1>
+        <img id="icono-filtro-tareas" src="/img/filtro.png" alt="Mostrar filtros" style="display:none; cursor:pointer; position:fixed; top:55px; right:20px; z-index:1101; width:32px; height:32px;">
         <div id="tareas" class="section"></div>
     </div>
 
@@ -216,6 +218,7 @@
 <script src="../components/TimeEntriesTable.js" type="module"></script>
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
+<script src="/js/filtroTareasToggle.js"></script>
 
 </body>
 </html>

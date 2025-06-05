@@ -15,11 +15,28 @@ class UserCard extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         /* Estilos existentes y de modal */
-        .card { display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 10px; background-color: ${active ? '#e0ffe0' : '#dfe9f5'}; }
+        .card {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 10px;
+          margin: 10px;
+          background-color: #f3f3f3;
+          transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card:hover {
+          background-color:rgb(219, 219, 219); /* Gris claro para el hover */
+          box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+          transform: scale(1.01);
+          transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
         .info-container { display: flex; align-items: flex-start; }
         .user-icon { width: 50px; height: 50px; margin-right: 15px; border-radius: 50%; object-fit: cover; }
         .info { display: flex; flex-direction: column; }
-        .card h2 { font-size: 1.5em; margin: 0 0 5px 0; }
+        .card h2 { font-size: 1.3em; margin: 0 0 5px 0; font-weight: bold; }
         .card p { font-size: 1em; margin: 0; }
         .buttons {
           display: flex;
@@ -29,8 +46,8 @@ class UserCard extends HTMLElement {
           max-width: 100%;
         }
         button {
-          padding: 15px 25px;
-          font-size: 20px;
+          padding: 10px 10px;
+          font-size: 15px;
           border: none;
           border-radius: 4px;
           cursor: pointer;
@@ -58,10 +75,7 @@ class UserCard extends HTMLElement {
           }
         }
         .boton_modificar { background-color: #4CAF50; }
-        .boton_eliminar { background-color: #f44336; }
-        .card:hover { background-color: rgb(145, 198, 255); }
-        
-        /*Modal Formulario */   
+        .boton_eliminar { background-color: #f44336; } 
             
         .modal {
           display: none;
