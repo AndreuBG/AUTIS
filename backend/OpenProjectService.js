@@ -109,7 +109,7 @@ static async getAllProjects() {
     const users = [];
 
     for (let i = 0; i < data.length; i++) {
-    const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
+    const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email, data[i].status);
     users.push(user);
 }
 return users;
@@ -165,14 +165,18 @@ return users;
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({
+                    ...userData,
+                    status: userData.status || 'active' // Ensure status is set
+                })
             });
 
             console.log(response);
+            return response;
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Error de conexión al servidor');
+            throw error;
         }
     }
 

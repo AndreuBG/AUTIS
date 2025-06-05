@@ -209,6 +209,15 @@
                 </button>
                 <small class="hint">La contraseña debe tener al menos 10 caracteres</small>
             </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select id="status-crear" required>
+                    <option value="active">Activo</option>
+                    <option value="invited">Invitado</option>
+                    <option value="registered">Registrado</option>
+                    <option value="locked">Bloqueado</option>
+                </select>
+            </div>
             <div class="modal-buttons">
                 <button type="button" id="cancelar-crear" class="boton-cancelar">Cancelar</button>
                 <button type="submit" class="boton-crear">Crear Usuario</button>

@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
             lastName: document.getElementById('lastName-crear').value,
             login: document.getElementById('login-crear').value,
             email: document.getElementById('email-crear').value,
-            password: document.getElementById('password-crear').value
+            password: document.getElementById('password-crear').value,
+            status: document.getElementById('status-crear').value || 'active'
         };
 
         try {
