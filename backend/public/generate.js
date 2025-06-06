@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             userElement.setAttribute('name', u.name);
             userElement.setAttribute('login', u.login);
             userElement.setAttribute('email', u.email);
+            userElement.setAttribute('status', u.status);
             listaUsuarios.appendChild(userElement);
         });
 
