@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectService } from "./OpenProjectService.js";
 import {login} from "./controllers/authentication.js";
+import e from "express";
 
 // Inicialització d'Express
 const app = express();
@@ -138,7 +139,7 @@ app.get('/getTimeEntries', async (req, res) => {
                 assignedUser: userInfo // Incluye los datos del usuario asignado
             };
         }));
-
+        console.log(entriesWithUser);
         res.json(entriesWithUser);
     } catch (error) {
         res.status(500).json({ error: error.message });

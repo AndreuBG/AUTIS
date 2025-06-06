@@ -1,6 +1,7 @@
 class TimeEntriesTable extends HTMLElement {
     async connectedCallback() {
         const response = await fetch('/getTimeEntries');
+
         const timeEntries = await response.json();
 
         const grouped = {};
