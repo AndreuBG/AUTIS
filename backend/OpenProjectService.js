@@ -5,6 +5,7 @@ import { User } from "./public/Models/User.js";
 export class OpenProjectService {
     static API_URL = 'http://localhost:8080/api/v3';
     static API_TOKEN;
+    static encodedSort = encodeURIComponent(JSON.stringify([["createdAt", "desc"]]));
 
     static setToken(token) {
         this.API_TOKEN = token;
@@ -14,7 +15,7 @@ export class OpenProjectService {
         const projects = [];
 
         try {
-            const data = await fetch(`${this.API_URL}/projects`, {
+            const data = await fetch(`${this.API_URL}/projects?sortBy=${this.encodedSort}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -42,7 +43,9 @@ export class OpenProjectService {
             // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
             const apiOffset = offset;
 
-            const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${apiOffset}`, {
+
+
+            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${this.encodedSort}&pageSize=${pageSize}&offset=${apiOffset}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -265,7 +268,7 @@ export class OpenProjectService {
         console.log(`${this.API_URL}/projects?filters=${encodedFilters}`);
 
         try {
-            const data = await fetch(`${this.API_URL}/projects?filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/projects?sortBy=${this.encodedSort}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -292,7 +295,7 @@ export class OpenProjectService {
         const encodedFilters = encodeURIComponent(filters);
 
         try {
-            const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${this.encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
