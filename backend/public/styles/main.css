@@ -51,11 +51,13 @@ nav {
 
 /* Logo a la izquierda */
 #logo {
-    max-height: 30px;
-    height: auto;
+    height: 30px; /* Altura fija */
     width: auto;
     position: absolute;
-    left: 5px;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    object-fit: contain; /* Mantiene la proporción de la imagen */
 }
 
 /* Icono cerrar sesión a la derecha */
@@ -604,8 +606,9 @@ project-card {
     #logo {
         position: absolute;
         left: 50%;
-        transform: translateX(-50%);
-        z-index: 1100;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        height: 30px; /* Mantiene la misma altura en móvil */
     }
 body.no-scroll #logo {
     left: 340px; /* Un poco más que el ancho del menú lateral */
@@ -707,6 +710,16 @@ body.no-scroll #logo {
 #logo {
     transition: left 0.3s;
 }
+.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    width: 100%;
+}
+
+
+
 
 .message-container {
     display: flex;
@@ -815,4 +828,25 @@ body.no-scroll #logo {
         padding: 12px 10px;
         margin: 0;
     }
+}
+
+.description {
+    width: 100%;
+    min-height: 100px;
+    font-size: 0.8em; /* Tamaño de texto más pequeño */
+    padding: 12px;
+    border: 2px solid #09348b;
+    border-radius: 4px;
+    background-color: #f8f8fc;
+    color: #330F0A;
+    resize: vertical;
+    margin-top: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.description:focus {
+    border-color: #CC6204;
+    outline: none;
+    background-color: #fff;
 }

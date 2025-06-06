@@ -3,24 +3,24 @@ import { Task } from "./public/Models/Task.js";
 import { User } from "./public/Models/User.js";
 
 export class OpenProjectService {
-static API_URL = 'http://localhost:8080/api/v3';
-static API_TOKEN;
+    static API_URL = 'http://localhost:8080/api/v3';
+    static API_TOKEN;
 
-static setToken(token) {
-    this.API_TOKEN = token;
-}
+    static setToken(token) {
+        this.API_TOKEN = token;
+    }
 
-static async getAllProjects() {
-    const projects = [];
+    static async getAllProjects() {
+        const projects = [];
 
-    try {
-        const data = await fetch(`${this.API_URL}/projects`, {
-            headers: {
-                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
-            }
-        })
-            .then(response => response.json())
-            .then (data => data._embedded.elements)
+        try {
+            const data = await fetch(`${this.API_URL}/projects`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
                 const project = new Project(data[i].active, data[i].id, data[i].name, data[i].description.raw);
@@ -28,45 +28,45 @@ static async getAllProjects() {
             }
 
 
-    } catch (error) {
-        console.log("Hubo un problema con los proyectos:" + error.message);
-        return error;
-    }
-
-  return projects;
-}
-    
- static async getAllTasks(pageSize = 16, offset = 1) {
-    const tasks = [];
-    try {
-        // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
-        const apiOffset = offset;
-
-        const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${apiOffset}`, {
-            headers: {
-                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
-            }
-        })
-            .then(response => response.json())
-            .then(data => data._embedded.elements);
-
-        for (let i = 0; i < data.length; i++) {
-            const task = new Task(
-                data[i].id,
-                data[i].subject,
-                data[i].description.raw,
-                data[i].startDate,
-                data[i].dueDate,
-                data[i]._links.project.title,
-                data[i]._links.type.title
-            );
-            tasks.push(task);
+        } catch (error) {
+            console.log("Hubo un problema con los proyectos:" + error.message);
+            return error;
         }
-    } catch (error) {
-        console.error("Hubo un problema con las tareas:", error.message);
+
+        return projects;
     }
-    return tasks;
-}
+
+    static async getAllTasks(pageSize = 16, offset = 1) {
+        const tasks = [];
+        try {
+            // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
+            const apiOffset = offset;
+
+            const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${apiOffset}`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            })
+                .then(response => response.json())
+                .then(data => data._embedded.elements);
+
+            for (let i = 0; i < data.length; i++) {
+                const task = new Task(
+                    data[i].id,
+                    data[i].subject,
+                    data[i].description.raw,
+                    data[i].startDate,
+                    data[i].dueDate,
+                    data[i]._links.project.title,
+                    data[i]._links.type.title
+                );
+                tasks.push(task);
+            }
+        } catch (error) {
+            console.error("Hubo un problema con las tareas:", error.message);
+        }
+        return tasks;
+    }
 
     static async getAllTasksNoPagination() {
         const tasks = [];
@@ -99,21 +99,21 @@ static async getAllProjects() {
 
     static async getAllUsers() {
         const data = await fetch(`${this.API_URL}/users`, {
-        headers: {
-            'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+            }
+        })
+            .then(response => response.json())
+            .then(data => data._embedded.elements)
+
+        const users = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
+            users.push(user);
         }
-    })
-    .then(response => response.json())
-    .then(data => data._embedded.elements)
-
-    const users = [];
-
-    for (let i = 0; i < data.length; i++) {
-    const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
-    users.push(user);
-}
-return users;
-}
+        return users;
+    }
 
     static async deleteUser(id) {
         try {
@@ -176,45 +176,86 @@ return users;
         }
     }
 
-    static async getUserData(id) {
-    try {
-        const response = await fetch(`${this.API_URL}/users/${id}`, {
-            headers: {
-                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
-            }
-        });
+    static async createProject(projectData) {
+        console.log(projectData);
+        try {
+            const response = await fetch(`${this.API_URL}/projects`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(projectData)
+            });
 
-        if (!response.ok) {
-            throw new Error('Error al obtener datos del usuario');
-        }
-
-        const userData = await response.json();
-        return userData;
-
-    } catch (error) {
-        console.error(`Error consiguiendo datos del usuario ${id}:`, error.message);
-        throw error;
-    }
-}
-    static async modifyUser(datosActualizados, idUser) {
-    try {
-
-        const response = await fetch(`${this.API_URL}/users/${idUser}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datosActualizados)
-        });
-
-        if (!response.ok) {
             console.log(response);
-            console.error("Error modificando el usuario");
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error de conexión al servidor');
         }
-    } catch (error) {
-        console.error('Error de red:', error);
     }
+
+    static async createTask(taskData) {
+        console.log(taskData);
+        try {
+            const response = await fetch(`${this.API_URL}/work_packages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(taskData)
+            });
+
+            console.log(response);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error de conexión al servidor');
+        }
+    }
+
+    static async getUserData(id) {
+        try {
+            const response = await fetch(`${this.API_URL}/users/${id}`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al obtener datos del usuario');
+            }
+
+            const userData = await response.json();
+            return userData;
+
+        } catch (error) {
+            console.error(`Error consiguiendo datos del usuario ${id}:`, error.message);
+            throw error;
+        }
+    }
+
+    static async modifyUser(datosActualizados, idUser) {
+        try {
+
+            const response = await fetch(`${this.API_URL}/users/${idUser}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datosActualizados)
+            });
+
+            if (!response.ok) {
+                console.log(response);
+                console.error("Error modificando el usuario");
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+        }
     }
 
     static async getProjectsFiltered(filters) {
@@ -230,7 +271,7 @@ return users;
                 }
             })
                 .then(response => response.json())
-                .then (data => data._embedded.elements)
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
                 const project = new Project(data[i].active, data[i].id, data[i].name, data[i].description.raw);
@@ -292,7 +333,7 @@ return users;
                 }
             })
                 .then(response => response.json())
-                .then (data => data._embedded.elements)
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
                 const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
@@ -323,4 +364,22 @@ return users;
         }
     }
 
+    static async getOneProject(id) {
+        try {
+            const response = await fetch(`${this.API_URL}/projects/${id}`, {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Error al obtener el proyecto');
+            }
+            const projectData = await response.json();
+            return new Project(projectData.active, projectData.id, projectData.name, projectData.description.raw);
+
+        } catch (error) {
+            console.error("Error obteniendo el proyecto:", error);
+            throw error;
+        }
+    }
 }

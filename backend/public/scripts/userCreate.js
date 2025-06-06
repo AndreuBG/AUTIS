@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modal-crear-usuario');
-    const openBtn = document.querySelector('.boton_crear');
-    const cancelBtn = document.getElementById('cancelar-crear');
+    const openBtn = document.getElementById('boton-crear-usuarios');
+    const cancelBtn = document.getElementById('cancelar-crear-usuario');
     const form = document.getElementById('form-crear-usuario');
     const togglePassword = document.getElementById('toggle-password-crear');
     const passwordInput = document.getElementById('password-crear');
+
+
 
     openBtn.addEventListener('click', () => {
         modal.style.display = 'flex';
@@ -14,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'none';
         form.reset();
     });
+
+
 
     // Toggle password visibility
     togglePassword.addEventListener('click', () => {
@@ -26,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+
+
         const userData = {
             firstName: document.getElementById('firstName-crear').value,
             lastName: document.getElementById('lastName-crear').value,
@@ -33,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             email: document.getElementById('email-crear').value,
             password: document.getElementById('password-crear').value
         };
+
+
 
         try {
             const res = await fetch('http://localhost:5500/createUser', {

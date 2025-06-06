@@ -70,6 +70,15 @@ app.get('/deleteUser/:id', async function (req, res) {
     res.send(await OpenProjectService.deleteUser(req.params.id));
 });
 
+app.get('/getOneProject/:id', async function(req, res) {
+    try {
+        const project = await OpenProjectService.getOneProject(req.params.id);
+        res.send(project);
+    } catch (error) {
+        console.error("Error obteniendo el proyecto:", error);
+        res.status(500).json({ error: 'Error obteniendo el proyecto' });
+    }
+})
 
 app.post('/login', async (req, res) => {
     res.send(await login(req.body));
@@ -78,6 +87,14 @@ app.post('/login', async (req, res) => {
 app.post('/createUser', async (req, res) => {
     res.send(await OpenProjectService.createUser(req.body));
 })
+
+app.post('/createProject', async (req, res) => {
+    res.send(await OpenProjectService.createProject(req.body));
+});
+
+app.post('/createTask', async (req, res) => {
+    res.send(await OpenProjectService.createTask(req.body));
+});
 
 app.get('/getUserData/:id', async function(req, res){
    res.send(await OpenProjectService.getUserData(req.params.id));

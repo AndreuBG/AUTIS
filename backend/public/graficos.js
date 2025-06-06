@@ -4,7 +4,7 @@ export class Graficos {
         try {
             // Obtener los proyectos y las tareas desde el servicio OpenProject
             const proyectos = await (await fetch('http://localhost:5500/getProjects')).json();
-            const tareas = await (await fetch('http://localhost:5500/getTasks')).json();
+            const tareas = await (await fetch('http://localhost:5500/getAllTasks')).json();
 
             // Llamar a la función para crear los gráficos con los datos obtenidos
             this.crearGraficos(proyectos, tareas);

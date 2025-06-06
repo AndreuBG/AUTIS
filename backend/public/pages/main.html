@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="icon" type="image/jpg" href="/img/favicon.png"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../userCreate.js" defer></script>
+    <script src="/scripts/userCreate.js" defer></script>
+    <script src="/scripts/projectCreate.js" defer></script>
+    <script src="/scripts/taskCreate.js" defer></script>
     <script src="/scripts/menu.js" defer></script>
-    <script src="../js/filtroProyectos.js" defer></script>
+    <script src="/js/filtroProyectos.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>AUTIS - Gestión de proyectos</title>
 </head>
@@ -128,11 +130,17 @@
     <div id="proyectos-group">
         <h1>Proyectos</h1>
         <div id="proyectos" class="section active"></div>
+        <div class="crear-container">
+            <button class="boton_crear" id="boton-crear-proyectos">Crear nuevo proyecto</button>
+        </div>
     </div>
 
     <div id="tareas-group" style="display: none;">
         <h1>Tareas</h1>
         <img id="icono-filtro-tareas" src="/img/filtro.png" alt="Mostrar filtros" style="display:none; cursor:pointer; position:fixed; top:55px; right:20px; z-index:1101; width:32px; height:32px;">
+        <div class="crear-container">
+            <button class="boton_crear" id="boton-crear-tarea">Crear nueva tarea</button>
+        </div>
         <div id="tareas" class="section"></div>
         <div class="paginacion">
             <button id="anterior">&laquo;</button>
@@ -145,31 +153,29 @@
         <h1>Usuarios</h1>
         <div id="users" class="section"></div>
         <div class="crear-container">
-            <button class="boton_crear">Crear nuevo usuario</button>
+            <button class="boton_crear" id="boton-crear-usuarios">Crear nuevo usuario</button>
         </div>
     </div>
 
     <div id="dashboard-group" style="display: none;">
         <h1>Dashboard</h1>
+        <div class="graficos-container">
+            <div class="graficos">
+                <h2>Gráfico de Barras</h2>
+                <canvas id="graficoBarras" width="300" height="300"></canvas>
+            </div>
+
+            <div class="graficos">
+                <h2>Gráfico Circular</h2>
+                <canvas id="graficoCircular" width="300" height="300"></canvas>
+            </div>
+
+            <div class="graficos">
+                <h2>Gráfico de Ejemplo</h2>
+                <canvas id="graficoEjemplo" width="300" height="300"></canvas>
+            </div>
+        </div>
         <time-entries-table></time-entries-table>
-    </div>
-
-    <div class="graficos-container">
-        <div class="graficos">
-            <h2>Gráfico de Barras</h2>
-            <canvas id="graficoBarras" width="300" height="300"></canvas>
-        </div>
-
-        <div class="graficos">
-            <h2>Gráfico Circular</h2>
-            <canvas id="graficoCircular" width="300" height="300"></canvas>
-        </div>
-
-        <div class="graficos">
-            <h2>Gráfico de Ejemplo</h2>
-            <canvas id="graficoEjemplo" width="300" height="300"></canvas>
-        </div>
-
 
     </div>
 
@@ -212,13 +218,134 @@
                 <small class="hint">La contraseña debe tener al menos 10 caracteres</small>
             </div>
             <div class="modal-buttons">
-                <button type="button" id="cancelar-crear" class="boton-cancelar">Cancelar</button>
+                <button type="button" id="cancelar-crear-usuario" class="boton-cancelar">Cancelar</button>
                 <button type="submit" class="boton-crear">Crear Usuario</button>
             </div>
         </form>
     </div>
 </div>
 
+<div id="modal-crear-proyecto" class="modal-crear" style="display: none;">
+    <div class="modal-content">
+        <h2>Crear Nuevo Proyecto</h2>
+        <form id="form-crear-proyecto">
+            <div class="form-group">
+                <label for="name-crear">Nombre</label>
+                <input
+                        type="text"
+                        id="name-crear"
+                        placeholder="Ej: Proyecto Innovación"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label for="identifier-crear">Identificador</label>
+                <input
+                        type="text"
+                        id="identifier-crear"
+                        pattern="[a-z0-9-]+"
+                        placeholder="Ej: proyecto-innovacion"
+                        required
+                        oninvalid="this.setCustomValidity('El identificador solo puede contener letras minúsculas, números y guiones')"
+                        oninput="this.setCustomValidity('')"
+                >
+                <small class="hint">Solo letras minúsculas, números y guiones</small>
+            </div>
+            <div class="form-group">
+                <label for="description-crear">Descripción</label>
+                <textarea
+                        class="description"
+                        id="description-proyecto"
+                        placeholder="Descripción del proyecto (opcional)"
+                ></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancelar-crear-proyecto" class="boton-cancelar">Cancelar</button>
+                <button type="submit" class="boton-crear" id="boton-crear-proyecto">Crear Proyecto</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal-crear-tarea" class="modal-crear" style="display: none;">
+    <div class="modal-content">
+        <h2>Crear Nueva Tarea</h2>
+        <form id="form-crear-tarea">
+            <div class="form-group">
+                <label for="subject-crear">Asunto</label>
+                <input
+                        type="text"
+                        id="subject-crear"
+                        placeholder="Ej: Implementar nueva función"
+                        required
+                        oninvalid="this.setCustomValidity('Por favor, introduce un asunto para la tarea')"
+                        oninput="this.setCustomValidity('')"
+                >
+            </div>
+            <div class="form-group">
+                <label for="project-crear">Proyecto</label>
+                <select
+                        id="project-crear"
+                        required
+                        oninvalid="this.setCustomValidity('Por favor, selecciona un proyecto')"
+                        oninput="this.setCustomValidity('')"
+                >
+                    <option value="">Selecciona un proyecto</option>
+                    <!-- Populated dynamically via JavaScript -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type-crear">Tipo</label>
+                <select id="type-crear">
+                    <option value="1">Tarea</option>
+                    <option value="2">Milestone</option>
+                    <option value="3">Summary Task</option>
+                    <option value="5">Epic</option>
+                    <option value="6">User Story</option>
+                    <option value="7">Error</option>
+                    <option value="4">Función</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description-crear">Descripción</label>
+                <textarea
+                        class="description"
+                        id="description-crear"
+                        placeholder="Detalles de la tarea (opcional)"
+                ></textarea>
+            </div>
+            <div class="form-group">
+                <label for="priority-crear">Prioridad</label>
+                <select id="priority-crear">
+                    <option value="low">Baja</option>
+                    <option value="medium" selected>Media</option>
+                    <option value="high">Alta</option>
+                    <option value="inmediate">Inmediata</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="start-date-crear">Fecha de inicio</label>
+                <input
+                        type="date"
+                        id="start-date-crear"
+                        placeholder="Fecha de inicio (opcional)"
+                >
+            </div>
+            <div class="form-group">
+                <label for="due-date-crear">Fecha de vencimiento</label>
+                <input
+                        type="date"
+                        id="due-date-crear"
+                        placeholder="Fecha de vencimiento (opcional)"
+                >
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancelar-crear-tarea" class="boton-cancelar">Cancelar</button>
+                <button type="submit" class="boton-crear" id="crear-tarea">Crear Tarea</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script src="../components/TimeEntriesTable.js" type="module"></script>
 <script src="../generate.js" type="module" defer></script>

@@ -2,6 +2,7 @@ import './components/ProjectCard.js';
 import './components/TaskCard.js';
 import './components/TabButton.js';
 import './components/UserCard.js';
+import {Graficos} from "./graficos.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     listaTareas.appendChild(taskElement);
                 });
 
-                document.getElementById('pagina-actual').textContent = `Página ${pagina}`;
+                document.getElementById('pagina-actual').textContent = `${pagina}`;
                 paginaTareaActual = pagina;
 
                 document.getElementById('anterior').disabled = pagina <= 1;

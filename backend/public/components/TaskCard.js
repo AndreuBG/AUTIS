@@ -12,9 +12,9 @@ class TaskCard extends HTMLElement {
         const type = this.getAttribute('type');
         const typeColor = this.getAttribute('typeColor');
         const subject = this.getAttribute('subject');
-        const description = this.getAttribute('description');
-        const startDate = this.getAttribute('startDate');
-        const dueDate = this.getAttribute('dueDate');
+        const description = this.getAttribute('description') || 'Sin descripción';
+        const startDate = this.getAttribute('startDate') || 'No especificada';
+        const dueDate = this.getAttribute('dueDate') || 'No especificada';
         const project = this.getAttribute('project');
 
         this.shadowRoot.innerHTML = `
