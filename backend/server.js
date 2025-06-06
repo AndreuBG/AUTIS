@@ -139,7 +139,6 @@ app.get('/getTimeEntries', async (req, res) => {
                 assignedUser: userInfo // Incluye los datos del usuario asignado
             };
         }));
-        console.log(entriesWithUser);
         res.json(entriesWithUser);
     } catch (error) {
         res.status(500).json({ error: error.message });
