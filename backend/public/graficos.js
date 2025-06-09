@@ -85,5 +85,48 @@ export class Graficos {
                 }
             }
         });
+
+        const ctxProyectosEstado = document.getElementById('graficoProyectosEstado');
+
+        if (ctxProyectosEstado) {
+            const activos = proyectos.filter(p => p.active === true).length;
+            const inactivos = proyectos.filter(p => p.active === false).length;
+
+            new Chart(ctxProyectosEstado, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Activos', 'Inactivos'],
+                    datasets: [{
+                        data: [activos, inactivos],
+                        backgroundColor: ['#2ecc71', '#e74c3c'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    cutout: '70%',
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#09348b',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 }
