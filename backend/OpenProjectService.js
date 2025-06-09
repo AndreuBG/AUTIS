@@ -34,42 +34,40 @@ export class OpenProjectService {
             return error;
         }
 
-        return projects;
-    }
+  return projects;
+}
+    
+ static async getAllTasks(pageSize = 16, offset = 1) {
+    const tasks = [];
+    try {
+        // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
+        const apiOffset = offset;
 
-    static async getAllTasks(pageSize = 16, offset = 1) {
-        const tasks = [];
-        try {
-            // Calculamos el offset correcto (página 1 = offset 0, página 2 = offset 16, etc.)
-            const apiOffset = offset;
-
-
-
-            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${this.encodedSort}&pageSize=${pageSize}&offset=${apiOffset}`, {
-                headers: {
-                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
-                }
-            })
-                .then(response => response.json())
-                .then(data => data._embedded.elements);
-
-            for (let i = 0; i < data.length; i++) {
-                const task = new Task(
-                    data[i].id,
-                    data[i].subject,
-                    data[i].description.raw,
-                    data[i].startDate,
-                    data[i].dueDate,
-                    data[i]._links.project.title,
-                    data[i]._links.type.title
-                );
-                tasks.push(task);
+        const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${apiOffset}`, {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
             }
-        } catch (error) {
-            console.error("Hubo un problema con las tareas:", error.message);
+        })
+            .then(response => response.json())
+            .then(data => data._embedded.elements);
+
+        for (let i = 0; i < data.length; i++) {
+            const task = new Task(
+                data[i].id,
+                data[i].subject,
+                data[i].description.raw,
+                data[i].startDate,
+                data[i].dueDate,
+                data[i]._links.project.title,
+                data[i]._links.type.title
+            );
+            tasks.push(task);
         }
-        return tasks;
+    } catch (error) {
+        console.error("Hubo un problema con las tareas:", error.message);
     }
+    return tasks;
+}
 
     static async getAllTasksNoPagination() {
         const tasks = [];
@@ -111,12 +109,12 @@ export class OpenProjectService {
 
         const users = [];
 
-        for (let i = 0; i < data.length; i++) {
-            const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
-            users.push(user);
-        }
-        return users;
-    }
+    for (let i = 0; i < data.length; i++) {
+    const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email, data[i].status);
+    users.push(user);
+}
+return users;
+}
 
     static async deleteUser(id) {
         try {
@@ -168,7 +166,10 @@ export class OpenProjectService {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({
+                    ...userData,
+                    status: userData.status || 'active' // Ensure status is set
+                })
             });
 
             console.log(response);
@@ -212,10 +213,11 @@ export class OpenProjectService {
             });
 
             console.log(response);
+            return response;
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Error de conexión al servidor');
+            throw error;
         }
     }
 
@@ -294,8 +296,10 @@ export class OpenProjectService {
         const tasks = [];
         const encodedFilters = encodeURIComponent(filters);
 
+        console.log(`${this.API_URL}/work_packages?filters=${encodedFilters}`);
+
         try {
-            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${this.encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/work_packages?pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -315,6 +319,8 @@ export class OpenProjectService {
                 );
                 tasks.push(task);
             }
+
+
         } catch (error) {
             console.error("Error con las tareas filtradas:", error.message);
             return [];
@@ -336,7 +342,7 @@ export class OpenProjectService {
                 }
             })
                 .then(response => response.json())
-                .then(data => data._embedded.elements)
+                .then (data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
                 const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);

@@ -110,6 +110,14 @@ app.get('/getProjectsFiltered/:filter', async (req, res) => {
     res.send(await OpenProjectService.getProjectsFiltered(req.params.filter));
 });
 
+app.get('/getTimeEntries', async (req, res) => {
+    try {
+        const entries = await OpenProjectService.getAllTimeEntries();
+        res.json(entries);
+    } catch (error) {
+        res.status(500).json({ error: 'Error obteniendo time entries' });
+    }
+});
 app.get('/getTasksFiltered/:filter', async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 16;
     const offset = parseInt(req.query.offset) || 1;

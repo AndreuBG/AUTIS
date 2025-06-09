@@ -11,6 +11,7 @@ class UserCard extends HTMLElement {
     const name = this.getAttribute('name') || '';
     const login = this.getAttribute('login') || '';
     const email = this.getAttribute('email') || '';
+    const status = this.getAttribute('status') || '';
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -143,6 +144,79 @@ class UserCard extends HTMLElement {
           cursor: pointer;} 
         #modalbtndel:hover,
         #modalbtnmod:hover { background-color: #cc8400; }
+
+       /* Estilos para el contenedor del formulario */
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 1rem; /* Espacio entre contenedores */
+        }
+
+        /* Estilos para el selector de estado */
+        .form-group select {
+          width: 100%; /* Asegura que tome el ancho del contenedor padre */
+          max-width: 100%; /* Evita que se desborde */
+          box-sizing: border-box; /* Incluye padding y border en el ancho total */
+          margin: 0; /* Elimina márgenes adicionales */
+          padding: 10px; /* Ajusta el padding para que coincida con otros inputs */
+          border: 2px solid #002855;
+          border-radius: 4px;
+          background-color: white;
+          font-size: 16px;
+          color: #333;
+          cursor: pointer;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+          background-repeat: no-repeat;
+          background-position: right 10px center;
+          background-size: 1em;
+        }
+
+        /* Estilo para otros inputs (para consistencia) */
+        .form-group input,
+        .form-group textarea {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 10px; /* Mismo padding que el select */
+          border: 2px solid #002855;
+          border-radius: 4px;
+          font-size: 16px;
+          color: #333;
+        }
+
+        .form-group select:hover,
+        .form-group input:hover,
+        .form-group textarea:hover {
+          border-color: #0a28d1;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+          outline: none;
+          border-color: #0a28d1;
+          box-shadow: 0 0 0 2px rgba(10, 40, 209, 0.2);
+        }
+
+        .form-group select option {
+          padding: 10px;
+          background-color: white;
+          color: #333;
+        }
+
+        /* Media query para responsividad */
+        @media (max-width: 600px) {
+          .form-group select,
+          .form-group input,
+          .form-group textarea {
+            font-size: 14px;
+            padding: 8px; /* Ajuste de padding para pantallas pequeñas */
+          }
+        }
       </style>
 
       <div class="card">
@@ -150,7 +224,7 @@ class UserCard extends HTMLElement {
           <img class="user-icon" src="../img/user.png" alt="User Icon" />
           <div class="info">
             <h2>${name} <i>(${login})</i></h2>
-            <p>${email}</p>
+            <p>${email}  [<b style="color: blue;">${status}</b>]</p>
           </div>
         </div>
         <div class="buttons">
@@ -178,6 +252,15 @@ class UserCard extends HTMLElement {
             <div class="form-group">
               <label>Correo electrónico</label>
               <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="status" required>
+                <option value="active">Activo</option>
+                <option value="locked">Bloqueado</option>
+                <option value="registered">Registrado</option>
+                <option value="invited">Invitado</option>
+              </select>
             </div>
             <div class="modal-buttons">
               <button type="button" class="boton_eliminar" id="modalbtndel">Cancelar</button>
@@ -237,16 +320,17 @@ class UserCard extends HTMLElement {
     form.querySelector('#lastName').value = this.userData.lastName || '';
     form.querySelector('#login').value = this.userData.login || '';
     form.querySelector('#email').value = this.userData.email || '';
+    form.querySelector('#status').value = this.userData.status || 'active';
     this.shadowRoot.querySelector('.modal').style.display = 'flex';
   }
 
   async modificarUsuario() {
-
     const datosActualizados = {
       firstName: this.shadowRoot.querySelector('#firstName').value,
       lastName: this.shadowRoot.querySelector('#lastName').value,
       login: this.shadowRoot.querySelector('#login').value,
       email: this.shadowRoot.querySelector('#email').value,
+      status: this.shadowRoot.querySelector('#status').value
     };
     try {
       const res = await fetch(`http://localhost:5500/modifyUser/${this.idUser}`, {
@@ -261,9 +345,9 @@ class UserCard extends HTMLElement {
         alert('Usuario modificado exitosamente');
         this.shadowRoot.querySelector('.info h2').textContent =
             `${datosActualizados.firstName} ${datosActualizados.lastName} (${datosActualizados.login})`;
-        this.shadowRoot.querySelector('.info p').textContent =
-            datosActualizados.email;
-        this.setAttribute('description', datosActualizados.description);
+        this.shadowRoot.querySelector('.info p').innerHTML =
+            `${datosActualizados.email}  [<b style="color: blue;">${datosActualizados.status}</b>]`;
+        this.setAttribute('status', datosActualizados.status);
         this.shadowRoot.querySelector('.modal').style.display = 'none';
       } else {
         const errorText = await res.text();
