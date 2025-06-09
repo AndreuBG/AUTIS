@@ -4,6 +4,8 @@ class ProjectCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.expanded = false;
         this.onExternalExpand = this.onExternalExpand.bind(this);
+        this.availableUsers = [];
+        this.projectMembers = new Set();
     }
 
     connectedCallback() {
@@ -16,17 +18,24 @@ class ProjectCard extends HTMLElement {
     }
 
     onExternalExpand(event) {
+        const card = this.shadowRoot.querySelector('.card');
         if (event.detail === null) {
-            this.shadowRoot.querySelector('.card').classList.remove('hidden');
+            // Cuando se cierra cualquier tarjeta, todas vuelven a ser visibles
+            card.classList.remove('hidden');
+            card.style.zIndex = '0';
         } else if (event.detail !== this) {
-            this.shadowRoot.querySelector('.card').classList.add('hidden');
+            // Cuando se expande otra tarjeta, esta se oculta
+            card.classList.add('hidden');
+            card.style.zIndex = '0';
             if (this.expanded) {
                 this.expanded = false;
                 document.body.classList.remove('no-scroll');
                 this.render();
             }
         } else {
-            this.shadowRoot.querySelector('.card').classList.remove('hidden');
+            // Cuando esta tarjeta se expande
+            card.classList.remove('hidden');
+            card.style.zIndex = '9999';
         }
     }
 
@@ -51,6 +60,120 @@ class ProjectCard extends HTMLElement {
         this.render();
     }
 
+    async fetchAvailableUsers() {
+        try {
+            const response = await fetch('/getUsers');
+            const users = await response.json();
+            this.availableUsers = users.filter(user => !this.projectMembers.has(user.id));
+            return this.availableUsers;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            return [];
+        }
+    }
+
+    async addMember(userId, roleId = 3) {
+        try {
+            const projectId = this.getAttribute('id');
+            console.log('Adding member with:', {
+                projectId,
+                userId,
+                roleId,
+                token: localStorage.getItem('token')
+            });
+
+            // Ensure userId is a number
+            const numericUserId = parseInt(userId, 10);
+            if (isNaN(numericUserId)) {
+                throw new Error('Invalid user ID format');
+            }
+
+            const response = await fetch('http://localhost:8080/api/v3/memberships', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/hal+json'
+                },
+                body: JSON.stringify({
+                    _type: "Membership",
+                    project: {
+                        href: `/api/v3/projects/${projectId}`
+                    },
+                    principal: {
+                        href: `/api/v3/users/${numericUserId}`
+                    },
+                    roles: [
+                        {
+                            href: `/api/v3/roles/${roleId}`
+                        }
+                    ]
+                })
+            });
+
+            // Log the actual request
+            console.log('Request sent:', {
+                url: 'http://localhost:8080/api/v3/memberships',
+                body: JSON.stringify({
+                    _type: "Membership",
+                    project: { href: `/api/v3/projects/${projectId}` },
+                    principal: { href: `/api/v3/users/${numericUserId}` },
+                    roles: [{ href: `/api/v3/roles/${roleId}` }]
+                }, null, 2)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Full error response:', errorData);
+                throw new Error(`Failed to add member: ${response.status}\nMessage: ${errorData.message}\nDetails: ${JSON.stringify(errorData._embedded?.details || {})}`);
+            }
+
+            const data = await response.json();
+            this.projectMembers.add(userId);
+            const currentMembers = parseInt(this.getAttribute('members') || '0');
+            this.setAttribute('members', currentMembers + 1);
+            this.render();
+            return data;
+        } catch (error) {
+            console.error('Error adding member:', error);
+            throw error;
+        }
+    }
+
+    async showMembersModal() {
+        const users = await this.fetchAvailableUsers();
+        const modal = document.createElement('div');
+        modal.className = 'members-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3>Añadir Miembros</h3>
+                <div class="users-list">
+                    ${users.map(user => `
+                        <div class="user-item" data-user-id="${user.id}">
+                            <span>${user.name}</span>
+                            <button class="add-user-btn">Añadir</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="close-modal-btn">Cerrar</button>
+            </div>
+        `;
+
+        this.shadowRoot.appendChild(modal);
+
+        modal.querySelector('.close-modal-btn').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.querySelectorAll('.add-user-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const userId = e.target.closest('.user-item').dataset.userId;
+                await this.addMember(userId);
+                e.target.closest('.user-item').remove();
+            });
+        });
+    }
+
     getRelatedTasksHtml(projectName) {
         // Usar las tareas globales almacenadas en window.todasLasTareas
         return window.todasLasTareas
@@ -73,6 +196,7 @@ class ProjectCard extends HTMLElement {
         const active = this.getAttribute('active') === 'true';
         const name = this.getAttribute('name');
         const fullDescription = this.getAttribute('description') || '';
+        const members = this.getAttribute('members') || '0';
 
         const maxLength = 100;
         const shortDescription = fullDescription.length > maxLength
@@ -113,7 +237,6 @@ class ProjectCard extends HTMLElement {
             }
 
             .card {
-        
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 padding: 15px;
@@ -122,13 +245,6 @@ class ProjectCard extends HTMLElement {
                 background-color: #ececec;
                 box-sizing: border-box;
                 font-family: Arial, sans-serif;
-                transition: 
-                transform 0.3s ease,
-                width 0.3s ease,
-                height 0.3s ease,
-                background-color 0.3s ease,
-                box-shadow 0.3s ease,
-                opacity 0.3s ease;
                 cursor: pointer;
                 overflow: hidden;
                 position: relative;
@@ -137,10 +253,7 @@ class ProjectCard extends HTMLElement {
             }
 
             .card.hidden {
-                opacity: 0;
-                pointer-events: none;
-                transform: scale(0.95);
-                transition: opacity 0.3s ease, transform 0.3s ease;
+                display: none;
             }
 
             .card:hover:not(.expanded):not(.hidden) {
@@ -157,20 +270,33 @@ class ProjectCard extends HTMLElement {
 
             .card.expanded {
                 position: fixed;
-                top: 100px;
+                top: 50%;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translate(-50%, -50%);
                 width: 70vw;
+                height: auto;
+                max-height: 80vh;
                 background-color: white;
                 box-shadow: 0 0 30px rgba(0,0,0,0.5);
                 border-radius: 10px;
                 overflow-y: auto;
-                max-height: 80vh;
                 z-index: 9999;
-                transform: scale(1) translateX(-50%);
-                cursor: default;
-                user-select: text;
-                padding-bottom: 50px;
+                padding: 20px;
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 9998;
+            }
+
+            .card.expanded + .overlay {
+                display: block;
             }
 
             task-card {
@@ -253,6 +379,91 @@ class ProjectCard extends HTMLElement {
                 color: #c60009;
                 box-shadow: 0 0 5px rgba(198, 0, 9, 0.6);
             }
+
+            .member-count {
+                color: #666;
+                font-size: 0.9em;
+                margin-top: 8px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .member-count span {
+                color: #0a28d1;
+                font-weight: bold;
+            }
+
+            .members-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10001;
+            }
+
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                width: 80%;
+                max-width: 500px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .users-list {
+                margin: 20px 0;
+            }
+
+            .user-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .add-user-btn {
+                padding: 5px 10px;
+                background: #0a28d1;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .add-user-btn:hover {
+                background: #081d94;
+            }
+
+            .add-members-btn {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background: #0a28d1;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .add-members-btn:hover {
+                background: #081d94;
+            }
+
+            .close-modal-btn {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background: #666;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
             </style>
 
             <div class="${cardClass}" tabindex="0" role="button" aria-expanded="${this.expanded}">
@@ -272,7 +483,16 @@ class ProjectCard extends HTMLElement {
             : ''}
 
                 ${relatedTasksHtml}
+
+                <div class="member-count">
+                    👥 Miembros: <span>${members}</span>
+                </div>
+
+                ${this.expanded ? `
+                    <button class="add-members-btn">Añadir Miembros</button>
+                ` : ''}
             </div>
+            ${this.expanded ? '<div class="overlay"></div>' : ''}
         `;
 
         const cardEl = this.shadowRoot.querySelector('.card');
@@ -285,6 +505,13 @@ class ProjectCard extends HTMLElement {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.toggleDescription();
+            });
+        }
+
+        if (this.expanded) {
+            this.shadowRoot.querySelector('.add-members-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showMembersModal();
             });
         }
     }

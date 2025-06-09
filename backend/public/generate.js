@@ -5,6 +5,8 @@ import './components/UserCard.js';
 import {Graficos} from "./graficos.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const API_TOKEN = localStorage.getItem('token');
+    
     try {
         await fetch('http://localhost:5500/postToken', {
             method: 'POST',
@@ -35,6 +37,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         const responseUser = await fetch('/getUsers');
         const usuarios = await responseUser.json();
 
+        // Obtener memberships con autenticación
+        const responseMemberships = await fetch('http://localhost:8080/api/v3/memberships', {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${API_TOKEN}`),
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!responseMemberships.ok) {
+            throw new Error(`Error al obtener memberships: ${responseMemberships.status}`);
+        }
+
+        const membershipsData = await responseMemberships.json();
+        
+        // Validar y contar miembros por proyecto
+        const miembrosPorProyecto = {};
+        if (membershipsData._embedded && membershipsData._embedded.elements) {
+            membershipsData._embedded.elements.forEach(membership => {
+                if (membership._links && membership._links.project) {
+                    const projectId = membership._links.project.href.split('/').pop();
+                    miembrosPorProyecto[projectId] = (miembrosPorProyecto[projectId] || 0) + 1;
+                }
+            });
+        }
+
         // Renderizar proyectos
         const listaProyectos = document.getElementById('proyectos');
         proyectos.forEach((p) => {
@@ -43,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             projectElement.setAttribute('active', p.active);
             projectElement.setAttribute('name', p.name);
             projectElement.setAttribute('description', p.description);
+            projectElement.setAttribute('members', miembrosPorProyecto[p.id] || 0);
             listaProyectos.appendChild(projectElement);
         });
 
