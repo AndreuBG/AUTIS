@@ -3,6 +3,7 @@ import './components/TaskCard.js';
 import './components/TabButton.js';
 import './components/UserCard.js';
 import {Graficos} from "./graficos.js";
+import {ShowMyAlert} from "./my_alert.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -80,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('siguiente').disabled = tareas.length < pageSize;
             } catch (error) {
                 console.error('Error cargando tareas:', error.message);
+                ShowMyAlert('error','Error cargando tareas:');
             }
         }
 
@@ -111,6 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await Graficos.generarGraficos();
         } catch (error) {
             console.error('Error generando gráficos:', error);
+            ShowMyAlert('error','Error generando graficos:');
         }
 
         const cerrarSesion = document.getElementById('cerrarSesion');
@@ -248,8 +251,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error cargando time entries:', error);
+            ShowMyAlert('error','Error cargando time entries:');
         }
     } catch (error) {
         console.error('Error en la carga inicial:', error.message);
+        ShowMyAlert('error','Error en la carga inicial:');
     }
 });

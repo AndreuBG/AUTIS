@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 class ProjectCard extends HTMLElement {
     constructor() {
         super();
@@ -315,12 +317,13 @@ class ProjectCard extends HTMLElement {
                         method: 'DELETE'
                     });
                     if (res.ok) {
+                        ShowMyAlert('success', 'Proyecto eliminado exitosamente');
                         this.remove();
                     } else {
-                        alert('No se pudo eliminar el proyecto');
+                        ShowMyAlert('error', 'No se pudo eliminar el proyecto');
                     }
                 } catch (err) {
-                    alert('Error de red al eliminar el proyecto');
+                    ShowMyAlert('error', 'Error de red al eliminar el proyecto');
                 }
             });
         }

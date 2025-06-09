@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 class TaskCard extends HTMLElement {
     constructor() {
         super();
@@ -107,12 +109,13 @@ class TaskCard extends HTMLElement {
                         method: 'DELETE'
                     });
                     if (res.ok) {
+                        ShowMyAlert('success', 'Tarea eliminada exitosamente');
                         this.remove();
                     } else {
-                        alert('No se pudo eliminar la tarea');
+                        ShowMyAlert('error', 'No se pudo eliminar la tarea');
                     }
                 } catch (err) {
-                    alert('Error de red al eliminar la tarea');
+                    ShowMyAlert('error','Error de red al eliminar la tarea');
                 }
             });
         }

@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modal-crear-proyecto');
     const openBtn = document.getElementById('boton-crear-proyectos');
@@ -5,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-crear-proyecto');
 
     openBtn.addEventListener('click', () => {
+        console.log("Abrir modal de creación de proyecto");
         modal.style.display = 'flex';
     });
 
@@ -32,16 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert('Proyecto creado exitosamente');
                 modal.style.display = 'none';
                 form.reset();
-                location.reload();
+                ShowMyAlert('success','Proyecto creado exitosamente');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500); // recarga tras mostrar el alert
+
             } else {
                 const data = await res.json();
-                alert(`Error: ${data.message || 'Error desconocido'}`);
+                ShowMyAlert('error', `Error: ${data.message || 'Error desconocido'}`);
             }
         } catch (error) {
-            alert('Error de conexión al servidor');
+            ShowMyAlert('error', 'Error de conexión al servidor');
             console.error('Error creando proyecto:', error.message);
         }
     });
