@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     } catch (error) {
         console.error('Error subiendo el token:', error.message);
+        window.location= '/pages/index.html';
     }
 
     try {
@@ -58,7 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 tareas.forEach((t) => {
-                    console.log('ID tarea:', t.id, 'Asunto:', t.subject);
                     const taskElement = document.createElement('task-card');
                     Object.entries({
                         id: t.id,

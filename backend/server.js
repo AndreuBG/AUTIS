@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectService } from "./OpenProjectService.js";
 import {login} from "./controllers/authentication.js";
-import e from "express";
 
 const app = express();
 const PORT = 5500;

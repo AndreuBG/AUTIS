@@ -9,29 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="login-container">
-        <form id="api-token-login">
-            <label for="api-token">API Token:</label>
-            <div class="password-container">
-                <input type="password" id="api-token" name="api-token" required>
-                <button type="button" id="toggle-password" onclick="togglePassword()">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button type="button" id="clear-password" onclick="clearPassword()">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
+<div class="login-container">
+    <form id="api-token-login">
+        <label for="api-token">API Token:</label>
+        <div class="password-container">
+            <input type="password" id="api-token" name="api-token" required>
+            <button type="button" id="toggle-password" onclick="togglePassword()">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button type="button" id="clear-password" onclick="clearPassword()">
+                <i class="fas fa-trash"></i>
+            </button>
 
-            <div class="checkbox-wrapper">
-                <label for="recordarPasswd">Recordar contraseña</label>
-                <input type="checkbox" value="recordar" id="recordarPasswd" name="recordar" />
-            </div>
+        </div>
+
+        <div class="checkbox-wrapper">
+            <label for="recordarPasswd">Recordar contraseña</label>
+            <input type="checkbox" value="recordar" id="recordarPasswd" name="recordar" />
+        </div>
 
 
-            <button type="submit">Acceder</button>
-        </form>
-    </div>
+        <button type="submit">Acceder</button>
+    </form>
+</div>
 
-    <script src="../index.js"></script>
+<script src="../index.js"></script>
 </body>
 </html>
