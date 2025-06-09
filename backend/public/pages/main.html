@@ -16,7 +16,6 @@
 </head>
 <body>
 <nav>
-    <!-- Botón menú hamburguesa (oculto en escritorio, visible en móvil) -->
     <div id="menu-hamburguesa">
         <span></span>
         <span></span>
@@ -30,7 +29,6 @@
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
 </nav>
 
-<!-- Menú lateral oculto, se muestra al pulsar hamburguesa -->
 <div id="menu-lateral">
     <span id="cerrarMenuLateral" class="cerrar-x">&times;</span>
     <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
@@ -38,8 +36,6 @@
     <tab-button target="usuarios-group">Usuarios</tab-button>
     <tab-button target="dashboard-group">Dashboard</tab-button>
 </div>
-
-    <!-- Filtros para Proyectos -->
     <div class="filtro-container" id="filtro-proyectos">
         <div class="filtro-menu">
             <label>
@@ -68,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Filtros para Tareas -->
     <div class="filtro-container" id="filtro-tareas" style="display: none;">
         <div class="filtro-menu">
             <label>
@@ -138,7 +133,6 @@
         </div>
     </div>
 
-    <!-- Filtros para Usuarios -->
     <div class="filtro-container" id="filtro-usuarios" style="display: none;">
         <div class="filtro-menu">
             <label>
@@ -204,7 +198,6 @@
             </div>
         </div>
         <time-entries-table></time-entries-table>
-
     </div>
 
 <div id="modal-crear-usuario" class="modal-crear" style="display: none;">
@@ -328,7 +321,6 @@
                         oninput="this.setCustomValidity('')"
                 >
                     <option value="">Selecciona un proyecto</option>
-                    <!-- Populated dynamically via JavaScript -->
                 </select>
             </div>
             <div class="form-group">

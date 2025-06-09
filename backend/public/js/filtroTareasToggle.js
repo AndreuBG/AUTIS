@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('resize', checkResponsiveFiltro);
 
-    // Observa los cambios de visibilidad de las secciones
     const observer = new MutationObserver(checkResponsiveFiltro);
     if (tareasGroup) {
         observer.observe(tareasGroup, { attributes: true, attributeFilter: ['style', 'class'] });

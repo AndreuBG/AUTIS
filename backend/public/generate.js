@@ -18,24 +18,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // Obtener proyectos
         const responseProject = await fetch('/getProjects');
         const proyectos = await responseProject.json();
 
-        // Obtener todas las tareas y hacerlas disponibles globalmente
         const responseAllTasks = await fetch('/getAllTasks');
         const todasLasTareas = await responseAllTasks.json();
         window.todasLasTareas = todasLasTareas;
 
-        // Configuración de paginación
         let paginaTareaActual = 1;
         const pageSize = 16;
 
-        // Obtener usuarios
         const responseUser = await fetch('/getUsers');
         const usuarios = await responseUser.json();
 
-        // Renderizar proyectos
         const listaProyectos = document.getElementById('proyectos');
         proyectos.forEach((p) => {
             const projectElement = document.createElement('project-card');
@@ -46,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaProyectos.appendChild(projectElement);
         });
 
-        // Función para cargar tareas por página
         async function cargarTareasPagina(pagina) {
             try {
                 const responseTask = await fetch(`/getTasks?pageSize=${pageSize}&offset=${pagina}`);
@@ -64,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 tareas.forEach((t) => {
+                    console.log('ID tarea:', t.id, 'Asunto:', t.subject);
                     const taskElement = document.createElement('task-card');
                     Object.entries({
                         id: t.id,
@@ -88,7 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Configurar eventos de paginación
         document.getElementById('anterior').addEventListener('click', () => {
             if (paginaTareaActual > 1) {
                 cargarTareasPagina(paginaTareaActual - 1);
@@ -99,10 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             cargarTareasPagina(paginaTareaActual + 1);
         });
 
-        // Cargar la primera página de tareas
         await cargarTareasPagina(1);
 
-        // Renderizar usuarios
         const listaUsuarios = document.getElementById('users');
         usuarios.forEach((u) => {
             const userElement = document.createElement('user-card');
@@ -115,14 +107,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaUsuarios.appendChild(userElement);
         });
 
-        // Generar gráficos
         try {
             await Graficos.generarGraficos();
         } catch (error) {
             console.error('Error generando gráficos:', error);
         }
 
-        // Manejo del botón de cerrar sesión
         const cerrarSesion = document.getElementById('cerrarSesion');
         cerrarSesion.addEventListener('click', () => {
             localStorage.removeItem('token');
@@ -130,7 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = '/pages/index.html';
         });
 
-        // Renderizar entradas de tiempo
         try {
             const responseTimeEntries = await fetch('/getTimeEntries');
             const timeEntries = await responseTimeEntries.json();
