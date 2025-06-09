@@ -61,7 +61,8 @@ export class OpenProjectService {
                     data[i].startDate,
                     data[i].dueDate,
                     data[i]._links.project.title,
-                    data[i]._links.type.title
+                    data[i]._links.type.title,
+                    data[i]._links.priority.title
                 );
                 tasks.push(task);
             }
@@ -90,7 +91,8 @@ export class OpenProjectService {
                     data[i].startDate,
                     data[i].dueDate,
                     data[i]._links.project.title,
-                    data[i]._links.type.title
+                    data[i]._links.type.title,
+                    data[i]._links.priority.title
                 );
                 tasks.push(task);
             }
@@ -265,14 +267,13 @@ return users;
         }
     }
 
-    static async getProjectsFiltered(filters) {
+    static async getProjectsFiltered(filters, orden, ordenacion) {
         const projects = [];
         const encodedFilters = encodeURIComponent(filters);
-
-        console.log(`${this.API_URL}/projects?filters=${encodedFilters}`);
+        const encodedSort = encodeURIComponent(JSON.stringify([[orden, ordenacion]]));
 
         try {
-            const data = await fetch(`${this.API_URL}/projects?sortBy=${this.encodedSort}&filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/projects?sortBy=${encodedSort}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -294,12 +295,15 @@ return users;
         return projects;
     }
 
-    static async getTasksFiltered(filters, pageSize = 16, offset = 1) {
+    static async getTasksFiltered(filters, pageSize = 16, offset = 1, orden, ordenacion) {
         const tasks = [];
         const encodedFilters = encodeURIComponent(filters);
+        const encodedSort = encodeURIComponent(JSON.stringify([[orden, ordenacion]]));
+
+        console.log(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`);
 
         try {
-            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${this.encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
+            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
@@ -315,7 +319,8 @@ return users;
                     data[i].startDate,
                     data[i].dueDate,
                     data[i]._links.project.title,
-                    data[i]._links.type.title
+                    data[i]._links.type.title,
+                    data[i]._links.priority.title
                 );
                 tasks.push(task);
             }

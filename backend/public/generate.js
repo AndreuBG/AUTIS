@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         startDate: t.startDate,
                         dueDate: t.dueDate,
                         project: t.project,
+                        priority: t.priority
                     }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
                     listaTareas.appendChild(taskElement);
                 });

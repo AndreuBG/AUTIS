@@ -105,16 +105,16 @@ app.post('/modifyUser/:id', async (req, res) => {
     res.send(await OpenProjectService.modifyUser(req.body, req.params.id));
 })
 
-app.get('/getProjectsFiltered/:filter', async (req, res) => {
+app.get('/getProjectsFiltered/:filter/:orden/:ordenacion', async (req, res) => {
     console.log(req.params.filter);
-    res.send(await OpenProjectService.getProjectsFiltered(req.params.filter));
+    res.send(await OpenProjectService.getProjectsFiltered(req.params.filter, req.params.orden, req.params.ordenacion));
 });
 
-app.get('/getTasksFiltered/:filter', async (req, res) => {
+app.get('/getTasksFiltered/:filter/:orden/:ordenacion', async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 16;
     const offset = parseInt(req.query.offset) || 1;
     console.log(req.params.filter);
-    res.send(await OpenProjectService.getTasksFiltered(req.params.filter, pageSize, offset));
+    res.send(await OpenProjectService.getTasksFiltered(req.params.filter, pageSize, offset, req.params.orden, req.params.ordenacion));
 });
 
 app.get('/getUsersFiltered/:filter', async (req, res) => {

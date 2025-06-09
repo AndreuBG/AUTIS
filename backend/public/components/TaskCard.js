@@ -16,6 +16,7 @@ class TaskCard extends HTMLElement {
         const startDate = this.getAttribute('startDate') || 'No especificada';
         const dueDate = this.getAttribute('dueDate') || 'No especificada';
         const project = this.getAttribute('project');
+        const priority = this.getAttribute('priority');
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -75,6 +76,7 @@ class TaskCard extends HTMLElement {
                 <p><strong>Vencimiento:</strong> ${dueDate}</p>
                 <p><strong>Proyecto:</strong> ${project}</p>
                 <p><strong>Tipo:</strong> <span style="color: ${typeColor}; font-weight: bold;">${type}</span></p>
+                <p><strong>Prioridad:</strong> ${priority}</p>
             </div>
         `;
     }

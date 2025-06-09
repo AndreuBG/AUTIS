@@ -50,6 +50,20 @@
                     <option value="f">Inactivo</option>
                 </select>
             </label>
+            <label>
+                Ordenar por:
+                <select id="orden-proyectos">
+                    <option value="created_at">Fecha de creación</option>
+                    <option value="name">Nombre</option>
+                </select>
+            </label>
+            <label>
+                Orden:
+                <select id="ordenacion-proyectos">
+                    <option value="desc">Desc</option>
+                    <option value="asc">Asc</option>
+                </select>
+            </label>
             <button id="aplicar-filtro-proyectos" class="aplicar-filtro">Aplicar filtro</button>
         </div>
     </div>
@@ -82,28 +96,42 @@
                 T.Estado:
                 <select id="filtro-tipo-estado-tareas">
                     <option value="">Todos</option>
-                    <option value="new">New</option>
-                    <option value="in-specification">In Specification</option>
-                    <option value="specification" >Specification</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="to-be-scheduled">To Be Scheduled</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="developed">Developed</option>
-                    <option value="in-testing">In Testing</option>
-                    <option value="tested">Tested</option>
-                    <option value="test-failed">Test Failed</option>
-                    <option value="on-hold">On Hold</option>
+                    <option value="1">New</option>
+                    <option value="2">In Specification</option>
+                    <option value="3" >Specification</option>
+                    <option value="4">Confirmed</option>
+                    <option value="5">To Be Scheduled</option>
+                    <option value="6">Scheduled</option>
+                    <option value="7">In Progress</option>
+                    <option value="8">Developed</option>
+                    <option value="9">In Testing</option>
+                    <option value="10">Tested</option>
+                    <option value="11">Test Failed</option>
+                    <option value="13">On Hold</option>
                 </select>
             </label>
             <label>
                 Prioridad:
                 <select id="filtro-Prioridad-tareas">
                     <option value="">Todos</option>
-                    <option value="7">Low</option>
+                    <option value="7">Baja</option>
                     <option value="8">Normal</option>
-                    <option value="9">High</option>
-                    <option value="10">Inmediate</option>
+                    <option value="9">Alta</option>
+                    <option value="10">Inmediata</option>
+                </select>
+            </label>
+            <label>
+                Ordenar por:
+                <select id="orden-tareas">
+                    <option value="created_at">Fecha de creación</option>
+                    <option value="subject">Asunto</option>
+                </select>
+            </label>
+            <label>
+                Orden:
+                <select id="ordenacion-tareas">
+                    <option value="desc">Desc</option>
+                    <option value="asc">Asc</option>
                 </select>
             </label>
             <button class="aplicar-filtro" id="aplicar-filtro-tareas">Aplicar filtro</button>
@@ -326,10 +354,10 @@
             <div class="form-group">
                 <label for="priority-crear">Prioridad</label>
                 <select id="priority-crear">
-                    <option value="low">Baja</option>
-                    <option value="medium" selected>Media</option>
-                    <option value="high">Alta</option>
-                    <option value="inmediate">Inmediata</option>
+                    <option value="7">Baja</option>
+                    <option value="8" selected>Normal</option>
+                    <option value="9">Alta</option>
+                    <option value="10">Inmediata</option>
                 </select>
             </div>
             <div class="form-group">

@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tipo = document.getElementById('filtro-tipo-tareas').value;
         const estado = document.getElementById('filtro-estado-tareas').value;
         const prioridad = document.getElementById('filtro-Prioridad-tareas').value;
+        const tipoEstado = document.getElementById('filtro-tipo-estado-tareas').value;
         let paginaTareaActual = 1;
         const pageSize = 16;
         const filtros = [];
@@ -63,11 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
             filtros.push({ priority: { operator: '=', values: [prioridad] } });
         }
 
+        if (tipoEstado !== '') {
+            filtros.push({ status_id: {"operator": "=", "values": [tipoEstado]} });
+        }
+
+        const ordenarPor = document.getElementById('orden-tareas').value;
+        const ordenarDireccion = document.getElementById('ordenacion-tareas').value;
+
         const filtrosTXT = JSON.stringify(filtros);
 
         async function cargarTareasFiltradas(pagina) {
             try {
-                const response = await fetch(`/getTasksFiltered/${filtrosTXT}?pageSize=${pageSize}&offset=${pagina}`);
+                const response = await fetch(`/getTasksFiltered/${filtrosTXT}/${ordenarPor}/${ordenarDireccion}?pageSize=${pageSize}&offset=${pagina}`);
                 const tareasFiltradas = await response.json();
                 const listaTareas = document.getElementById('tareas');
 
@@ -95,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             dueDate: t.dueDate,
                             project: t.project,
                             type: t.type,
+                            priority: t.priority
                         }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
                         listaTareas.appendChild(taskElement);
                     });
@@ -137,8 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtrosTXT = JSON.stringify(filtros);
         const listaProyectos = document.getElementById('proyectos');
 
+        const ordenarPor = document.getElementById('orden-proyectos').value;
+        const ordenarDireccion = document.getElementById('ordenacion-proyectos').value;
+
         try {
-            const response = await fetch(`/getProjectsFiltered/${filtrosTXT}`);
+            const response = await fetch(`/getProjectsFiltered/${filtrosTXT}/${ordenarPor}/${ordenarDireccion}`);
             const proyectosFiltrados = await response.json();
 
             if (proyectosFiltrados.length === 0) {
