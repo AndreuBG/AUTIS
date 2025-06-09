@@ -15,7 +15,6 @@ class UserCard extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <style>
-        /* Estilos existentes y de modal */
         .card {
           display: flex;
           justify-content: space-between;
@@ -59,7 +58,6 @@ class UserCard extends HTMLElement {
           transition: background 0.2s, color 0.2s, font-size 0.2s, padding 0.2s;
         }
 
-        /* Responsive: botones más pequeños, alineados a la derecha y uno al lado del otro */
         @media (max-width: 600px) {
           .buttons {
             gap: 4px;
@@ -75,6 +73,7 @@ class UserCard extends HTMLElement {
             white-space: nowrap;
           }
         }
+
         .boton_modificar { background-color: #4CAF50; }
         .boton_eliminar { background-color: #f44336; } 
             
@@ -124,14 +123,14 @@ class UserCard extends HTMLElement {
         }
         
         .form-group textarea {
-          min-height: 200px; /* Más alto */
+          min-height: 200px; 
           resize: vertical;
         }
                 
         .form-group label { display: block; margin-bottom: 5px; color: #333; font-size: 18px; }
         .form-group input:invalid,
         .form-group textarea:invalid {
-          border-color: #e63946; /* rojo si está vacío o inválido */
+          border-color: #e63946;
         }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
         #modalbtndel { background-color: #002855; }
@@ -271,7 +270,6 @@ class UserCard extends HTMLElement {
       </div>
     `;
 
-    // Eventos
     this.shadowRoot.querySelectorAll('.boton_eliminar')[0].addEventListener('click', () => {
       this.eliminarUsuario(this.idUser);
     });

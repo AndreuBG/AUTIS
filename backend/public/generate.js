@@ -17,20 +17,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     } catch (error) {
         console.error('Error subiendo el token:', error.message);
+        window.location= '/pages/index.html';
     }
 
     try {
+        // Obtener proyectos
         const responseProject = await fetch('/getProjects');
         const proyectos = await responseProject.json();
 
         // Obtener TODAS las tareas primero
         const responseAllTasks = await fetch('/getAllTasks');
         const todasLasTareas = await responseAllTasks.json();
-
-        // Hacer disponibles las tareas globalmente
         window.todasLasTareas = todasLasTareas;
-
-
 
         // Configuración de paginación
         let paginaTareaActual = 1;
@@ -77,6 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaProyectos.appendChild(projectElement);
         });
 
+        // Función para cargar tareas por página
         async function cargarTareasPagina(pagina) {
             try {
                 const responseTask = await fetch(`/getTasks?pageSize=${pageSize}&offset=${pagina}`);
@@ -93,9 +92,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                tareas.forEach(t => {
+                tareas.forEach((t) => {
                     const taskElement = document.createElement('task-card');
-                    // Mantener solo un setAttribute por propiedad
                     Object.entries({
                         id: t.id,
                         type: t.type,
@@ -103,9 +101,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         description: t.description,
                         startDate: t.startDate,
                         dueDate: t.dueDate,
-                        project: t.project
+                        project: t.project,
+                        priority: t.priority
                     }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
-
                     listaTareas.appendChild(taskElement);
                 });
 
@@ -119,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        //Evento de los botones de paginación
+        // Configurar eventos de paginación
         document.getElementById('anterior').addEventListener('click', () => {
             if (paginaTareaActual > 1) {
                 cargarTareasPagina(paginaTareaActual - 1);
@@ -130,9 +128,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             cargarTareasPagina(paginaTareaActual + 1);
         });
 
-        // Cargar la primera página de tareas al inicio
+        // Cargar la primera página de tareas
         await cargarTareasPagina(1);
 
+        // Renderizar usuarios
         const listaUsuarios = document.getElementById('users');
         usuarios.forEach((u) => {
             const userElement = document.createElement('user-card');
@@ -142,7 +141,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             userElement.setAttribute('login', u.login);
             userElement.setAttribute('email', u.email);
             userElement.setAttribute('status', u.status);
-
             listaUsuarios.appendChild(userElement);
         });
 
@@ -381,4 +379,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.todasLasTareas = todasLasTareas; // Hacer disponible para ProjectCard
 
 });
-

@@ -16,7 +16,6 @@
 </head>
 <body>
 <nav>
-    <!-- Botón menú hamburguesa (oculto en escritorio, visible en móvil) -->
     <div id="menu-hamburguesa">
         <span></span>
         <span></span>
@@ -30,7 +29,6 @@
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
 </nav>
 
-<!-- Menú lateral oculto, se muestra al pulsar hamburguesa -->
 <div id="menu-lateral">
     <span id="cerrarMenuLateral" class="cerrar-x">&times;</span>
     <tab-button active="true" target="proyectos-group">Proyectos</tab-button>
@@ -38,8 +36,6 @@
     <tab-button target="usuarios-group">Usuarios</tab-button>
     <tab-button target="dashboard-group">Dashboard</tab-button>
 </div>
-
-    <!-- Filtros para Proyectos -->
     <div class="filtro-container" id="filtro-proyectos">
         <div class="filtro-menu">
             <label>
@@ -50,11 +46,24 @@
                     <option value="f">Inactivo</option>
                 </select>
             </label>
+            <label>
+                Ordenar por:
+                <select id="orden-proyectos">
+                    <option value="created_at">Fecha de creación</option>
+                    <option value="name">Nombre</option>
+                </select>
+            </label>
+            <label>
+                Orden:
+                <select id="ordenacion-proyectos">
+                    <option value="desc">Desc</option>
+                    <option value="asc">Asc</option>
+                </select>
+            </label>
             <button id="aplicar-filtro-proyectos" class="aplicar-filtro">Aplicar filtro</button>
         </div>
     </div>
 
-    <!-- Filtros para Tareas -->
     <div class="filtro-container" id="filtro-tareas" style="display: none;">
         <div class="filtro-menu">
             <label>
@@ -82,35 +91,48 @@
                 T.Estado:
                 <select id="filtro-tipo-estado-tareas">
                     <option value="">Todos</option>
-                    <option value="new">New</option>
-                    <option value="in-specification">In Specification</option>
-                    <option value="specification" >Specification</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="to-be-scheduled">To Be Scheduled</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="developed">Developed</option>
-                    <option value="in-testing">In Testing</option>
-                    <option value="tested">Tested</option>
-                    <option value="test-failed">Test Failed</option>
-                    <option value="on-hold">On Hold</option>
+                    <option value="1">New</option>
+                    <option value="2">In Specification</option>
+                    <option value="3" >Specification</option>
+                    <option value="4">Confirmed</option>
+                    <option value="5">To Be Scheduled</option>
+                    <option value="6">Scheduled</option>
+                    <option value="7">In Progress</option>
+                    <option value="8">Developed</option>
+                    <option value="9">In Testing</option>
+                    <option value="10">Tested</option>
+                    <option value="11">Test Failed</option>
+                    <option value="13">On Hold</option>
                 </select>
             </label>
             <label>
                 Prioridad:
                 <select id="filtro-Prioridad-tareas">
                     <option value="">Todos</option>
-                    <option value="7">Low</option>
+                    <option value="7">Baja</option>
                     <option value="8">Normal</option>
-                    <option value="9">High</option>
-                    <option value="10">Inmediate</option>
+                    <option value="9">Alta</option>
+                    <option value="10">Inmediata</option>
+                </select>
+            </label>
+            <label>
+                Ordenar por:
+                <select id="orden-tareas">
+                    <option value="created_at">Fecha de creación</option>
+                    <option value="subject">Asunto</option>
+                </select>
+            </label>
+            <label>
+                Orden:
+                <select id="ordenacion-tareas">
+                    <option value="desc">Desc</option>
+                    <option value="asc">Asc</option>
                 </select>
             </label>
             <button class="aplicar-filtro" id="aplicar-filtro-tareas">Aplicar filtro</button>
         </div>
     </div>
 
-    <!-- Filtros para Usuarios -->
     <div class="filtro-container" id="filtro-usuarios" style="display: none;">
         <div class="filtro-menu">
             <label>
@@ -171,12 +193,11 @@
             </div>
 
             <div class="graficos">
-                <h2>Gráfico de Ejemplo</h2>
-                <canvas id="graficoEjemplo" width="300" height="300"></canvas>
+                <h2>Gráfico de Anillo</h2>
+                <canvas id="graficoProyectosEstado" width="300" height="300"></canvas>
             </div>
         </div>
         <time-entries-table></time-entries-table>
-
     </div>
 
 <div id="modal-crear-usuario" class="modal-crear" style="display: none;">
@@ -300,7 +321,6 @@
                         oninput="this.setCustomValidity('')"
                 >
                     <option value="">Selecciona un proyecto</option>
-                    <!-- Populated dynamically via JavaScript -->
                 </select>
             </div>
             <div class="form-group">
@@ -326,10 +346,10 @@
             <div class="form-group">
                 <label for="priority-crear">Prioridad</label>
                 <select id="priority-crear">
-                    <option value="low">Baja</option>
-                    <option value="medium" selected>Media</option>
-                    <option value="high">Alta</option>
-                    <option value="inmediate">Inmediata</option>
+                    <option value="7">Baja</option>
+                    <option value="8" selected>Normal</option>
+                    <option value="9">Alta</option>
+                    <option value="10">Inmediata</option>
                 </select>
             </div>
             <div class="form-group">

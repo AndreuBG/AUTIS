@@ -16,6 +16,7 @@ class TaskCard extends HTMLElement {
         const startDate = this.getAttribute('startDate') || 'No especificada';
         const dueDate = this.getAttribute('dueDate') || 'No especificada';
         const project = this.getAttribute('project');
+        const priority = this.getAttribute('priority');
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -45,11 +46,25 @@ class TaskCard extends HTMLElement {
                     transform: translateY(-4px) scale(1.02);
                     border-color: #ff7b00;
                 }
+                .trash-icon {
+                    position: absolute;
+                    right: 10px;  
+                    bottom: 10px;
+                    width: 25px;
+                    height: 25px;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    pointer-events: auto;
+                    z-index: 10;
+                    color: rgba(0,0,0,0.3);
+                }
+                .card:hover .trash-icon {
+                    opacity: 1;
+                }
                 .card h2 {
                     font-size: 1.3em;
                     margin: 0 0 10px 0;
                     color: #ff7b00;
-                    /* Elimina el recorte y elipsis para mostrar el título completo */
                     white-space: normal;
                     overflow: visible;
                     text-overflow: unset;
@@ -68,6 +83,7 @@ class TaskCard extends HTMLElement {
                 }
             </style>
             <div class="card" tabindex="0" role="region">
+                <img class="trash-icon" src="/img/papelera.png" alt="Eliminar tarea" />
                 <h2 title="${subject}">${subject}</h2>
                 <hr>
                 <p><strong>Descripción:</strong> ${description}</p>
@@ -75,8 +91,31 @@ class TaskCard extends HTMLElement {
                 <p><strong>Vencimiento:</strong> ${dueDate}</p>
                 <p><strong>Proyecto:</strong> ${project}</p>
                 <p><strong>Tipo:</strong> <span style="color: ${typeColor}; font-weight: bold;">${type}</span></p>
+                <p><strong>Prioridad:</strong> ${priority}</p>
             </div>
         `;
+
+        const trashIcon = this.shadowRoot.querySelector('.trash-icon');
+        if (trashIcon) {
+            trashIcon.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!confirm('¿Seguro que quieres eliminar esta tarea?')) return;
+                const taskId = this.getAttribute('id');
+                console.log('Eliminando tarea con ID:', taskId);
+                try {
+                    const res = await fetch(`/tasks/${taskId}`, {
+                        method: 'DELETE'
+                    });
+                    if (res.ok) {
+                        this.remove();
+                    } else {
+                        alert('No se pudo eliminar la tarea');
+                    }
+                } catch (err) {
+                    alert('Error de red al eliminar la tarea');
+                }
+            });
+        }
     }
 }
 

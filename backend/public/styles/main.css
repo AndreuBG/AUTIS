@@ -24,7 +24,7 @@ h1 {
     width: 35%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 40px; /* Add top margin to headers */
+    margin-top: 40px; 
 }
 
 project-card {
@@ -44,23 +44,24 @@ nav {
 
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    gap: 10px;
+    padding: 0 5px;
+    gap: 20px;
     justify-content: center;
 }
 
-/* Logo a la izquierda */
 #logo {
-    height: 30px; /* Altura fija */
+    height: 30px; 
     width: auto;
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    object-fit: contain; /* Mantiene la proporción de la imagen */
+    object-fit: contain; 
+    z-index: 1100;
+    display: block;
+    transition: left 0.3s;
 }
 
-/* Icono cerrar sesión a la derecha */
 #cerrarSesion {
     position: absolute;
     right: 20px;
@@ -111,18 +112,18 @@ nav {
 #tareas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 60px; /* Increased gap between tasks */
+    gap: 60px; 
     max-width: 1300px;
     margin: 0 auto;
-    padding: 30px; /* Increased padding around task container */
+    padding: 30px;
 }
 
 .task-card {
     background-color: #E2DCDE;
     border: 2px solid #CC6204;
     border-radius: 10px;
-    margin: 15px; /* Increased margin around each task */
-    padding: 30px; /* Increased padding inside each task */
+    margin: 15px; 
+    padding: 30px; 
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     min-height: 200px;
@@ -157,13 +158,12 @@ tab-button {
     color: #330F0A;
     border-radius: 6px;
     cursor: pointer;
-    font-size: clamp(0.9em, 2vw, 0.9em); /* Ajusta tamaño según ancho de pantalla */
-    transition: all 0.3s ease;
-    white-space: nowrap;      /* No dividir palabras */
-    overflow: visible;        /* Mostrar texto completo */
-    text-overflow: clip;      /* No usar '...' */
+    font-size: clamp(0.9em, 2vw, 0.9em); 
+    white-space: nowrap;      
+    overflow: visible;       
+    text-overflow: clip;   
     text-align: center;
-    max-width: 100%;          /* Evita que sobresalga del contenedor */
+    max-width: 100%;          
 }
 
 tab-button:hover {
@@ -184,7 +184,7 @@ tab-button[active="true"] {
 #proyectos-group,
 #tareas-group,
 #usuarios-group {
-    margin-top: 120px; /* Un solo valor de margin-top */
+    margin-top: 120px; 
 }
 
 #dashboard-group {
@@ -225,13 +225,13 @@ tab-button[active="true"] {
 }
 
 project-card {
-    display: block; /* Que se comporte como un bloque */
-    width: 100%; /* Ocupa todo el espacio del grid */
+    display: block; 
+    width: 100%; 
 }
 
 .no-scroll {
     overflow: hidden;
-    height: 100vh; /* para evitar saltos */
+    height: 100vh; 
 }
 
 
@@ -267,7 +267,7 @@ project-card {
 
 .filtro-wrapper {
     width: 100%;
-    max-width: 1200px; /* centra en pantallas grandes */
+    max-width: 1200px; 
     margin: 0 auto;
     overflow: hidden;
 }
@@ -279,11 +279,11 @@ project-card {
     height: 100%;
     flex-wrap: nowrap;
     justify-content: center;
-    width: auto; /* ← cambia esto */
-    margin: 0 auto; /* ← centra horizontalmente */
+    width: auto; 
+    margin: 0 auto; 
 }
 
-/* Permite que los labels y selects puedan reducir su tamaño */
+
 .filtro-menu label {
     font-weight: bold;
     color: #09348bf8;
@@ -292,7 +292,7 @@ project-card {
     gap: 5px;
     flex-shrink: 1;
     min-width: 50px;
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    white-space: nowrap; 
 }
 
 .filtro-menu select {
@@ -302,7 +302,7 @@ project-card {
     background-color: white;
     font-size: 12px;
     flex-shrink: 1;
-    min-width: 60px; /* Ancho mínimo */
+    min-width: 60px;
 }
 
 #aplicar-filtro {
@@ -513,7 +513,6 @@ project-card {
     display: block;
 }
 
-/* Estilos para la paginación */
 .paginacion {
     display: flex;
     justify-content: center;
@@ -562,7 +561,6 @@ project-card {
 }
 
 @media (max-width: 768px) {
-
     body {
         margin-top: 130px;
     }
@@ -608,22 +606,17 @@ project-card {
         left: 50%;
         transform: translate(-50%, -50%);
         top: 50%;
-        height: 30px; /* Mantiene la misma altura en móvil */
+        height: 30px; 
+        transition: left 0.3s, transform 0.3s;
     }
-body.no-scroll #logo {
-    left: 340px; /* Un poco más que el ancho del menú lateral */
-    transition: left 0.3s;
-}
-#logo {
-    transition: left 0.3s;
-}
-.no-results {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-    width: 100%;
-}
+
+    .no-results {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+        width: 100%;
+    }
 
     #cerrarSesion {
         display: block !important;
@@ -636,9 +629,14 @@ body.no-scroll #logo {
         z-index: 1202;
         margin: 0;
     }
+
+    #menu-lateral.show ~ #logo,
+    body.menu-abierto #logo {
+        left: 290px; 
+        transform: translateY(-50%);
+    }
 }
 
-/* Menú hamburguesa: oculto en escritorio, visible en móvil */
 #menu-hamburguesa {
     display: none;
     flex-direction: column;
@@ -655,60 +653,54 @@ body.no-scroll #logo {
 #menu-hamburguesa span {
     display: block;
     height: 4px;
-/* Estilos para selectores de estado */
-#status-crear,
-#status,
-.form-group select {
     width: 100%;
-    padding: 12px;
-    border: 2px solid #002855;
-    border-radius: 4px;
-    background-color: white;
-    font-size: 16px;
-    color: #333;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+
+#menu-lateral {
+    display: flex; 
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: #09348b;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    z-index: 2000;
+    padding: 70px 10px 10px 10px;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
+}
+#menu-lateral.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.cerrar-x {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 2rem;
+    color: #fff;
     cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 1em;
-    margin-top: 5px;
-    transition: all 0.3s ease;
+    z-index: 2100;
+    user-select: none;
+    transition: color 0.2s;
+}
+.cerrar-x:hover {
+    color: #CC6204;
 }
 
-#status-crear:hover,
-#status:hover,
-.form-group select:hover {
-    border-color: #0a28d1;
-}
-
-#status-crear:focus,
-#status:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #0a28d1;
-    box-shadow: 0 0 0 2px rgba(10, 40, 209, 0.2);
-}
-
-#status-crear option,
-#status option,
-.form-group select option {
-    padding: 10px;
-    background-color: white;
-    color: #333;
-}
-
-/* Estilos responsivos para móviles */
-@media (max-width: 600px) {
-    #status-crear,
-    #status,
-    .form-group select {
-        font-size: 14px;
-        padding: 10px;
-    }
-}
 .no-results {
     display: flex;
     justify-content: center;
@@ -716,9 +708,6 @@ body.no-scroll #logo {
     min-height: 200px;
     width: 100%;
 }
-
-
-
 
 .message-container {
     display: flex;
@@ -732,7 +721,6 @@ body.no-scroll #logo {
     transition: all 0.3s ease;
 }
 
-/* Estilos específicos para cada tipo de mensaje */
 #proyectos .message-container {
     border-color: #4a90e2;
 }
@@ -805,13 +793,13 @@ body.no-scroll #logo {
     }
     #icono-filtro-tareas {
         display: block;
-        position: static;    /* <-- No fijo, sigue el flujo normal */
+        position: static;    
         top: auto;
         right: auto;
         left: auto;
         width: 32px;
         height: 32px;
-        margin: 12px auto 8px auto; /* Centrado y con separación */
+        margin: 12px auto 8px auto; 
         z-index: auto;
         cursor: pointer;
     }
@@ -832,7 +820,7 @@ body.no-scroll #logo {
 .description {
     width: 100%;
     min-height: 100px;
-    font-size: 0.8em; /* Tamaño de texto más pequeño */
+    font-size: 0.8em; 
     padding: 12px;
     border: 2px solid #09348b;
     border-radius: 4px;
@@ -849,7 +837,3 @@ body.no-scroll #logo {
     outline: none;
     background-color: #fff;
 }
-
-
-
-
