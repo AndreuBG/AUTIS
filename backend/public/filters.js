@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const botonTareas = document.getElementById('aplicar-filtro-tareas');
     const botonUsuarios = document.getElementById('aplicar-filtro-usuarios');
 
-    // Manejo del filtro de usuarios
     botonUsuarios.addEventListener('click', async () => {
         const estado = document.getElementById('filtro-estado-usuarios').value;
         const filtros = [];
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Manejo del filtro de tareas
     botonTareas.addEventListener('click', async () => {
         const tipo = document.getElementById('filtro-tipo-tareas').value;
         const estado = document.getElementById('filtro-estado-tareas').value;
@@ -110,10 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Iniciar con la primera página
         await cargarTareasFiltradas(1);
 
-        // Configurar eventos de paginación
         document.getElementById('anterior').addEventListener('click', () => {
             if (paginaTareaActual > 1) {
                 cargarTareasFiltradas(paginaTareaActual - 1);
@@ -125,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Manejo del filtro de proyectos
     botonProyectos.addEventListener('click', async () => {
         const activo = document.getElementById('filtro-actividad-proyectos').value;
         const filtros = [];

@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-crear-tarea');
   const projectSelect = document.getElementById('project-crear');
 
-  // Populate project dropdown
   async function populateProjects() {
     try {
       const res = await fetch('http://localhost:5500/getProjects', {
@@ -27,23 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-// Initialize dropdowns
 populateProjects();
 projectSelect.addEventListener('change', () => {
 });
 
-// Open modal
 openBtn.addEventListener('click', () => {
     modal.style.display = 'flex';
 });
 
-// Close modal and reset form
 cancelBtn.addEventListener('click', () => {
     modal.style.display = 'none';
     form.reset();
 });
 
-// Submit form
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log("xxx")
@@ -61,10 +56,6 @@ form.addEventListener('submit', async (e) => {
         }
     };
 
-
-
-
-    // Validate dates
     if (taskData.startDate && taskData.dueDate && taskData.startDate > taskData.dueDate) {
         alert('La fecha de inicio no puede ser posterior a la fecha de vencimiento');
         return;

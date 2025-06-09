@@ -6,27 +6,21 @@ import { OpenProjectService } from "./OpenProjectService.js";
 import {login} from "./controllers/authentication.js";
 import e from "express";
 
-// Inicialització d'Express
 const app = express();
 const PORT = 5500;
 
-// Configuració de __dirname en mòduls ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 
-// Càrrega de middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Servim els arxius estàtics de /public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages', 'load.html'));
 });
 
-// Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
@@ -36,8 +30,8 @@ app.get('/getProjects', async function(req, res) {
 });
 
 app.get('/getTasks', async function(req, res) {
-    const pagesize = parseInt(req.query.pageSize) || 16; // Valor por defecto de 16
-    const offset = parseInt(req.query.offset) || 1; // Valor por defecto de 1
+    const pagesize = parseInt(req.query.pageSize) || 16; 
+    const offset = parseInt(req.query.offset) || 1; 
 
     try {
         const tasks = await OpenProjectService.getAllTasks(pagesize, offset);
@@ -126,7 +120,6 @@ app.get('/getTimeEntries', async (req, res) => {
     try {
         const entries = await OpenProjectService.getAllTimeEntries();
 
-        // Obtener detalles de usuario para cada time entry
         const entriesWithUser = await Promise.all(entries.map(async entry => {
             let userInfo = null;
             if (entry._links && entry._links.user && entry._links.user.href) {
@@ -136,7 +129,7 @@ app.get('/getTimeEntries', async (req, res) => {
             }
             return {
                 ...entry,
-                assignedUser: userInfo // Incluye los datos del usuario asignado
+                assignedUser: userInfo 
             };
         }));
         res.json(entriesWithUser);
@@ -152,5 +145,23 @@ app.get('/getAllTasks', async function(req, res) {
     } catch (error) {
         console.error("Error obteniendo todas las tareas:", error);
         res.status(500).json({ error: 'Error obteniendo todas las tareas' });
+    }
+});
+
+app.delete('/projects/:id', async function(req, res) {
+    try {
+        const response = await OpenProjectService.deleteProject(req.params.id);
+        res.status(response.ok ? 200 : response.status).send(await response.text());
+    } catch (error) {
+        res.status(500).json({ error: 'Error eliminando el proyecto' });
+    }
+});
+
+app.delete('/tasks/:id', async function(req, res) {
+    try {
+        const response = await OpenProjectService.deleteTask(req.params.id);
+        res.status(response.ok ? 200 : response.status).send(await response.text());
+    } catch (error) {
+        res.status(500).json({ error: 'Error eliminando la tarea' });
     }
 });

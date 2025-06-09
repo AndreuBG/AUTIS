@@ -13,7 +13,7 @@ export async function login(form){
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ token: form.token })  // Enviamos un objeto JSON
+                body: JSON.stringify({ token: form.token }) 
             });
 
             if (responsePost.ok) {

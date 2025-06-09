@@ -14,10 +14,8 @@ class TimeEntriesTable extends HTMLElement {
             grouped[user].push(entry);
         }
 
-        // Encuentra el máximo de time entries por usuario para definir columnas
         const maxEntries = Math.max(...Object.values(grouped).map(arr => arr.length));
 
-        // Construye cabecera dinámica
         let tableHeader = `
             <tr>
                 <th style="min-width:120px;">Usuario</th>
@@ -26,7 +24,6 @@ class TimeEntriesTable extends HTMLElement {
             </tr>
         `;
 
-        // Construye filas
         let tableBody = '';
         for (const [user, entries] of Object.entries(grouped)) {
             // Suma total de horas
@@ -46,61 +43,7 @@ class TimeEntriesTable extends HTMLElement {
             `;
             for (const entry of entries) {
                 tableBody += `
-        <div class="tarea-card" style="min-width:140px; background:#fff; border-radius:6px; box-shadow:0 1px 4px #e2dcde; padding:8px 12px; margin-bottom:0; transition: box-shadow 0.2s, transform 0.2s; display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-            <div>
-                ${entry.comment && entry.comment.raw ? '<strong style="color:#09348b;">' + entry.comment.raw + '</strong><br>' : ''}
-                <span style="color:#FF9800;">${entry._links.project && entry._links.project.title ? entry._links.project.title : ''}</span>
-            </div>
-            <div style="white-space:nowrap; font-weight:bold; color:#09348b; margin-left:8px;">
-                ${entry.hours ? entry.hours.replace(/^pt/i, '') : ''}
-            </div>
-        </div>
-    `;
-            }
-            tableBody += `</div></td>
-        <td style="text-align:right; font-weight:bold; color:#09348b;">
-            <div style="
-        display: inline-flex;
-        align-items: center;
-        background: #fff;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px #e2dcde;
-        padding: 8px 14px;
-        margin-left: 8px;
-        font-weight: bold;
-        color: #09348b;
-        gap: 6px;
-    ">
-                <img src="/img/reloj.png" alt="reloj" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;">
-                ${
-                    Number.isInteger(totalHoras)
-                        ? totalHoras + 'H'
-                        : totalHoras.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2}) + 'H'
-                }
-            </div>
-        </td>
-    </tr>`;
-        }
-
-        // Construye tarjetas de usuario
-        let usersCards = '';
-        for (const [user, entries] of Object.entries(grouped)) {
-            // Suma total de horas
-            let totalHoras = entries.reduce((sum, entry) => {
-                let h = entry.hours ? parseFloat(entry.hours.replace(",", ".").replace(/^pt/i, "")) : 0;
-                return sum + (isNaN(h) ? 0 : h);
-            }, 0);
-
-            usersCards += `
-    <div class="user-card">
-        <div class="user-main">
-            <div class="user-header">
-                <img src="/img/user.png" alt="user" class="user-avatar">
-                <span class="user-name">${user}</span>
-            </div>
-            <div class="user-tasks">
-                ${entries.map(entry => `
-                    <div class="tarea-card">
+                    <div class="tarea-card" style="min-width:140px; background:#fff; border-radius:6px; box-shadow:0 1px 4px #e2dcde; padding:8px 12px; margin-bottom:0; transition: box-shadow 0.2s, transform 0.2s; display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
                         <div>
                             ${entry.comment && entry.comment.raw ? '<strong style="color:#09348b;">' + entry.comment.raw + '</strong><br>' : ''}
                             <span style="color:#FF9800;">${entry._links.project && entry._links.project.title ? entry._links.project.title : ''}</span>
@@ -109,26 +52,78 @@ class TimeEntriesTable extends HTMLElement {
                             ${entry.hours ? entry.hours.replace(/^pt/i, '') : ''}
                         </div>
                     </div>
-                `).join('')}
-            </div>
-        </div>
-        <div class="user-total">
-            <img src="/img/reloj.png" alt="reloj" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;">
-            ${
-                Number.isInteger(totalHoras)
-                    ? totalHoras + 'H'
-                    : totalHoras.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2}) + 'H'
-            }
-        </div>
-    </div>
-`;
+                `;
+                }
+                tableBody += `</div></td>
+                <td style="text-align:right; font-weight:bold; color:#09348b;">
+                <div style="
+                    display: inline-flex;
+                    align-items: center;
+                    background: #fff;
+                    border-radius: 6px;
+                    box-shadow: 0 1px 4px #e2dcde;
+                    padding: 8px 14px;
+                    margin-left: 8px;
+                    font-weight: bold;
+                    color: #09348b;
+                    gap: 6px;
+                ">
+                <img src="/img/reloj.png" alt="reloj" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;">
+                ${
+                    Number.isInteger(totalHoras)
+                        ? totalHoras + 'H'
+                        : totalHoras.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2}) + 'H'
+                }
+                </div>
+                </td>
+            </tr>`;
+        }
+
+        let usersCards = '';
+        for (const [user, entries] of Object.entries(grouped)) {
+            let totalHoras = entries.reduce((sum, entry) => {
+                let h = entry.hours ? parseFloat(entry.hours.replace(",", ".").replace(/^pt/i, "")) : 0;
+                return sum + (isNaN(h) ? 0 : h);
+            }, 0);
+
+            usersCards += `
+                <div class="user-card">
+                    <div class="user-main">
+                        <div class="user-header">
+                            <img src="/img/user.png" alt="user" class="user-avatar">
+                            <span class="user-name">${user}</span>
+                        </div>
+                        <div class="user-tasks">
+                            ${entries.map(entry => `
+                                <div class="tarea-card">
+                                    <div>
+                                        ${entry.comment && entry.comment.raw ? '<strong style="color:#09348b;">' + entry.comment.raw + '</strong><br>' : ''}
+                                        <span style="color:#FF9800;">${entry._links.project && entry._links.project.title ? entry._links.project.title : ''}</span>
+                                    </div>
+                                    <div style="white-space:nowrap; font-weight:bold; color:#09348b; margin-left:8px;">
+                                        ${entry.hours ? entry.hours.replace(/^pt/i, '') : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="user-total">
+                        <img src="/img/reloj.png" alt="reloj" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;">
+                        ${
+                            Number.isInteger(totalHoras)
+                                ? totalHoras + 'H'
+                                : totalHoras.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2}) + 'H'
+                        }
+                    </div>
+                </div>
+            `;
         }
 
         this.innerHTML = `
             <style>
                 .users-grid {
                     display: flex;
-                    flex-direction: column; /* Cambia a columna */
+                    flex-direction: column; 
                     gap: 28px;
                     justify-content: center;
                     margin: 24px auto 20px auto;
@@ -143,7 +138,7 @@ class TimeEntriesTable extends HTMLElement {
                     width: 100%;
                     max-width: 100%;
                     display: flex;
-                    flex-direction: row; /* Cambia a fila */
+                    flex-direction: row; 
                     align-items: flex-start;
                     gap: 18px;
                     box-sizing: border-box;
@@ -161,7 +156,7 @@ class TimeEntriesTable extends HTMLElement {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    margin-bottom: 0; /* Quita el margen inferior */
+                    margin-bottom: 0; 
                     white-space: nowrap;
                 }
                 .user-avatar {
@@ -188,7 +183,7 @@ class TimeEntriesTable extends HTMLElement {
                 }
                 .tarea-card {
                     min-width: 140px;
-                    background: #e9e9e9; /* Cambiado a gris */
+                    background: #e9e9e9; 
                     border-radius: 6px;
                     box-shadow: 0 1px 4px #e2dcde;
                     padding: 8px 12px;
@@ -200,7 +195,7 @@ class TimeEntriesTable extends HTMLElement {
                 .tarea-card:hover {
                     box-shadow: 0 4px 16px #c7b7b7;
                     transform: translateY(-3px) scale(1.03);
-                    background: #d6d6d6; /* Gris más oscuro al pasar el mouse */
+                    background: #d6d6d6; 
                     cursor: pointer;
                 }
                 .user-total {
@@ -208,7 +203,7 @@ class TimeEntriesTable extends HTMLElement {
                     margin-left: 12px;
                     font-weight: bold;
                     color: #09348b;
-                    background: #e9e9e9; /* Igual que las tareas */
+                    background: #e9e9e9; 
                     border-radius: 6px;
                     box-shadow: 0 1px 4px #e2dcde;
                     padding: 8px 14px;
@@ -226,31 +221,31 @@ class TimeEntriesTable extends HTMLElement {
                     font-size: 20px;
                 }
                 @media (max-width: 900px) {
-    .users-grid {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-    .user-card, .user-main {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    .user-tasks {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-        overflow-x: unset; /* Quita el scroll horizontal */
-    }
-    .tarea-card {
-        min-width: 0;
-        width: 100%;
-    }
-    .user-total {
-        margin-left: 0;
-        margin-top: 10px;
-        align-self: flex-end;
-    }
-}
+                    .users-grid {
+                        padding-left: 12px;
+                        padding-right: 12px;
+                    }
+                    .user-card, .user-main {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                    }
+                    .user-tasks {
+                        flex-direction: column;
+                        width: 100%;
+                        gap: 10px;
+                        overflow-x: unset; /* Quita el scroll horizontal */
+                    }
+                    .tarea-card {
+                        min-width: 0;
+                        width: 100%;
+                    }
+                    .user-total {
+                        margin-left: 0;
+                        margin-top: 10px;
+                        align-self: flex-end;
+                    }
+                }
             </style>
             <h2 class="time-entries-title">Tareas de hoy</h2>
             <div class="users-grid">

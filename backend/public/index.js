@@ -51,8 +51,6 @@
         } else {
             alert(data.error || "Error durante el login");
         }
-
-
     });
 
 

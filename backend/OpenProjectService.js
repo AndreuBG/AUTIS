@@ -385,4 +385,34 @@ export class OpenProjectService {
             throw error;
         }
     }
+
+    static async deleteProject(id) {
+    try {
+        const res = await fetch(`${this.API_URL}/projects/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+            }
+        });
+        return res;
+    } catch (error) {
+        console.error('Error eliminando proyecto:', error.message);
+        throw error;
+    }
+}
+
+    static async deleteTask(id) {
+        try {
+            const res = await fetch(`${this.API_URL}/work_packages/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+                }
+            });
+            return res;
+        } catch (error) {
+            console.error('Error eliminando tarea:', error.message);
+            throw error;
+        }
+    }
 }

@@ -52,7 +52,6 @@ class ProjectCard extends HTMLElement {
     }
 
     getRelatedTasksHtml(projectName) {
-        // Usar las tareas globales almacenadas en window.todasLasTareas
         return window.todasLasTareas
             .filter(task => task.project === projectName)
             .map(task => {
@@ -214,10 +213,10 @@ class ProjectCard extends HTMLElement {
 
             .toggle-arrow {
                 position: absolute;
-                right: 15px;
-                bottom: 15px;
+                left: 10px;      
+                bottom: 5px;
                 font-size: 1.8em;
-                color: rgba(0,0,0,0.3);
+                color: rgba(85, 84, 84, 0.3);
                 user-select: none;
                 pointer-events: none;
                 transition: color 0.3s ease;
@@ -253,9 +252,26 @@ class ProjectCard extends HTMLElement {
                 color: #c60009;
                 box-shadow: 0 0 5px rgba(198, 0, 9, 0.6);
             }
+
+            .trash-icon {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                width: 25px;
+                height: 25px;
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: auto; 
+                z-index: 10;
+                color: rgba(0,0,0,0.3);
+            }
+            .card.collapsed:hover .trash-icon {
+                opacity: 1;
+            }
             </style>
 
             <div class="${cardClass}" tabindex="0" role="button" aria-expanded="${this.expanded}">
+                <img class="trash-icon" src="/img/papelera.png" alt="Eliminar proyecto" />
                 <h2 title="${name}">${name}</h2>
                 <hr>
                 <p class="estado">Estado: <b>${active ? "Activo" : "Inactivo"}</b></p>
@@ -285,6 +301,27 @@ class ProjectCard extends HTMLElement {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.toggleDescription();
+            });
+        }
+
+        const trashIcon = this.shadowRoot.querySelector('.trash-icon');
+        if (trashIcon) {
+            trashIcon.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!confirm('¿Seguro que quieres eliminar este proyecto?')) return;
+                const projectId = this.getAttribute('id');
+                try {
+                    const res = await fetch(`/projects/${projectId}`, {
+                        method: 'DELETE'
+                    });
+                    if (res.ok) {
+                        this.remove();
+                    } else {
+                        alert('No se pudo eliminar el proyecto');
+                    }
+                } catch (err) {
+                    alert('Error de red al eliminar el proyecto');
+                }
             });
         }
     }
