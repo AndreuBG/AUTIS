@@ -273,13 +273,14 @@
                 <input
                         type="text"
                         id="identifier-crear"
-                        pattern="[a-z0-9-]+"
+                        pattern="^[a-z][a-z0-9-]*$"
+                        maxlength="100"
                         placeholder="Ej: proyecto-innovacion"
                         required
-                        oninvalid="this.setCustomValidity('El identificador solo puede contener letras minúsculas, números y guiones')"
+                        oninvalid="this.setCustomValidity('El identificador debe comenzar con una letra minúscula y solo puede contener letras minúsculas, números y guiones')"
                         oninput="this.setCustomValidity('')"
                 >
-                <small class="hint">Solo letras minúsculas, números y guiones</small>
+                <small class="hint">Debe comenzar con letra minúscula. Solo letras minúsculas, números y guiones</small>
             </div>
             <div class="form-group">
                 <label for="description-crear">Descripción</label>
