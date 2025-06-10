@@ -138,12 +138,12 @@ class ProjectCard extends HTMLElement {
             if (memberCount) {
                 memberCount.textContent = currentMembers + 1;
             }
-
+            ShowMyAlert('success', 'Miembro añadido exitosamente');
             return true;
 
         } catch (error) {
             console.error('Error:', error);
-            alert(error.message);
+            ShowMyAlert('error', error.message);
             return false;
         }
     }
@@ -420,7 +420,7 @@ class ProjectCard extends HTMLElement {
                     });
                 });
             }
-
+            ShowMyAlert('success', 'Miembro eliminado exitosamente');
             return true;
         } catch (error) {
             console.error('Error:', error);
