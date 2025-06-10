@@ -159,3 +159,7 @@ app.delete('/tasks/:id', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+app.get('/getMemberQuantity', async function (req, res){
+   res.send(await OpenProjectService.getMemberQuantity());
+});

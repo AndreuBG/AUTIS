@@ -425,4 +425,33 @@ return users;
             throw error;
         }
     }
+
+    static async getMemberQuantity() {
+
+        // Obtener memberships con autenticación
+        const responseMemberships = await fetch('http://localhost:8080/api/v3/memberships', {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+            }
+        });
+
+        if (!responseMemberships.ok) {
+            throw new Error(`Error al obtener memberships: ${responseMemberships.status}`);
+        }
+
+        const membershipsData = await responseMemberships.json();
+
+        // Validar y contar miembros por proyecto
+        const miembrosPorProyecto = {};
+        if (membershipsData._embedded && membershipsData._embedded.elements) {
+            membershipsData._embedded.elements.forEach(membership => {
+                if (membership._links && membership._links.project) {
+                    const projectId = membership._links.project.href.split('/').pop();
+                    miembrosPorProyecto[projectId] = (miembrosPorProyecto[projectId] || 0) + 1;
+                }
+            });
+        }
+
+        return miembrosPorProyecto;
+    }
 }
