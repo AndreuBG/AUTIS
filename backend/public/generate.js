@@ -7,7 +7,7 @@ import {ShowMyAlert} from "./my_alert.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        await fetch('http://localhost:5500/postToken', {
+        await fetch('/postToken', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,19 +20,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+        // Obtener proyectos
         const responseProject = await fetch('/getProjects');
         const proyectos = await responseProject.json();
 
+        // Obtener TODAS las tareas primero
         const responseAllTasks = await fetch('/getAllTasks');
         const todasLasTareas = await responseAllTasks.json();
         window.todasLasTareas = todasLasTareas;
 
+        // Configuración de paginación
         let paginaTareaActual = 1;
         const pageSize = 16;
 
+        // Obtener usuarios
         const responseUser = await fetch('/getUsers');
         const usuarios = await responseUser.json();
 
+        // Obtener memberships
+        const responseMemberships = await fetch('/getMemberQuantity');
+
+        if (!responseMemberships.ok) {
+            throw new Error('Error al obtener memberships');
+        }
+
+        const miembrosPorProyecto = await responseMemberships.json();
+
+        // Renderizar proyectos
         const listaProyectos = document.getElementById('proyectos');
         proyectos.forEach((p) => {
             const projectElement = document.createElement('project-card');
@@ -40,9 +54,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             projectElement.setAttribute('active', p.active);
             projectElement.setAttribute('name', p.name);
             projectElement.setAttribute('description', p.description);
+            projectElement.setAttribute('members', miembrosPorProyecto[p.id] || 0);
             listaProyectos.appendChild(projectElement);
         });
 
+        // Función para cargar tareas por página
         async function cargarTareasPagina(pagina) {
             try {
                 const responseTask = await fetch(`/getTasks?pageSize=${pageSize}&offset=${pagina}`);
@@ -85,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        // Configurar eventos de paginación
         document.getElementById('anterior').addEventListener('click', () => {
             if (paginaTareaActual > 1) {
                 cargarTareasPagina(paginaTareaActual - 1);
@@ -95,8 +112,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             cargarTareasPagina(paginaTareaActual + 1);
         });
 
+        // Cargar la primera página de tareas
         await cargarTareasPagina(1);
 
+        // Renderizar usuarios
         const listaUsuarios = document.getElementById('users');
         usuarios.forEach((u) => {
             const userElement = document.createElement('user-card');
@@ -109,6 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             listaUsuarios.appendChild(userElement);
         });
 
+        // Generar gráficos
         try {
             await Graficos.generarGraficos();
         } catch (error) {
@@ -116,6 +136,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             ShowMyAlert('error','Error generando graficos:');
         }
 
+        const cerrarSesion = document.getElementById('cerrarSesion');
+        cerrarSesion.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            console.log('Cerrando sesión...');
+            window.location.href = '/pages/index.html';
+        });
+
+        // Renderizar entradas de tiempo
         try {
             const responseTimeEntries = await fetch('/getTimeEntries');
             const timeEntries = await responseTimeEntries.json();
@@ -250,4 +278,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error en la carga inicial:', error.message);
         ShowMyAlert('error','Error en la carga inicial:');
     }
+
+
+    // Modificar el getRelatedTasksHtml en ProjectCard.js para usar todasLasTareas
+    window.todasLasTareas = todasLasTareas; // Hacer disponible para ProjectCard
+
 });

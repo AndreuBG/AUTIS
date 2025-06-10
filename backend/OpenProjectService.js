@@ -217,7 +217,6 @@ return users;
             });
 
             console.log(response);
-            return response;
 
         } catch (error) {
             console.error('Error:', error);
@@ -302,6 +301,8 @@ return users;
 
         console.log(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`);
 
+        console.log(`${this.API_URL}/work_packages?filters=${encodedFilters}`);
+
         try {
             const data = await fetch(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
                 headers: {
@@ -345,7 +346,7 @@ return users;
                 }
             })
                 .then(response => response.json())
-                .then(data => data._embedded.elements)
+                .then (data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
                 const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
@@ -423,5 +424,72 @@ return users;
             console.error('Error eliminando tarea:', error.message);
             throw error;
         }
+    }
+
+    static async getMemberQuantity() {
+
+        // Obtener memberships con autenticación
+        const responseMemberships = await fetch('http://localhost:8080/api/v3/memberships', {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+            }
+        });
+
+        if (!responseMemberships.ok) {
+            throw new Error(`Error al obtener memberships: ${responseMemberships.status}`);
+        }
+
+        const membershipsData = await responseMemberships.json();
+
+        // Validar y contar miembros por proyecto
+        const miembrosPorProyecto = {};
+        if (membershipsData._embedded && membershipsData._embedded.elements) {
+            membershipsData._embedded.elements.forEach(membership => {
+                if (membership._links && membership._links.project) {
+                    const projectId = membership._links.project.href.split('/').pop();
+                    miembrosPorProyecto[projectId] = (miembrosPorProyecto[projectId] || 0) + 1;
+                }
+            });
+        }
+
+        return miembrosPorProyecto;
+    }
+
+    static async addMemberToProject(projectId, numericUserId, roleId) {
+        return await fetch('http://localhost:8080/api/v3/memberships', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                project: { href: `/api/v3/projects/${projectId}` },
+                principal: { href: `/api/v3/users/${numericUserId}` },
+                roles: [{ href: `/api/v3/roles/${roleId}` }]
+            })
+        });
+    }
+
+    static async getProjectMembers(projectId) {
+        const response = await fetch(`${this.API_URL}/memberships?filters=[{"project_id":{"operator":"=","values":["${projectId}"]}}]`, {
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`),
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText);
+        }
+        return await response.json();
+    }
+
+    static async removeMemberFromProject(membershipId) {
+        return await fetch(`${this.API_URL}/memberships/${membershipId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
+            }
+        });
     }
 }

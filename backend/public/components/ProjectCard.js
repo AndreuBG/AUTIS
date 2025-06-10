@@ -6,6 +6,8 @@ class ProjectCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.expanded = false;
         this.onExternalExpand = this.onExternalExpand.bind(this);
+        this.availableUsers = [];
+        this.projectMembers = new Set();
     }
 
     connectedCallback() {
@@ -18,17 +20,24 @@ class ProjectCard extends HTMLElement {
     }
 
     onExternalExpand(event) {
+        const card = this.shadowRoot.querySelector('.card');
         if (event.detail === null) {
-            this.shadowRoot.querySelector('.card').classList.remove('hidden');
+            // Cuando se cierra cualquier tarjeta, todas vuelven a ser visibles
+            card.classList.remove('hidden');
+            card.style.zIndex = '0';
         } else if (event.detail !== this) {
-            this.shadowRoot.querySelector('.card').classList.add('hidden');
+            // Cuando se expande otra tarjeta, esta se oculta
+            card.classList.add('hidden');
+            card.style.zIndex = '0';
             if (this.expanded) {
                 this.expanded = false;
                 document.body.classList.remove('no-scroll');
                 this.render();
             }
         } else {
-            this.shadowRoot.querySelector('.card').classList.remove('hidden');
+            // Cuando esta tarjeta se expande
+            card.classList.remove('hidden');
+            card.style.zIndex = '9999';
         }
     }
 
@@ -53,7 +62,285 @@ class ProjectCard extends HTMLElement {
         this.render();
     }
 
+    async fetchAvailableUsers() {
+        try {
+            const response = await fetch('/getUsers');
+            const users = await response.json();
+            // Remove this filter to show all users
+            this.availableUsers = users;
+            return this.availableUsers;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            return [];
+        }
+    }
+
+    async addMember(userId, roleId = 3) {
+        try {
+            const projectId = this.getAttribute('id');
+            const numericUserId = parseInt(userId, 10);
+            
+            if (isNaN(numericUserId)) {
+                throw new Error('ID de usuario inválido');
+            }
+
+            const response = await fetch('/addMemberToProject', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectId: projectId,
+                    numericUserId: numericUserId,
+                    roleId: roleId
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Error al añadir miembro');
+            }
+
+            this.projectMembers.add(userId);
+            const currentMembers = parseInt(this.getAttribute('members') || '0');
+            this.setAttribute('members', currentMembers + 1);
+            
+            // En lugar de hacer render() aquí, actualizamos solo la lista de miembros
+            const membersGrid = this.shadowRoot.querySelector('.members-grid');
+            if (membersGrid) {
+                this.getCurrentMembers().then(members => {
+                    membersGrid.innerHTML = members.map(member => `
+                        <div class="member-entry">
+                            <div class="member-details">
+                                <div class="member-name">
+                                    ${member.userDetails.firstName} ${member.userDetails.lastName}
+                                </div>
+                                <div class="member-login">@${member.userDetails.login}</div>
+                            </div>
+                            <button class="delete-member-btn" data-user-id="${member._links.principal.href.split('/').pop()}">×</button>
+                        </div>
+                    `).join('');
+
+                    // Añadir listeners para los botones de eliminar
+                    membersGrid.querySelectorAll('.delete-member-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            if (confirm('¿Seguro que quieres eliminar este miembro del proyecto?')) {
+                                await this.deleteMember(btn.dataset.userId);
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Actualizar el contador de miembros en la tarjeta
+            const memberCount = this.shadowRoot.querySelector('.member-count span');
+            if (memberCount) {
+                memberCount.textContent = currentMembers + 1;
+            }
+
+            return true;
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+            return false;
+        }
+    }
+
+    async showMembersModal() {
+        const users = await this.fetchAvailableUsers();
+        const currentMembers = await this.getCurrentMembers();
+        const currentMemberIds = currentMembers.map(member => 
+            member._links.principal.href.split('/').pop()
+        );
+
+        const modal = document.createElement('div');
+        modal.className = 'members-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3>Añadir Miembros</h3>
+                <div class="users-list">
+                    ${users.map(user => {
+                        const isLocked = user.status === 'locked';
+                        const isMember = currentMemberIds.includes(user.id.toString());
+                        const statusClass = user.status === 'active' ? 'active' : 
+                                          user.status === 'locked' ? 'locked' : 'registered';
+                        
+                        return `
+                            <div class="user-item ${isLocked ? 'locked' : ''} ${isMember ? 'existing-member' : ''}" data-user-id="${user.id}">
+                                <div class="user-info">
+                                    <span class="user-name">${user.name}</span>
+                                    <span class="user-status ${statusClass}">
+                                        ${user.status === 'active' ? '✓ Activo' : 
+                                          user.status === 'locked' ? '✕ Bloqueado' : 
+                                          '○ Registrado'}
+                                    </span>
+                                </div>
+                                ${isMember ? 
+                                    `<span class="status-badge member">Ya es miembro</span>` : 
+                                    `<button class="add-user-btn ${statusClass}" ${isLocked ? 'disabled' : ''}>
+                                        ${isLocked ? '✕ Bloqueado' : '+ Añadir'}
+                                    </button>`
+                                }
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <button class="close-modal-btn">Cerrar</button>
+            </div>
+        `;
+
+        // Actualizar estilos para mantener consistencia
+        const styleEl = document.createElement('style');
+        styleEl.textContent = `
+            .user-item {
+                padding: 12px;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .user-status {
+                font-size: 0.85em;
+                padding: 2px 6px;
+                border-radius: 3px;
+            }
+            .user-status.active { 
+                background: #e6ffe6; 
+                color: #029302;
+            }
+            .user-status.locked { 
+                background: #ffe6e6; 
+                color: #c60009;
+            }
+            .user-status.registered { 
+                background: #f0f0f0; 
+                color: #666;
+            }
+            .add-user-btn.active {
+                background: #029302;
+            }
+            .add-user-btn.locked {
+                background: #c60009;
+            }
+            .add-user-btn:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+            .status-badge.member {
+                background: #f0f0f0;
+                color: #666;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 0.9em;
+            }
+            .existing-member {
+                background: #f8f8f8;
+            }
+        `;
+
+        modal.appendChild(styleEl);
+        this.shadowRoot.appendChild(modal);
+
+        modal.querySelector('.close-modal-btn').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.querySelectorAll('.add-user-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const userItem = e.target.closest('.user-item');
+                const userId = userItem.dataset.userId;
+                const success = await this.addMember(userId);
+                
+                if (success) {
+                    // Solo actualizamos el estado visual del usuario en el modal
+                    userItem.classList.add('existing-member');
+                    userItem.innerHTML = `
+                        <div class="user-info">
+                            <span class="user-name">${userItem.querySelector('.user-name').textContent}</span>
+                            <span class="user-status ${userItem.querySelector('.user-status').classList[1]}">
+                                ${userItem.querySelector('.user-status').textContent}
+                            </span>
+                        </div>
+                        <span class="status-badge member">Ya es miembro</span>
+                    `;
+                }
+            });
+        });
+    }
+
+    async getCurrentMembers() {
+        try {
+            const projectId = this.getAttribute('id');
+            const response = await fetch(`/getCurrentMembers/${projectId}`);
+
+            if (!response.ok) return [];
+            
+            const data = await response.json();
+
+            const members = data._embedded?.elements || [];
+
+            // Obtener detalles de cada usuario
+            const membersWithDetails = await Promise.all(members.map(async (member) => {
+                if (!member._links?.principal?.href) return null;
+                const userId = member._links.principal.href.split('/').pop();
+                
+                try {
+                    const userResponse = await fetch(`/getUserData/${userId}`, {
+                        headers: {
+                            'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!userResponse.ok) return null;
+                    
+                    const userData = await userResponse.json();
+                    return {
+                        ...member,
+                        userDetails: {
+                            firstName: userData.firstName,
+                            lastName: userData.lastName,
+                            login: userData.login
+                        }
+                    };
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    return null;
+                }
+            }));
+
+            return membersWithDetails.filter(m => m !== null);
+        } catch (error) {
+            console.error('Error fetching members:', error);
+            return [];
+        }
+    }
+
+    async renderMembersList() {
+        const members = await this.getCurrentMembers();
+        const membersList = this.shadowRoot.querySelector('.current-members-list');
+        
+        if (!membersList) return;
+
+        membersList.innerHTML = members.length ? members.map(member => `
+            <div class="member-item">
+                <img src="/img/user.png" alt="Usuario" class="member-avatar">
+                <div class="member-info">
+                    <span class="member-name">${member._links.principal.title}</span>
+                    <span class="member-role">${member._links.roles[0]?.title || 'Sin rol'}</span>
+                </div>
+            </div>
+        `).join('') : '<p class="no-members">No hay miembros en este proyecto</p>';
+    }
+
     getRelatedTasksHtml(projectName) {
+        // Usar las tareas globales almacenadas en window.todasLasTareas
         return window.todasLasTareas
             .filter(task => task.project === projectName)
             .map(task => {
@@ -70,10 +357,83 @@ class ProjectCard extends HTMLElement {
             .join('');
     }
 
+    async deleteMember(userId) {
+        try {
+            const projectId = this.getAttribute('id');
+            
+            // Primero obtener el ID de la membresía usando el ID del usuario
+            const membershipsResponse = await fetch(`/getCurrentMembers/${projectId}`)
+
+            if (!membershipsResponse.ok) throw new Error('Error al buscar la membresía');
+            
+            const data = await membershipsResponse.json();
+            const membership = data._embedded?.elements?.find(m => 
+                m._links?.principal?.href.split('/').pop() === userId
+            );
+
+            if (!membership) throw new Error('No se encontró la membresía');
+
+            // Ahora sí eliminar usando el ID de la membresía
+            const membershipId = membership.id;
+            const deleteResponse = await fetch(`/removeMemberFromProject/${membershipId}`, {
+                method: 'DELETE'
+            });
+
+            if (!deleteResponse.ok) {
+                throw new Error('Error al eliminar miembro');
+            }
+
+            this.projectMembers.delete(userId);
+            const currentMembers = parseInt(this.getAttribute('members') || '0');
+            this.setAttribute('members', currentMembers - 1);
+
+            // Actualizar el contador de miembros en la tarjeta
+            const memberCount = this.shadowRoot.querySelector('.member-count span');
+            if (memberCount) {
+                memberCount.textContent = currentMembers - 1;
+            }
+
+            // Actualizar la lista de miembros
+            const membersGrid = this.shadowRoot.querySelector('.members-grid');
+            if (membersGrid) {
+                this.getCurrentMembers().then(members => {
+                    membersGrid.innerHTML = members.map(member => `
+                        <div class="member-entry">
+                            <div class="member-details">
+                                <div class="member-name">
+                                    ${member.userDetails.firstName} ${member.userDetails.lastName}
+                                </div>
+                                <div class="member-login">@${member.userDetails.login}</div>
+                            </div>
+                            <button class="delete-member-btn" data-user-id="${member._links.principal.href.split('/').pop()}">×</button>
+                        </div>
+                    `).join('');
+
+                    // Añadir listeners para los botones de eliminar
+                    membersGrid.querySelectorAll('.delete-member-btn').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            if (confirm('¿Seguro que quieres eliminar este miembro del proyecto?')) {
+                                await this.deleteMember(btn.dataset.userId);
+                            }
+                        });
+                    });
+                });
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+            return false;
+        }
+    }
+
     render() {
         const active = this.getAttribute('active') === 'true';
         const name = this.getAttribute('name');
         const fullDescription = this.getAttribute('description') || '';
+        const members = this.getAttribute('members') || '0';
 
         const maxLength = 100;
         const shortDescription = fullDescription.length > maxLength
@@ -123,13 +483,6 @@ class ProjectCard extends HTMLElement {
                 background-color: #ececec;
                 box-sizing: border-box;
                 font-family: Arial, sans-serif;
-                transition: 
-                transform 0.3s ease,
-                width 0.3s ease,
-                height 0.3s ease,
-                background-color 0.3s ease,
-                box-shadow 0.3s ease,
-                opacity 0.3s ease;
                 cursor: pointer;
                 overflow: hidden;
                 position: relative;
@@ -138,10 +491,7 @@ class ProjectCard extends HTMLElement {
             }
 
             .card.hidden {
-                opacity: 0;
-                pointer-events: none;
-                transform: scale(0.95);
-                transition: opacity 0.3s ease, transform 0.3s ease;
+                display: none;
             }
 
             .card:hover:not(.expanded):not(.hidden) {
@@ -154,24 +504,40 @@ class ProjectCard extends HTMLElement {
                 height: 200px;
                 width: 300px;
                 overflow: hidden;
+                position: relative;  // Asegurar posicionamiento relativo
+                display: flex;
+                flex-direction: column;
             }
 
             .card.expanded {
                 position: fixed;
-                top: 100px;
+                top: 50%;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translate(-50%, -50%);
                 width: 70vw;
+                height: auto;
+                max-height: 80vh;
                 background-color: white;
                 box-shadow: 0 0 30px rgba(0,0,0,0.5);
                 border-radius: 10px;
                 overflow-y: auto;
-                max-height: 80vh;
                 z-index: 9999;
-                transform: scale(1) translateX(-50%);
-                cursor: default;
-                user-select: text;
-                padding-bottom: 50px;
+                padding: 20px;
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 9998;
+            }
+
+            .card.expanded + .overlay {
+                display: block;
             }
 
             task-card {
@@ -270,6 +636,206 @@ class ProjectCard extends HTMLElement {
             .card.collapsed:hover .trash-icon {
                 opacity: 1;
             }
+
+            .member-count {
+                font-size: 0.9em;
+                color: #333;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+
+            .card.collapsed .member-count {
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+                padding: 6px 10px;
+                z-index: 10;
+                margin: 0;
+            }
+
+
+            .members-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10001;
+            }
+
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                width: 80%;
+                max-width: 500px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .users-list {
+                margin: 20px 0;
+            }
+
+            .user-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .add-user-btn {
+                padding: 5px 10px;
+                background: #0a28d1;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .add-user-btn:hover {
+                background: #081d94;
+            }
+
+            .add-members-btn {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background: #0a28d1;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .add-members-btn:hover {
+                background: #081d94;
+            }
+
+            .close-modal-btn {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background: #666;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .current-members {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+            }
+            .current-members h3 {
+                color: #333;
+                margin-bottom: 15px;
+            }
+            .current-members-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            .member-item {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                gap: 10px;
+            }
+            .member-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            .member-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .member-name {
+                font-weight: bold;
+                color: #0a28d1;
+            }
+            .member-role {
+                font-size: 0.85em;
+                color: #666;
+            }
+            .no-members {
+                color: #666;
+                font-style: italic;
+                text-align: center;
+                grid-column: 1/-1;
+                padding: 20px;
+            }
+
+            .members-list {
+                margin-top: 20px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            .members-list h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 1.1em;
+            }
+            .members-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 10px;
+            }
+            .member-entry {
+                padding: 10px;
+                background: white;
+                border-radius: 6px;
+                border: 1px solid #eee;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .member-details {
+                font-size: 0.9em;
+            }
+            .member-name {
+                font-weight: bold;
+                color: #0a28d1;
+            }
+            .member-login {
+                color: #666;
+                font-style: italic;
+            }
+            .delete-member-btn {
+                background: none;
+                border: none;
+                color: #c60009;
+                font-size: 1.2em;
+                cursor: pointer;
+                padding: 4px 8px;
+                border-radius: 4px;
+                opacity: 0.6;
+                transition: all 0.2s ease;
+            }
+            
+            .delete-member-btn:hover {
+                opacity: 1;
+                background: #ffe6e6;
+            }
+            
+            .member-entry {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
             </style>
 
             <div class="${cardClass}" tabindex="0" role="button" aria-expanded="${this.expanded}">
@@ -290,8 +856,88 @@ class ProjectCard extends HTMLElement {
             : ''}
 
                 ${relatedTasksHtml}
+
+                <div class="member-count">
+                    👥 Miembros: <span>${members}</span>
+                </div>
+                ${this.expanded ? `
+                    <div class="members-list">
+                        <h3>Lista de Miembros</h3>
+                        <div class="members-grid"></div>
+                    </div>
+                    <button class="add-members-btn">Añadir Miembros</button>
+                ` : ''}
             </div>
+            ${this.expanded ? '<div class="overlay"></div>' : ''}
         `;
+
+        // Añadir estilos para la lista de miembros
+        this.shadowRoot.querySelector('style').textContent += `
+            .members-list {
+                margin-top: 20px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            .members-list h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 1.1em;
+            }
+            .members-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 10px;
+            }
+            .member-entry {
+                padding: 10px;
+                background: white;
+                border-radius: 6px;
+                border: 1px solid #eee;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .member-details {
+                font-size: 0.9em;
+            }
+            .member-name {
+                font-weight: bold;
+                color: #0a28d1;
+            }
+            .member-login {
+                color: #666;
+                font-style: italic;
+            }
+        `;
+
+        // Cargar y mostrar los miembros si está expandido
+        if (this.expanded) {
+            const membersGrid = this.shadowRoot.querySelector('.members-grid');
+            this.getCurrentMembers().then(members => {
+                membersGrid.innerHTML = members.map(member => `
+                    <div class="member-entry">
+                        <div class="member-details">
+                            <div class="member-name">
+                                ${member.userDetails.firstName} ${member.userDetails.lastName}
+                            </div>
+                            <div class="member-login">@${member.userDetails.login}</div>
+                        </div>
+                        <button class="delete-member-btn" data-user-id="${member._links.principal.href.split('/').pop()}">×</button>
+                    </div>
+                `).join('');
+
+                // Añadir listeners para los botones de eliminar
+                membersGrid.querySelectorAll('.delete-member-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (confirm('¿Seguro que quieres eliminar este miembro del proyecto?')) {
+                            await this.deleteMember(btn.dataset.userId);
+                        }
+                    });
+                });
+            });
+        }
 
         const cardEl = this.shadowRoot.querySelector('.card');
         cardEl.addEventListener('click', () => {
@@ -303,6 +949,13 @@ class ProjectCard extends HTMLElement {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.toggleDescription();
+            });
+        }
+
+        if (this.expanded) {
+            this.shadowRoot.querySelector('.add-members-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showMembersModal();
             });
         }
 
@@ -326,6 +979,11 @@ class ProjectCard extends HTMLElement {
                     ShowMyAlert('error', 'Error de red al eliminar el proyecto');
                 }
             });
+        }
+
+        // Renderizar la lista de miembros actuales si está expandido
+        if (this.expanded) {
+            this.renderMembersList();
         }
     }
 }

@@ -29,8 +29,8 @@ app.get('/getProjects', async function(req, res) {
 });
 
 app.get('/getTasks', async function(req, res) {
-    const pagesize = parseInt(req.query.pageSize) || 16; 
-    const offset = parseInt(req.query.offset) || 1; 
+    const pagesize = parseInt(req.query.pageSize) || 16;
+    const offset = parseInt(req.query.offset) || 1;
 
     try {
         const tasks = await OpenProjectService.getAllTasks(pagesize, offset);
@@ -106,7 +106,6 @@ app.get('/getProjectsFiltered/:filter/:orden/:ordenacion', async (req, res) => {
 app.get('/getTasksFiltered/:filter/:orden/:ordenacion', async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 16;
     const offset = parseInt(req.query.offset) || 1;
-    console.log(req.params.filter);
     res.send(await OpenProjectService.getTasksFiltered(req.params.filter, pageSize, offset, req.params.orden, req.params.ordenacion));
 });
 
@@ -115,21 +114,17 @@ app.get('/getUsersFiltered/:filter', async (req, res) => {
     res.send(await OpenProjectService.getUsersFiltered(req.params.filter));
 });
 
+// Una sola ruta para getTimeEntries
 app.get('/getTimeEntries', async (req, res) => {
     try {
         const entries = await OpenProjectService.getAllTimeEntries();
-
         const entriesWithUser = await Promise.all(entries.map(async entry => {
             let userInfo = null;
-            if (entry._links && entry._links.user && entry._links.user.href) {
-                // Extrae el ID del usuario desde la URL
+            if (entry._links?.user?.href) {
                 const userId = entry._links.user.href.split('/').pop();
                 userInfo = await OpenProjectService.getUserData(userId);
             }
-            return {
-                ...entry,
-                assignedUser: userInfo 
-            };
+            return { ...entry, assignedUser: userInfo };
         }));
         res.json(entriesWithUser);
     } catch (error) {
@@ -147,20 +142,48 @@ app.get('/getAllTasks', async function(req, res) {
     }
 });
 
-app.delete('/projects/:id', async function(req, res) {
+app.delete('/projects/:id', async (req, res) => {
     try {
-        const response = await OpenProjectService.deleteProject(req.params.id);
-        res.status(response.ok ? 200 : response.status).send(await response.text());
+        const result = await OpenProjectService.deleteProject(req.params.id);
+        res.status(result.status).send();
     } catch (error) {
-        res.status(500).json({ error: 'Error eliminando el proyecto' });
+        res.status(500).send(error.message);
     }
 });
 
-app.delete('/tasks/:id', async function(req, res) {
+app.delete('/tasks/:id', async (req, res) => {
     try {
-        const response = await OpenProjectService.deleteTask(req.params.id);
-        res.status(response.ok ? 200 : response.status).send(await response.text());
+        const result = await OpenProjectService.deleteTask(req.params.id);
+        res.status(result.status).send();
     } catch (error) {
-        res.status(500).json({ error: 'Error eliminando la tarea' });
+        res.status(500).send(error.message);
     }
 });
+
+app.get('/getMemberQuantity', async function (req, res){
+   res.send(await OpenProjectService.getMemberQuantity());
+});
+
+app.post('/addMemberToProject', async (req, res) => {
+    res.send(await OpenProjectService.addMemberToProject(req.body.projectId, req.body.numericUserId, req.body.roleId));
+})
+
+app.get('/getCurrentMembers/:id', async (req, res) => {
+    try {
+        const data = await OpenProjectService.getProjectMembers(req.params.id);
+        res.json(data);
+    } catch (error) {
+        console.error("Error obteniendo miembros del proyecto:", error);
+        res.status(500).json({ error: 'Error obteniendo miembros del proyecto' });
+    }
+});
+
+app.delete('/removeMemberFromProject/:memberID', async (req, res) => {
+    try {
+        const result = await OpenProjectService.removeMemberFromProject(req.params.memberID);
+        res.status(result.status).send();
+    } catch (error) {
+        console.error("Error eliminando miembro del proyecto:", error);
+        res.status(500).json({ error: 'Error eliminando miembro del proyecto' });
+    }
+})
