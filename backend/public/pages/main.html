@@ -222,11 +222,15 @@
             </div>
             <div class="form-group">
                 <label>Usuario</label>
-                <input type="text" id="login-crear"
-                    placeholder="Ej: jgarcia" 
+                <input type="text" 
+                    id="login-crear"
+                    placeholder="ejemplo: Usuario-1" 
                     required
-                    oninvalid="this.setCustomValidity('Por favor, introduce un nombre de usuario')"
-                    oninput="this.setCustomValidity('')">
+                    pattern="^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+                    minlength="3"
+                    oninvalid="this.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres, usar letras, números y guiones. No puede empezar ni terminar con guión')"
+                    oninput="validateLoginCrear(this)">
+                <small class="hint">Mínimo 3 caracteres, letras, números y guiones. No puede empezar ni terminar con guión</small>
             </div>
             <div class="form-group">
                 <label>Correo electrónico</label>
@@ -407,7 +411,21 @@
                     }
                     input.setCustomValidity('');
                 }
-            </script>
+
+    function validateLoginCrear(input) {
+        const login = input.value;
+        const loginPattern = /^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$/;
+        if (login.length < 3) {
+            input.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres');
+            return;
+        }
+        if (!loginPattern.test(login)) {
+            input.setCustomValidity('El nombre de usuario solo puede contener letras, números y guiones. No puede empezar ni terminar con guión');
+            return;
+        }
+        input.setCustomValidity('');
+    }
+</script>
 
 </body>
 </html>

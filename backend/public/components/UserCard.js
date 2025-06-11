@@ -216,6 +216,14 @@ class UserCard extends HTMLElement {
             padding: 8px; /* Ajuste de padding para pantallas pequeñas */
           }
         }
+
+        /* Añadir a los estilos existentes */
+        .form-group .hint {
+          color: #666;
+          font-size: 0.85em;
+          margin-top: 4px;
+          padding-left: 4px;
+        }
       </style>
 
       <div class="card">
@@ -250,9 +258,17 @@ class UserCard extends HTMLElement {
             </div>
             <div class="form-group">
               <label>Usuario</label>
-              <input type="text" id="login" required
-                oninvalid="this.setCustomValidity('Por favor, introduce un nombre de usuario')"
-                oninput="this.setCustomValidity('')">
+              <div>
+                <input type="text" 
+                  id="login" 
+                  required
+                  pattern="^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+                  minlength="3"
+                  placeholder="ejemplo: Usuario-1"
+                  oninvalid="this.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres, usar letras, números y guiones. No puede empezar ni terminar con guión')"
+                  oninput="this.getRootNode().host.validateLogin(this)">
+                <span class="hint">Mínimo 3 caracteres, letras, números y guiones. No puede empezar ni terminar con guión</span>
+              </div>
             </div>
             <div class="form-group">
               <label>Correo electrónico</label>
@@ -323,8 +339,26 @@ class UserCard extends HTMLElement {
       return true;
     };
 
+    // Mover validateLogin al contexto de la clase
+    this.validateLogin = (input) => {
+      const login = input.value;
+      const loginPattern = /^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$/;
+      
+      if (login.length < 3) {
+        input.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres');
+        return false;
+      }
+      if (!loginPattern.test(login)) {
+        input.setCustomValidity('El nombre de usuario solo puede contener letras, números y guiones. No puede empezar ni terminar con guión');
+        return false;
+      }
+      input.setCustomValidity('');
+      return true;
+    };
+
     // Añadir función de validación al contexto del shadow DOM
     this.shadowRoot.validateEmail = validateEmail;
+    this.shadowRoot.validateLogin = this.validateLogin;
   }
 
   async cargarDatosUsuario() {
@@ -358,8 +392,13 @@ class UserCard extends HTMLElement {
 
   async modificarUsuario() {
     const emailInput = this.shadowRoot.querySelector('#email');
+    const loginInput = this.shadowRoot.querySelector('#login');
     if (!this.shadowRoot.validateEmail(emailInput)) {
       emailInput.focus();
+      return;
+    }
+    if (!this.shadowRoot.validateLogin(loginInput)) {
+      loginInput.focus();
       return;
     }
     
