@@ -238,23 +238,36 @@ class UserCard extends HTMLElement {
           <form id="form-modificar">
             <div class="form-group">
               <label>Nombre</label>
-              <input type="text" id="firstName" required>
+              <input type="text" id="firstName" required
+                oninvalid="this.setCustomValidity('Por favor, introduce un nombre')"
+                oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
               <label>Apellidos</label>
-              <input type="text" id="lastName" required>
+              <input type="text" id="lastName" required
+                oninvalid="this.setCustomValidity('Por favor, introduce los apellidos')"
+                oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
               <label>Usuario</label>
-              <input type="text" id="login" required>
+              <input type="text" id="login" required
+                oninvalid="this.setCustomValidity('Por favor, introduce un nombre de usuario')"
+                oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
               <label>Correo electrónico</label>
-              <input type="email" id="email" required>
+              <input type="email" 
+                id="email" 
+                required
+                pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                oninvalid="this.setCustomValidity('Por favor, introduce un correo electrónico válido con formato usuario@dominio.extension')"
+                oninput="validateEmail(this)">
             </div>
             <div class="form-group">
               <label>Estado</label>
-              <select id="status" required>
+              <select id="status" required
+                oninvalid="this.setCustomValidity('Por favor, selecciona un estado')"
+                oninput="this.setCustomValidity('')">
                 <option value="active">Activo</option>
                 <option value="locked">Bloqueado</option>
                 <option value="registered">Registrado</option>
@@ -291,6 +304,27 @@ class UserCard extends HTMLElement {
       e.preventDefault();
       await this.modificarUsuario();
     });
+
+    const validateEmail = (input) => {
+      const email = input.value;
+      // Verificar si hay @ y si después hay al menos un punto
+      const parts = email.split('@');
+      if (parts.length !== 2 || !parts[1].includes('.')) {
+        input.setCustomValidity('El correo debe tener un dominio válido después del @ (ejemplo@dominio.com)');
+        return false;
+      }
+      // Verificar el formato completo
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(email)) {
+        input.setCustomValidity('Por favor, introduce un correo electrónico válido con formato usuario@dominio.extension');
+        return false;
+      }
+      input.setCustomValidity('');
+      return true;
+    };
+
+    // Añadir función de validación al contexto del shadow DOM
+    this.shadowRoot.validateEmail = validateEmail;
   }
 
   async cargarDatosUsuario() {
@@ -323,6 +357,12 @@ class UserCard extends HTMLElement {
   }
 
   async modificarUsuario() {
+    const emailInput = this.shadowRoot.querySelector('#email');
+    if (!this.shadowRoot.validateEmail(emailInput)) {
+      emailInput.focus();
+      return;
+    }
+    
     const datosActualizados = {
       firstName: this.shadowRoot.querySelector('#firstName').value,
       lastName: this.shadowRoot.querySelector('#lastName').value,
@@ -330,6 +370,7 @@ class UserCard extends HTMLElement {
       email: this.shadowRoot.querySelector('#email').value,
       status: this.shadowRoot.querySelector('#status').value
     };
+
     try {
       const res = await fetch(`http://localhost:5500/modifyUser/${this.idUser}`, {
         method: 'POST',
