@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (usuariosFiltrados.length === 0) {
                 listaUsuarios.innerHTML = `
-          <div class="no-results">
-            <div class="message-container">
-              <i class="fas fa-user-slash"></i>
-              <p>No hay usuarios que cumplan con este filtro</p>
-            </div>
-          </div>`;
+                    <div class="no-results">
+                        <div class="message-container">
+                            <i class="fas fa-user-slash"></i>
+                            <p>No hay usuarios que cumplan con este filtro</p>
+                        </div>
+                    </div>`;
             } else {
                 listaUsuarios.innerHTML = '';
                 usuariosFiltrados.forEach((u) => {
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     userElement.setAttribute('name', u.name);
                     userElement.setAttribute('login', u.login);
                     userElement.setAttribute('email', u.email);
+                    userElement.setAttribute('status', u.status); // Asegurarnos de que el status se pase correctamente
                     listaUsuarios.appendChild(userElement);
                 });
             }

@@ -342,8 +342,6 @@ return users;
         const users = [];
         const encodedFilters = encodeURIComponent(filters);
 
-        console.log(`${this.API_URL}/users?filters=${encodedFilters}`);
-
         try {
             const data = await fetch(`${this.API_URL}/users?filters=${encodedFilters}`, {
                 headers: {
@@ -351,16 +349,14 @@ return users;
                 }
             })
                 .then(response => response.json())
-                .then (data => data._embedded.elements)
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
-                const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
+                const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email, data[i].status);
                 users.push(user);
             }
-
-
         } catch (error) {
-            console.log("Hubo un problema con las tareas filtradas:" + error.message);
+            console.log("Hubo un problema con los usuarios filtrados:" + error.message);
             return error;
         }
 
