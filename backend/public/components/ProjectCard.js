@@ -454,12 +454,47 @@ class ProjectCard extends HTMLElement {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 20px;
-                margin-top: 20px;
             }
 
             .related-tasks task-card {
-                flex: 1 1 calc(50% - 20px); 
-                max-width: calc(50% - 20px);
+                flex: 1 1 calc(50% - 60px); 
+                max-width: calc(50% - 40px);
+            }
+
+            @media (max-width: 700px) {
+                .card.expanded {
+                    position: fixed;
+                    top: 90px;
+                    left: 0;
+                    transform: none;
+                    width: 100vw;
+                    min-width: 0;
+                    max-width: 100vw;
+                    height: 100vw;         /* Hace el contenedor cuadrado */
+                    max-height: 100vw;     /* Limita el alto igual al ancho */
+                    overflow-y: auto;
+                    border-radius: 0;
+                    border-bottom: 20px;
+                    padding: 10px 4vw 20px 4vw;
+                    margin-bottom: 0 !important;
+                    box-sizing: border-box;
+                    background: white;
+                    z-index: 9999;
+                }
+                .related-tasks {
+                    flex-direction: column;
+                    padding-bottom: 20px;
+                    gap: 8px;
+                }
+                .related-tasks task-card {
+                    min-width: 90%;
+                    max-width: 90%;
+                    flex-basis: 90%;
+                    font-size: 0.85em;
+                    padding: 6px !important;
+                    margin-bottom: 6px !important;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+                }
             }
     
             
@@ -474,7 +509,6 @@ class ProjectCard extends HTMLElement {
             }
 
             .card {
-        
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 padding: 15px;
@@ -488,6 +522,10 @@ class ProjectCard extends HTMLElement {
                 position: relative;
                 z-index: 0;
                 user-select: none;
+                transition: 
+                    transform 0.3s cubic-bezier(.4,0,.2,1),
+                    box-shadow 0.3s cubic-bezier(.4,0,.2,1),
+                    z-index 0.1s linear;
             }
 
             .card.hidden {
@@ -511,18 +549,26 @@ class ProjectCard extends HTMLElement {
 
             .card.expanded {
                 position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 70vw;
+                top: 100px;
+                bottom: 10px;
+                left: 0;
+                right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                width: 95vw;
+                min-width: 0;
+                max-width: 1100px; /* <-- Cambiado de 700px a 1100px */
                 height: auto;
-                max-height: 80vh;
-                background-color: white;
-                box-shadow: 0 0 30px rgba(0,0,0,0.5);
-                border-radius: 10px;
+                max-height: calc(100vh - 40px); /* Deja margen inferior */
                 overflow-y: auto;
+                border-radius: 12px;
+                border: 2px solid #ccc;
+                padding: 10px 4vw 20px 4vw;
+                margin-bottom: 20px !important;
+                box-sizing: border-box;
+                background: white;
                 z-index: 9999;
-                padding: 20px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.10);
             }
 
             .overlay {
@@ -542,7 +588,8 @@ class ProjectCard extends HTMLElement {
 
             task-card {
                 display: block;
-                margin-bottom: 20px;
+                margin-bottom: 50px;
+                margin-top: 10px;
             }
 
             .card h2 {
@@ -780,7 +827,7 @@ class ProjectCard extends HTMLElement {
 
             .members-list {
                 margin-top: 20px;
-                padding: 15px;
+                padding: 6px 8px;
                 background: #f8f9fa;
                 border-radius: 8px;
             }
@@ -875,7 +922,7 @@ class ProjectCard extends HTMLElement {
         this.shadowRoot.querySelector('style').textContent += `
             .members-list {
                 margin-top: 20px;
-                padding: 15px;
+                padding: 6px 8px;
                 background: #f8f9fa;
                 border-radius: 8px;
             }

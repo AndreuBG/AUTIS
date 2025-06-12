@@ -191,6 +191,10 @@ class TimeEntriesTable extends HTMLElement {
                     justify-content: space-between;
                     align-items: flex-start;
                     gap: 8px;
+                    transition: 
+                        box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+                        transform 0.25s cubic-bezier(.4,0,.2,1),
+                        background 0.25s cubic-bezier(.4,0,.2,1);
                 }
                 .tarea-card:hover {
                     box-shadow: 0 4px 16px #c7b7b7;
