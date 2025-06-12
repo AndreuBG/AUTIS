@@ -21,21 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const identifier = document.getElementById('identifier-crear').value;
         const identifierPattern = /^[a-z][a-z0-9-]*$/;
+        const errorContainer = document.getElementById('error-container-proyecto');
 
         if (!identifierPattern.test(identifier) || identifier.length > 100) {
-            alert('Error: El identificador debe comenzar con una letra minúscula y solo puede contener letras minúsculas, números y guiones. Máximo 100 caracteres.');
+            errorContainer.textContent = 'El identificador debe comenzar con una letra minúscula y solo puede contener letras minúsculas, números y guiones. Máximo 100 caracteres.';
+            errorContainer.classList.add('show');
             return;
         }
 
         const projectData = {
             name: document.getElementById('name-crear').value,
-            identifier: identifier,
+            identifier: document.getElementById('identifier-crear').value,
             description: {
-                raw: document.getElementById('description-crear').value
-            },
+                raw: document.getElementById('description-proyecto').value
+            }
         };
 
         try {
+            errorContainer.classList.remove('show');
             const res = await fetch('http://localhost:5500/createProject', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -45,23 +48,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 modal.style.display = 'none';
                 form.reset();
-                ShowMyAlert('success','Proyecto creado exitosamente');
+                ShowMyAlert('success', 'Proyecto creado exitosamente');
                 setTimeout(() => {
                     location.reload();
-                }, 1500); // recarga tras mostrar el alert
-
+                }, 1500);
             } else {
-                const data = await res.json();
-                ShowMyAlert('error', `Error: ${data.message || 'Error desconocido'}`);
-                alert(`Error: ${data?.message || 'No se pudo crear el proyecto'}`);
+                const errorData = await res.json();
+                errorContainer.textContent = errorData.message || 'Error al crear el proyecto';
+                errorContainer.classList.add('show');
             }
         } catch (error) {
-            ShowMyAlert('error', 'Error de conexión al servidor');
-            console.error('Error creando proyecto:', error.message);
-        }
-    });
-            alert('Error de conexión al servidor');
-            console.error('Error creando proyecto:', error);
+            console.error('Error:', error);
+            errorContainer.textContent = 'Error de conexión al servidor';
+            errorContainer.classList.add('show');
         }
     });
 

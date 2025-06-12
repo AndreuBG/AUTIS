@@ -185,7 +185,6 @@ return users;
     }
 
     static async createProject(projectData) {
-        console.log(projectData);
         try {
             const response = await fetch(`${this.API_URL}/projects`, {
                 method: 'POST',
@@ -196,11 +195,9 @@ return users;
                 body: JSON.stringify(projectData)
             });
 
-            console.log(response);
-
+            return response;
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error de conexión al servidor');
+            throw new Error('Error de conexión al servidor');
         }
     }
 
