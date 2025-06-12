@@ -47,7 +47,7 @@ form.addEventListener('submit', async (e) => {
 
     if (data.success) {
         if (recordarCheck.checked) localStorage.setItem('token', token.value)
-        window.location.href = "/pages/main.html";
+        window.location.href = "../pages/main.html";
     } else {
         alert(data.error || "Error durante el login");
     }

@@ -1,7 +1,7 @@
-import './components/ProjectCard.js';
-import './components/TaskCard.js';
-import './components/TabButton.js';
-import './components/UserCard.js';
+import '../components/ProjectCard.js';
+import '../components/TaskCard.js';
+import '../components/TabButton.js';
+import '../components/UserCard.js';
 import {Graficos} from "./graficos.js";
 import {ShowMyAlert} from "./my_alert.js";
 
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     } catch (error) {
         console.error('Error subiendo el token:', error.message);
-        window.location= '/pages/index.html';
+        window.location= '../pages/index.html';
     }
 
     try {
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         cerrarSesion.addEventListener('click', () => {
             localStorage.removeItem('token');
             console.log('Cerrando sesión...');
-            window.location.href = '/pages/index.html';
+            window.location.href = '../pages/index.html';
         });
 
         // Renderizar entradas de tiempo

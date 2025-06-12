@@ -390,18 +390,43 @@ project-card {
 
 .modal-crear .modal-content {
     background-color: white;
-    padding: 5px 20px;      /* Menos padding vertical */
+    padding: 5px 20px;
     border-radius: 5px;
     width: 400px;
     max-width: 95%;
     border: 2px solid #09348b;
-    margin-top: 120px;        /* Menos margen superior */
-    margin-bottom: 70px;     /* Menos margen inferior */
+    margin-top: 120px;
+    margin-bottom: 70px;
 }
 
 .modal-crear .form-group {
     position: relative;
     margin-bottom: 20px;
+}
+
+.modal-crear select {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #09348b;
+    border-radius: 4px;
+    background-color: #f8f8fc;
+    color: #330F0A;
+    font-size: 0.95em;
+    transition: border-color 0.2s, background-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+    margin-top: 5px;
+}
+
+.modal-crear select:focus {
+    border-color: #CC6204;
+    outline: none;
+    background-color: #fff;
 }
 
 .modal-crear .password-container {
@@ -824,7 +849,7 @@ project-card {
     display: none;
     cursor: pointer;
     position: fixed;
-    top: 0px;   /* AJUSTA AQUÍ para subirlo más */
+    top: 0px;
     right: 20px;
     z-index: 1101;
     width: 32px;

@@ -1,4 +1,4 @@
-import {ShowMyAlert} from "../my_alert.js";
+import {ShowMyAlert} from "../js/my_alert.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modal-crear-usuario');
