@@ -28,6 +28,8 @@
     <tab-button target="usuarios-group">Usuarios</tab-button>
     <tab-button target="dashboard-group">Dashboard</tab-button>
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
+    <img id="icono-filtro-proyectos" src="/img/filtro.png" alt="Filtrar proyectos"
+         style="width:32px;height:32px;cursor:pointer;display:none;position:absolute;right:20px;top:70px;z-index:1202;">
 </nav>
 
 <div id="menu-lateral">
@@ -37,33 +39,33 @@
     <tab-button target="usuarios-group">Usuarios</tab-button>
     <tab-button target="dashboard-group">Dashboard</tab-button>
 </div>
-    <div class="filtro-container" id="filtro-proyectos">
-        <div class="filtro-menu">
-            <label>
-                Actividad:
-                <select id="filtro-actividad-proyectos">
-                    <option value="">Todos</option>
-                    <option value="t">Activo</option>
-                    <option value="f">Inactivo</option>
-                </select>
-            </label>
-            <label>
-                Ordenar por:
-                <select id="orden-proyectos">
-                    <option value="created_at">Fecha de creación</option>
-                    <option value="name">Nombre</option>
-                </select>
-            </label>
-            <label>
-                Orden:
-                <select id="ordenacion-proyectos">
-                    <option value="desc">Desc</option>
-                    <option value="asc">Asc</option>
-                </select>
-            </label>
-            <button id="aplicar-filtro-proyectos" class="aplicar-filtro">Aplicar filtro</button>
-        </div>
+<div class="filtro-container" id="filtro-proyectos">
+    <div class="filtro-menu">
+        <label>
+            Actividad:
+            <select id="filtro-actividad-proyectos">
+                <option value="">Todos</option>
+                <option value="t">Activo</option>
+                <option value="f">Inactivo</option>
+            </select>
+        </label>
+        <label>
+            Ordenar por:
+            <select id="orden-proyectos">
+                <option value="created_at">Fecha de creación</option>
+                <option value="name">Nombre</option>
+            </select>
+        </label>
+        <label>
+            Orden:
+            <select id="ordenacion-proyectos">
+                <option value="desc">Desc</option>
+                <option value="asc">Asc</option>
+            </select>
+        </label>
+        <button id="aplicar-filtro-proyectos" class="aplicar-filtro">Aplicar filtro</button>
     </div>
+</div>
 
     <div class="filtro-container" id="filtro-tareas" style="display: none;">
         <div class="filtro-menu">
@@ -152,6 +154,8 @@
 
     <div id="proyectos-group">
         <h1>Proyectos</h1>
+        <img id="icono-filtro-proyectos" src="/img/filtro.png" alt="Filtrar proyectos"
+             style="display:none; cursor:pointer; position:fixed; top:55px; right:20px; z-index:1101; width:32px; height:32px;">
         <div id="proyectos" class="section active"></div>
         <div class="crear-container">
             <button class="boton_crear" id="boton-crear-proyectos">Crear nuevo proyecto</button>
@@ -381,6 +385,7 @@
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
 <script src="/js/filtroTareasToggle.js"></script>
+<script src="/js/filtroProyectosToggle.js"></script>
 
 </body>
 </html>
