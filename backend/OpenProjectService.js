@@ -185,7 +185,6 @@ return users;
     }
 
     static async createProject(projectData) {
-        console.log(projectData);
         try {
             const response = await fetch(`${this.API_URL}/projects`, {
                 method: 'POST',
@@ -196,16 +195,13 @@ return users;
                 body: JSON.stringify(projectData)
             });
 
-            console.log(response);
-
+            return response;
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error de conexión al servidor');
+            throw new Error('Error de conexión al servidor');
         }
     }
 
     static async createTask(taskData) {
-        console.log(taskData);
         try {
             const response = await fetch(`${this.API_URL}/work_packages`, {
                 method: 'POST',
@@ -216,11 +212,9 @@ return users;
                 body: JSON.stringify(taskData)
             });
 
-            console.log(response);
-
+            return response;
         } catch (error) {
-            console.error('Error:', error);
-            throw error;
+            throw new Error('Error de conexión al servidor');
         }
     }
 
@@ -299,45 +293,48 @@ return users;
         const encodedFilters = encodeURIComponent(filters);
         const encodedSort = encodeURIComponent(JSON.stringify([[orden, ordenacion]]));
 
-        console.log(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`);
-
-        console.log(`${this.API_URL}/work_packages?filters=${encodedFilters}`);
-
         try {
-            const data = await fetch(`${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`, {
+            // Usar el offset directamente como está, ya que viene correctamente desde el cliente
+            const url = `${this.API_URL}/work_packages?sortBy=${encodedSort}&pageSize=${pageSize}&offset=${offset}&filters=${encodedFilters}`;
+            
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': 'Basic ' + btoa(`apikey:${this.API_TOKEN}`)
                 }
-            })
-                .then(response => response.json())
-                .then(data => data._embedded.elements)
+            });
 
-            for (let i = 0; i < data.length; i++) {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const elements = data._embedded?.elements || [];
+
+            for (const element of elements) {
                 const task = new Task(
-                    data[i].id,
-                    data[i].subject,
-                    data[i].description.raw,
-                    data[i].startDate,
-                    data[i].dueDate,
-                    data[i]._links.project.title,
-                    data[i]._links.type.title,
-                    data[i]._links.priority.title
+                    element.id,
+                    element.subject,
+                    element.description?.raw,
+                    element.startDate,
+                    element.dueDate,
+                    element._links.project?.title,
+                    element._links.type?.title,
+                    element._links.priority?.title
                 );
                 tasks.push(task);
             }
+            
+            return tasks;
+
         } catch (error) {
             console.error("Error con las tareas filtradas:", error.message);
             return [];
         }
-
-        return tasks;
     }
 
     static async getUsersFiltered(filters) {
         const users = [];
         const encodedFilters = encodeURIComponent(filters);
-
-        console.log(`${this.API_URL}/users?filters=${encodedFilters}`);
 
         try {
             const data = await fetch(`${this.API_URL}/users?filters=${encodedFilters}`, {
@@ -346,16 +343,14 @@ return users;
                 }
             })
                 .then(response => response.json())
-                .then (data => data._embedded.elements)
+                .then(data => data._embedded.elements)
 
             for (let i = 0; i < data.length; i++) {
-                const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email);
+                const user = new User(data[i].active, data[i].id, data[i].name, data[i].login, data[i].email, data[i].status);
                 users.push(user);
             }
-
-
         } catch (error) {
-            console.log("Hubo un problema con las tareas filtradas:" + error.message);
+            console.log("Hubo un problema con los usuarios filtrados:" + error.message);
             return error;
         }
 

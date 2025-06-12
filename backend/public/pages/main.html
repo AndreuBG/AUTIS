@@ -28,8 +28,6 @@
     <tab-button target="usuarios-group">Usuarios</tab-button>
     <tab-button target="dashboard-group">Dashboard</tab-button>
     <img id="cerrarSesion" src="/img/salir.png" alt="Icono cerrar sesión">
-    <img id="icono-filtro-proyectos" src="/img/filtro.png" alt="Filtrar proyectos"
-         style="width:32px;height:32px;cursor:pointer;display:none;position:absolute;right:20px;top:70px;z-index:1202;">
 </nav>
 
 <div id="menu-lateral">
@@ -212,32 +210,49 @@
             <div class="form-group">
                 <label>Nombre</label>
                 <input type="text" id="firstName-crear"
-                    placeholder="Ej: Juan" required>
+                    placeholder="Ej: Juan"
+                    required
+                    oninvalid="this.setCustomValidity('Por favor, introduce un nombre')"
+                    oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
                 <label>Apellidos</label>
                 <input type="text" id="lastName-crear"
-                    placeholder="Ej: García Pérez" required>
+                    placeholder="Ej: García Pérez"
+                    required
+                    oninvalid="this.setCustomValidity('Por favor, introduce los apellidos')"
+                    oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
                 <label>Usuario</label>
-                <input type="text" id="login-crear"
-                    placeholder="Ej: jgarcia" required>
+                <input type="text"
+                    id="login-crear"
+                    placeholder="ejemplo: Usuario-1"
+                    required
+                    pattern="^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+                    minlength="3"
+                    oninvalid="this.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres, usar letras, números y guiones. No puede empezar ni terminar con guión')"
+                    oninput="validateLoginCrear(this)">
+                <small class="hint">Mínimo 3 caracteres, letras, números y guiones. No puede empezar ni terminar con guión</small>
             </div>
             <div class="form-group">
                 <label>Correo electrónico</label>
-                <input type="email" id="email-crear"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                    placeholder="usuario@dominio.com" required>
+                <input type="email"
+                    id="email-crear"
+                    placeholder="Ej: ejemplo@dominio.com"
+                    required
+                    pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    oninvalid="this.setCustomValidity('El correo debe tener un dominio válido después del @ (ejemplo@dominio.com)')"
+                    oninput="validateEmailCrear(this)">
             </div>
             <div class="form-group password-container">
                 <label>Contraseña</label>
                 <input type="password" id="password-crear"
                     minlength="10"
                     placeholder="Mínimo 10 caracteres"
+                    required
                     oninvalid="this.setCustomValidity('La contraseña debe tener al menos 10 caracteres')"
-                    oninput="this.setCustomValidity('')"
-                    required>
+                    oninput="this.setCustomValidity('')">
                 <button type="button" id="toggle-password-crear" class="toggle-password">
                     <i class="fas fa-eye"></i>
                 </button>
@@ -271,6 +286,8 @@
                         id="name-crear"
                         placeholder="Ej: Proyecto Innovación"
                         required
+                        oninvalid="this.setCustomValidity('Por favor, introduce un nombre para el proyecto')"
+                        oninput="this.setCustomValidity('')"
                 >
             </div>
             <div class="form-group">
@@ -278,13 +295,14 @@
                 <input
                         type="text"
                         id="identifier-crear"
-                        pattern="[a-z0-9-]+"
+                        pattern="^[a-z][a-z0-9-]*$"
+                        maxlength="100"
                         placeholder="Ej: proyecto-innovacion"
                         required
-                        oninvalid="this.setCustomValidity('El identificador solo puede contener letras minúsculas, números y guiones')"
+                        oninvalid="this.setCustomValidity('El identificador debe comenzar con una letra minúscula y solo puede contener letras minúsculas, números y guiones')"
                         oninput="this.setCustomValidity('')"
                 >
-                <small class="hint">Solo letras minúsculas, números y guiones</small>
+                <small class="hint">Debe comenzar con letra minúscula. Solo letras minúsculas, números y guiones</small>
             </div>
             <div class="form-group">
                 <label for="description-crear">Descripción</label>
@@ -308,23 +326,19 @@
         <form id="form-crear-tarea">
             <div class="form-group">
                 <label for="subject-crear">Asunto</label>
-                <input
-                        type="text"
-                        id="subject-crear"
-                        placeholder="Ej: Implementar nueva función"
-                        required
-                        oninvalid="this.setCustomValidity('Por favor, introduce un asunto para la tarea')"
-                        oninput="this.setCustomValidity('')"
-                >
+                <input type="text"
+                    id="subject-crear"
+                    placeholder="Ej: Implementar nueva función"
+                    required
+                    oninvalid="this.setCustomValidity('Por favor, introduce un asunto para la tarea')"
+                    oninput="this.setCustomValidity('')">
             </div>
             <div class="form-group">
                 <label for="project-crear">Proyecto</label>
-                <select
-                        id="project-crear"
-                        required
-                        oninvalid="this.setCustomValidity('Por favor, selecciona un proyecto')"
-                        oninput="this.setCustomValidity('')"
-                >
+                <select id="project-crear"
+                    required
+                    oninvalid="this.setCustomValidity('Por favor, selecciona un proyecto')"
+                    oninput="this.setCustomValidity('')">
                     <option value="">Selecciona un proyecto</option>
                 </select>
             </div>
@@ -385,6 +399,36 @@
 <script src="../generate.js" type="module" defer></script>
 <script src="/filters.js" type="module"></script>
 <script src="/js/filtroTareasToggle.js"></script>
+<script>
+                function validateEmailCrear(input) {
+                    const email = input.value;
+                    const parts = email.split('@');
+                    if (parts.length !== 2 || !parts[1].includes('.')) {
+                        input.setCustomValidity('El correo debe tener un dominio válido después del @ (ejemplo@dominio.com)');
+                        return;
+                    }
+                    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailPattern.test(email)) {
+                        input.setCustomValidity('Por favor, introduce un correo electrónico válido con formato usuario@dominio.extension');
+                        return;
+                    }
+                    input.setCustomValidity('');
+                }
+
+    function validateLoginCrear(input) {
+        const login = input.value;
+        const loginPattern = /^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$/;
+        if (login.length < 3) {
+            input.setCustomValidity('El nombre de usuario debe tener al menos 3 caracteres');
+            return;
+        }
+        if (!loginPattern.test(login)) {
+            input.setCustomValidity('El nombre de usuario solo puede contener letras, números y guiones. No puede empezar ni terminar con guión');
+            return;
+        }
+        input.setCustomValidity('');
+    }
+</script>
 <script src="/js/filtroProyectosToggle.js"></script>
 
 </body>
