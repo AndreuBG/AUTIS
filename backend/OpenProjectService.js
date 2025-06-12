@@ -202,7 +202,6 @@ return users;
     }
 
     static async createTask(taskData) {
-        console.log(taskData);
         try {
             const response = await fetch(`${this.API_URL}/work_packages`, {
                 method: 'POST',
@@ -213,11 +212,9 @@ return users;
                 body: JSON.stringify(taskData)
             });
 
-            console.log(response);
-
+            return response;
         } catch (error) {
-            console.error('Error:', error);
-            throw error;
+            throw new Error('Error de conexión al servidor');
         }
     }
 

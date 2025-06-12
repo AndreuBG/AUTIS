@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log("xxx")
 
       const taskData = {
           "subject": document.getElementById('subject-crear').value,
@@ -70,35 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
               body: JSON.stringify(taskData),
           });
 
-        if (res.ok) {
-            modal.style.display = 'none';
-            form.reset();
-            ShowMyAlert('success','Tarea creada exitosamente');
-            setTimeout(() => {
-                location.reload();
-            }, 1500); // recarga tras mostrar el alert
-
-        } else {
-            const data = await res.json();
-            ShowMyAlert('error', `Error: ${data.message || 'No se pudo crear la tarea'}`);
-        }
-    } catch (error) {
-        ShowMyAlert('error', 'Error de conexión al servidor');
-        console.error('Error creando tarea:', error.message);
-    }
-});
           if (res.ok) {
-              alert('Tarea creada exitosamente');
               modal.style.display = 'none';
               form.reset();
-              location.reload();
+              ShowMyAlert('success','Tarea creada exitosamente');
+              setTimeout(() => {
+                  location.reload();
+              }, 1500);
           } else {
-              const data = await res.json();
-              alert(`Error: ${data.message || 'No se pudo crear la tarea'}`);
+              const errorData = await res.json();
+              ShowMyAlert('error', errorData.message || 'No se pudo crear la tarea');
           }
       } catch (error) {
-          alert('Error de conexión al servidor');
-          console.error('Error creando tarea:', error.message);
+          console.error('Error creando tarea:', error);
+          ShowMyAlert('error', 'Error de conexión al servidor');
       }
   });
 
