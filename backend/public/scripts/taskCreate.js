@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal-crear-tarea');
   const openBtn = document.getElementById('boton-crear-tarea');
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       if (taskData.startDate && taskData.dueDate && taskData.startDate > taskData.dueDate) {
-          alert('La fecha de inicio no puede ser posterior a la fecha de vencimiento');
+          ShowMyAlert('error', 'La fecha de inicio no puede ser posterior a la fecha de vencimiento');
           return;
       }
 
@@ -68,6 +70,23 @@ document.addEventListener('DOMContentLoaded', () => {
               body: JSON.stringify(taskData),
           });
 
+        if (res.ok) {
+            modal.style.display = 'none';
+            form.reset();
+            ShowMyAlert('success','Tarea creada exitosamente');
+            setTimeout(() => {
+                location.reload();
+            }, 1500); // recarga tras mostrar el alert
+
+        } else {
+            const data = await res.json();
+            ShowMyAlert('error', `Error: ${data.message || 'No se pudo crear la tarea'}`);
+        }
+    } catch (error) {
+        ShowMyAlert('error', 'Error de conexión al servidor');
+        console.error('Error creando tarea:', error.message);
+    }
+});
           if (res.ok) {
               alert('Tarea creada exitosamente');
               modal.style.display = 'none';

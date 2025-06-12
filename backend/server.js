@@ -159,3 +159,31 @@ app.delete('/tasks/:id', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+app.get('/getMemberQuantity', async function (req, res){
+   res.send(await OpenProjectService.getMemberQuantity());
+});
+
+app.post('/addMemberToProject', async (req, res) => {
+    res.send(await OpenProjectService.addMemberToProject(req.body.projectId, req.body.numericUserId, req.body.roleId));
+})
+
+app.get('/getCurrentMembers/:id', async (req, res) => {
+    try {
+        const data = await OpenProjectService.getProjectMembers(req.params.id);
+        res.json(data);
+    } catch (error) {
+        console.error("Error obteniendo miembros del proyecto:", error);
+        res.status(500).json({ error: 'Error obteniendo miembros del proyecto' });
+    }
+});
+
+app.delete('/removeMemberFromProject/:memberID', async (req, res) => {
+    try {
+        const result = await OpenProjectService.removeMemberFromProject(req.params.memberID);
+        res.status(result.status).send();
+    } catch (error) {
+        console.error("Error eliminando miembro del proyecto:", error);
+        res.status(500).json({ error: 'Error eliminando miembro del proyecto' });
+    }
+})

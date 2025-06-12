@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 class ProjectCard extends HTMLElement {
     constructor() {
         super();
@@ -82,16 +84,15 @@ class ProjectCard extends HTMLElement {
                 throw new Error('ID de usuario inválido');
             }
 
-            const response = await fetch('http://localhost:8080/api/v3/memberships', {
+            const response = await fetch('/addMemberToProject', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    project: { href: `/api/v3/projects/${projectId}` },
-                    principal: { href: `/api/v3/users/${numericUserId}` },
-                    roles: [{ href: `/api/v3/roles/${roleId}` }]
+                    projectId: projectId,
+                    numericUserId: numericUserId,
+                    roleId: roleId
                 })
             });
 
@@ -137,12 +138,12 @@ class ProjectCard extends HTMLElement {
             if (memberCount) {
                 memberCount.textContent = currentMembers + 1;
             }
-
+            ShowMyAlert('success', 'Miembro añadido exitosamente');
             return true;
 
         } catch (error) {
             console.error('Error:', error);
-            alert(error.message);
+            ShowMyAlert('error', error.message);
             return false;
         }
     }
@@ -277,16 +278,12 @@ class ProjectCard extends HTMLElement {
     async getCurrentMembers() {
         try {
             const projectId = this.getAttribute('id');
-            const response = await fetch(`http://localhost:8080/api/v3/memberships?filters=[{"project_id":{"operator":"=","values":["${projectId}"]}}]`, {
-                headers: {
-                    'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await fetch(`/getCurrentMembers/${projectId}`);
 
             if (!response.ok) return [];
             
             const data = await response.json();
+
             const members = data._embedded?.elements || [];
 
             // Obtener detalles de cada usuario
@@ -295,7 +292,7 @@ class ProjectCard extends HTMLElement {
                 const userId = member._links.principal.href.split('/').pop();
                 
                 try {
-                    const userResponse = await fetch(`http://localhost:8080/api/v3/users/${userId}`, {
+                    const userResponse = await fetch(`/getUserData/${userId}`, {
                         headers: {
                             'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
                             'Content-Type': 'application/json'
@@ -365,13 +362,7 @@ class ProjectCard extends HTMLElement {
             const projectId = this.getAttribute('id');
             
             // Primero obtener el ID de la membresía usando el ID del usuario
-            const membershipsResponse = await fetch(
-                `http://localhost:8080/api/v3/memberships?filters=[{"project_id":{"operator":"=","values":["${projectId}"]}}]`, {
-                headers: {
-                    'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`),
-                    'Content-Type': 'application/json'
-                }
-            });
+            const membershipsResponse = await fetch(`/getCurrentMembers/${projectId}`)
 
             if (!membershipsResponse.ok) throw new Error('Error al buscar la membresía');
             
@@ -384,11 +375,8 @@ class ProjectCard extends HTMLElement {
 
             // Ahora sí eliminar usando el ID de la membresía
             const membershipId = membership.id;
-            const deleteResponse = await fetch(`http://localhost:8080/api/v3/memberships/${membershipId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': 'Basic ' + btoa(`apikey:${localStorage.getItem('token')}`)
-                }
+            const deleteResponse = await fetch(`/removeMemberFromProject/${membershipId}`, {
+                method: 'DELETE'
             });
 
             if (!deleteResponse.ok) {
@@ -432,7 +420,7 @@ class ProjectCard extends HTMLElement {
                     });
                 });
             }
-
+            ShowMyAlert('success', 'Miembro eliminado exitosamente');
             return true;
         } catch (error) {
             console.error('Error:', error);
@@ -982,12 +970,13 @@ class ProjectCard extends HTMLElement {
                         method: 'DELETE'
                     });
                     if (res.ok) {
+                        ShowMyAlert('success', 'Proyecto eliminado exitosamente');
                         this.remove();
                     } else {
-                        alert('No se pudo eliminar el proyecto');
+                        ShowMyAlert('error', 'No se pudo eliminar el proyecto');
                     }
                 } catch (err) {
-                    alert('Error de red al eliminar el proyecto');
+                    ShowMyAlert('error', 'Error de red al eliminar el proyecto');
                 }
             });
         }

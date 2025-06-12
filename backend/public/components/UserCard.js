@@ -1,3 +1,5 @@
+import {ShowMyAlert} from "../my_alert.js";
+
 class UserCard extends HTMLElement {
   constructor() {
     super();
@@ -446,11 +448,11 @@ class UserCard extends HTMLElement {
       const res = await fetch(`http://localhost:5500/deleteUser/${id}`);
 
       if (res.ok) {
-        alert('Usuario eliminado');
+        ShowMyAlert('success','Usuario eliminado');
         this.remove();
       } else {
         const errorText = await res.text();
-        alert(`Error al eliminar usuario: ${res.status} - ${errorText}`);
+        ShowMyAlert('error', `Error al eliminar usuario: ${res.status} - ${errorText}`);
         if (res.status === 401) window.location.href = '/login.html';
       }
 
