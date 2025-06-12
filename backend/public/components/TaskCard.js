@@ -34,12 +34,25 @@ class TaskCard extends HTMLElement {
                     box-sizing: border-box;
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
+                    justify-content: flex-start;
                     user-select: text;
                     position: relative;
                     z-index: 0;
-                    overflow: hidden;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    scrollbar-width: thin;
+                    scrollbar-color: #ff7b00 #fff8f0;
                     transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+                }
+                .card::-webkit-scrollbar {
+                    width: 8px;
+                }
+                .card::-webkit-scrollbar-track {
+                    background: #fff8f0;
+                }
+                .card::-webkit-scrollbar-thumb {
+                    background-color: #ffbb80;
+                    border-radius: 4px;
                 }
                 .card:hover {
                     box-shadow: 0 6px 16px rgba(255,123,0,0.25), 0 2px 4px rgba(0,0,0,0.12);
@@ -94,6 +107,14 @@ class TaskCard extends HTMLElement {
                 <p><strong>Prioridad:</strong> ${priority}</p>
             </div>
         `;
+
+        const card = this.shadowRoot.querySelector('.card');
+        card.addEventListener('wheel', (e) => {
+            if (card.scrollHeight > card.clientHeight) {
+                e.preventDefault();
+                card.scrollTop += e.deltaY;
+            }
+        });
 
         const trashIcon = this.shadowRoot.querySelector('.trash-icon');
         if (trashIcon) {
