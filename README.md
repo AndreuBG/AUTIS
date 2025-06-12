@@ -1,6 +1,6 @@
 # AUTIS
 
-**AUTIS** es una aplicación web diseñada para gestionar proyectos, tareas y entradas de tiempo. Está orientada a equipos que necesitan llevar un control eficiente del trabajo colaborativo.
+Nuesto proyecto es una aplicación web diseñada para gestionar proyectos, tareas y entradas de tiempo que se encuentran en el contendor de OpenProject. Está orientada a equipos que necesitan llevar un control eficiente del trabajo colaborativo.
 
 ## 🚀 Funcionalidades principales
 
