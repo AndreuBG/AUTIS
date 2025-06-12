@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (usuariosFiltrados.length === 0) {
                 listaUsuarios.innerHTML = `
-          <div class="no-results">
-            <div class="message-container">
-              <i class="fas fa-user-slash"></i>
-              <p>No hay usuarios que cumplan con este filtro</p>
-            </div>
-          </div>`;
+                    <div class="no-results">
+                        <div class="message-container">
+                            <i class="fas fa-user-slash"></i>
+                            <p>No hay usuarios que cumplan con este filtro</p>
+                        </div>
+                    </div>`;
             } else {
                 listaUsuarios.innerHTML = '';
                 usuariosFiltrados.forEach((u) => {
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     userElement.setAttribute('name', u.name);
                     userElement.setAttribute('login', u.login);
                     userElement.setAttribute('email', u.email);
+                    userElement.setAttribute('status', u.status); // Asegurarnos de que el status se pase correctamente
                     listaUsuarios.appendChild(userElement);
                 });
             }
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const estado = document.getElementById('filtro-estado-tareas').value;
         const prioridad = document.getElementById('filtro-Prioridad-tareas').value;
         const tipoEstado = document.getElementById('filtro-tipo-estado-tareas').value;
-        let paginaTareaActual = 1;
+        let currentPage = 1;
         const pageSize = 16;
         const filtros = [];
 
@@ -73,43 +74,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function cargarTareasFiltradas(pagina) {
             try {
-                const response = await fetch(`/getTasksFiltered/${filtrosTXT}/${ordenarPor}/${ordenarDireccion}?pageSize=${pageSize}&offset=${pagina}`);
+                // Calcular el offset correcto (página 1 = offset 1)
+                const offset = pagina;
+                const response = await fetch(`/getTasksFiltered/${filtrosTXT}/${ordenarPor}/${ordenarDireccion}?pageSize=${pageSize}&offset=${offset}`);
                 const tareasFiltradas = await response.json();
                 const listaTareas = document.getElementById('tareas');
 
                 if (tareasFiltradas.length === 0) {
                     listaTareas.innerHTML = `
-            <div class="no-results">
-              <div class="message-container">
-                <i class="fas fa-tasks"></i>
-                <p>No hay tareas que cumplan con este filtro</p>
-              </div>
-            </div>`;
-                    if (pagina > 1) {
-                        await cargarTareasFiltradas(pagina - 1);
-                        return;
-                    }
-                } else {
-                    listaTareas.innerHTML = '';
-                    tareasFiltradas.forEach((t) => {
-                        const taskElement = document.createElement('task-card');
-                        Object.entries({
-                            id: t.id,
-                            subject: t.subject,
-                            description: t.description,
-                            startDate: t.startDate,
-                            dueDate: t.dueDate,
-                            project: t.project,
-                            type: t.type,
-                            priority: t.priority
-                        }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
-                        listaTareas.appendChild(taskElement);
-                    });
+                        <div class="no-results">
+                            <div class="message-container">
+                                <i class="fas fa-tasks"></i>
+                                <p>No hay tareas que cumplan con este filtro</p>
+                            </div>
+                        </div>`;
+                    return;
                 }
 
-                document.getElementById('pagina-actual').textContent = pagina;
-                paginaTareaActual = pagina;
+                listaTareas.innerHTML = '';
+                tareasFiltradas.forEach((t) => {
+                    const taskElement = document.createElement('task-card');
+                    Object.entries({
+                        id: t.id,
+                        subject: t.subject,
+                        description: t.description,
+                        startDate: t.startDate,
+                        dueDate: t.dueDate,
+                        project: t.project,
+                        type: t.type,
+                        priority: t.priority
+                    }).forEach(([key, value]) => taskElement.setAttribute(key, value || ''));
+                    listaTareas.appendChild(taskElement);
+                });
 
+                document.getElementById('pagina-actual').textContent = pagina;
+                currentPage = pagina;
+                
+                // Actualizar estado de los botones
                 document.getElementById('anterior').disabled = pagina <= 1;
                 document.getElementById('siguiente').disabled = tareasFiltradas.length < pageSize;
             } catch (error) {
@@ -117,16 +118,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Inicializar paginación
         await cargarTareasFiltradas(1);
 
+        // Remover listeners anteriores
+        const anterior = document.getElementById('anterior');
+        const siguiente = document.getElementById('siguiente');
+        
+        anterior.replaceWith(anterior.cloneNode(true));
+        siguiente.replaceWith(siguiente.cloneNode(true));
+
+        // Agregar nuevos listeners
         document.getElementById('anterior').addEventListener('click', () => {
-            if (paginaTareaActual > 1) {
-                cargarTareasFiltradas(paginaTareaActual - 1);
+            if (currentPage > 1) {
+                cargarTareasFiltradas(currentPage - 1);
             }
         });
 
         document.getElementById('siguiente').addEventListener('click', () => {
-            cargarTareasFiltradas(paginaTareaActual + 1);
+            cargarTareasFiltradas(currentPage + 1);
         });
     });
 

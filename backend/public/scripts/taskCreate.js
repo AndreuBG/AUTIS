@@ -28,63 +28,150 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-populateProjects();
-projectSelect.addEventListener('change', () => {
-});
+  populateProjects();
+  projectSelect.addEventListener('change', () => {
+  });
 
-openBtn.addEventListener('click', () => {
-    modal.style.display = 'flex';
-});
+  openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+  });
 
-cancelBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-    form.reset();
-});
+  cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      form.reset();
+  });
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log("xxx")
+  form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    const taskData = {
-        "subject": document.getElementById('subject-crear').value,
-        "description": {"raw": `${document.getElementById('description-crear').value || null}`},
-        "startDate": document.getElementById('start-date-crear').value || null,
-        "dueDate": document.getElementById('due-date-crear').value || null,
-        "_links": {
-            "project": {"href": `/api/v3/projects/${projectSelect.value}`},
-            "type": {"href": `/api/v3/types/${document.getElementById('type-crear').value}`},
-            "status": {"href": "/api/v3/statuses/1"},
-            "priority": {"href": `/api/v3/priorities/${document.getElementById('priority-crear').value}`}
-        }
-    };
+      const taskData = {
+          "subject": document.getElementById('subject-crear').value,
+          "description": {"raw": `${document.getElementById('description-crear').value || null}`},
+          "startDate": document.getElementById('start-date-crear').value || null,
+          "dueDate": document.getElementById('due-date-crear').value || null,
+          "_links": {
+              "project": {"href": `/api/v3/projects/${projectSelect.value}`},
+              "type": {"href": `/api/v3/types/${document.getElementById('type-crear').value}`},
+              "status": {"href": "/api/v3/statuses/1"},
+              "priority": {"href": `/api/v3/priorities/${document.getElementById('priority-crear').value}`}
+          }
+      };
 
-    if (taskData.startDate && taskData.dueDate && taskData.startDate > taskData.dueDate) {
-        ShowMyAlert('error', 'La fecha de inicio no puede ser posterior a la fecha de vencimiento');
-        return;
-    }
+      if (taskData.startDate && taskData.dueDate && taskData.startDate > taskData.dueDate) {
+          ShowMyAlert('error', 'La fecha de inicio no puede ser posterior a la fecha de vencimiento');
+          return;
+      }
 
-    try {
-        const res = await fetch('http://localhost:5500/createTask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(taskData),
-        });
+      try {
+          const res = await fetch('http://localhost:5500/createTask', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(taskData),
+          });
 
-        if (res.ok) {
-            modal.style.display = 'none';
-            form.reset();
-            ShowMyAlert('success','Tarea creada exitosamente');
-            setTimeout(() => {
-                location.reload();
-            }, 1500); // recarga tras mostrar el alert
+          if (res.ok) {
+              modal.style.display = 'none';
+              form.reset();
+              ShowMyAlert('success','Tarea creada exitosamente');
+              setTimeout(() => {
+                  location.reload();
+              }, 1500);
+          } else {
+              const errorData = await res.json();
+              ShowMyAlert('error', errorData.message || 'No se pudo crear la tarea');
+          }
+      } catch (error) {
+          console.error('Error creando tarea:', error);
+          ShowMyAlert('error', 'Error de conexión al servidor');
+      }
+  });
 
-        } else {
-            const data = await res.json();
-            ShowMyAlert('error', `Error: ${data.message || 'No se pudo crear la tarea'}`);
-        }
-    } catch (error) {
-        ShowMyAlert('error', 'Error de conexión al servidor');
-        console.error('Error creando tarea:', error.message);
-    }
-});
+  let isLoading = false;
+  let currentRequest = null;
+  let currentPage = 1;
+
+  async function cargarTareas(page, filters = {}) {
+      if (isLoading) {
+          return;
+      }
+
+      // Cancelar petición anterior si existe
+      if (currentRequest) {
+          currentRequest.abort();
+      }
+
+      isLoading = true;
+      const paginaActualBtn = document.getElementById('pagina-actual');
+      
+      try {
+          const controller = new AbortController();
+          currentRequest = controller;
+
+          // Construir URL con filtros
+          const queryParams = new URLSearchParams({
+              page: page,
+              ...filters
+          });
+
+          const response = await fetch(`http://localhost:5500/tasks?${queryParams}`, {
+              signal: controller.signal
+          });
+
+          if (!response.ok) throw new Error('Error al cargar tareas');
+          
+          const data = await response.json();
+          
+          // Actualizar solo si es la petición más reciente
+          if (currentRequest === controller) {
+              actualizarTareas(data.tasks);
+              currentPage = page;
+              paginaActualBtn.textContent = page;
+          }
+      } catch (error) {
+          if (error.name !== 'AbortError') {
+              console.error('Error cargando tareas:', error);
+          }
+      } finally {
+          isLoading = false;
+      }
+  }
+
+  // Debounce para los botones de paginación
+  function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+          const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+      };
+  }
+
+  // Eventos de paginación con debounce
+  document.getElementById('anterior').addEventListener('click', 
+      debounce(() => {
+          if (!isLoading && currentPage > 1) {
+              cargarTareas(currentPage - 1);
+          }
+      }, 300)
+  );
+
+  document.getElementById('siguiente').addEventListener('click',
+      debounce(() => {
+          if (!isLoading) {
+              cargarTareas(currentPage + 1);
+          }
+      }, 300)
+  );
+
+  // Aplicar filtros con estado de carga
+  document.getElementById('aplicar-filtro-tareas').addEventListener('click', () => {
+      if (!isLoading) {
+          currentPage = 1;
+          const filters = obtenerFiltros(); // función que obtiene los valores de los filtros
+          cargarTareas(1, filters);
+      }
+  });
 });
